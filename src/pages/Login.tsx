@@ -68,10 +68,7 @@ const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
       {/* Background with blur */}
       <div className="absolute inset-0" style={{
-        backgroundImage: 'url(/img/bg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        backgroundColor: '#00CCFF',
         filter: 'blur(10px)'
       }}></div>
       
