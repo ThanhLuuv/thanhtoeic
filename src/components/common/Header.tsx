@@ -53,13 +53,13 @@ const Header: React.FC = () => {
               </button>
             )}
             <a href="/" className="flex items-center space-x-4 hover:opacity-80 transition-opacity">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center">
-                <img src="/logo.png" alt="Antoree TOEIC" className="w-full h-full object-contain" />
+              <div className="w-10 h-10 rounded-full flex items-center justify-center">
+                <img src="/logo.png" alt="Antoree TOEIC" className="w-full h-full rounded-full object-contain" />
               </div>
               <div>
                 <span className="text-black text-xl">
                   {
-                   location.pathname === '/' ? 'Dictation' :
+                   location.pathname === '/' ? 'T-TOEIC' :
                    location.pathname === '/grammar-game' ? 'Grammar' :
                    location.pathname.startsWith('/dictation-practice') ? 'Dictation' :
                    'Antoeic '}
@@ -72,8 +72,8 @@ const Header: React.FC = () => {
               {navItems.map((item) => (
                 <a
                   key={item}
-                  href={item === 'Dictation' ? '/' : item === 'Grammar' ? '/grammar-game' : '/grammar'}
-                  className={`nav-item text-black font-medium px-4 py-2 transition-all duration-300 ${activeNav === item ? 'border-b-2 border-green-600' : ''}`}
+                  href={item === 'T-TOEIC' ? '/' : item === 'Grammar' ? '/grammar-game' : '/grammar'}
+                  className={`nav-item text-black font-medium px-4 py-2 transition-all duration-300 ${activeNav === item ? 'border-b-2 border-[#00CCFF]' : ''}`}
                   onClick={() => handleNavClick(item)}
                 >
                   {item}
@@ -111,7 +111,7 @@ const Header: React.FC = () => {
                 </Link>
                 <Link
                   to="/register"
-                  className="px-4 py-2 text-sm font-medium bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors"
+                  className="px-4 py-2 text-sm font-medium bg-[#00CCFF] text-white rounded-full hover:bg-[#0099CC] transition-colors"
                 >
                   Register
                 </Link>
@@ -135,8 +135,8 @@ const Header: React.FC = () => {
                   {navItems.map((item) => (
                     <a
                       key={item}
-                      href={item === 'Dictation' ? '/' : item === 'Grammar' ? '/grammar-game' : '/grammar'}
-                      className="block px-3 py-2 text-black font-medium hover:bg-green-100 rounded-md transition-colors"
+                      href={item === 'T-TOEIC' ? '/' : item === 'Grammar' ? '/grammar-game' : '/grammar'}
+                      className="block px-3 py-2 text-black font-medium hover:bg-[#E6F7FF] rounded-md transition-colors"
                       onClick={() => {
                         handleNavClick(item);
                         setIsMobileMenuOpen(false);
@@ -157,7 +157,7 @@ const Header: React.FC = () => {
                   </div>
                   <Link
                     to="/profile"
-                    className="block px-3 py-2 text-black font-medium hover:bg-green-100 rounded-md transition-colors"
+                    className="block px-3 py-2 text-black font-medium hover:bg-[#E6F7FF] rounded-md transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Profile
@@ -167,7 +167,7 @@ const Header: React.FC = () => {
                       handleLogout();
                       setIsMobileMenuOpen(false);
                     }}
-                    className="block w-full text-left px-3 py-2 text-black font-medium hover:bg-green-100 rounded-md transition-colors"
+                    className="block w-full text-left px-3 py-2 text-black font-medium hover:bg-[#E6F7FF] rounded-md transition-colors"
                   >
                     Logout
                   </button>
@@ -176,14 +176,14 @@ const Header: React.FC = () => {
                 <>
                   <Link
                     to="/login"
-                    className="block px-3 py-2 text-black font-medium hover:bg-green-100 rounded-md transition-colors"
+                    className="block px-3 py-2 text-black font-medium hover:bg-[#E6F7FF] rounded-md transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="block px-3 py-2 text-black font-medium hover:bg-green-100 rounded-md transition-colors"
+                    className="block px-3 py-2 text-black font-medium hover:bg-[#E6F7FF] rounded-md transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Register

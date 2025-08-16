@@ -149,7 +149,7 @@ const ErrorMessage: React.FC<{ error: string }> = ({ error }) => (
       <p className="text-gray-600">{error}</p>
       <button 
         onClick={() => window.location.reload()} 
-        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+        className="mt-4 bg-[#00CCFF] text-white px-4 py-2 rounded-lg hover:bg-[#0099CC]"
       >
         Try again
       </button>
@@ -183,14 +183,14 @@ const VocabSetCard: React.FC<{
           <div className="flex items-center gap-2">
             <div
               className="w-2 h-2 rounded-full"
-              style={{ background: '#0284c7' }}
+              style={{ background: '#00CCFF' }}
             ></div>
             <h3 className="text-lg font-bold text-slate-800">
               Set {topicSetIndex !== undefined ? topicSetIndex + 1 : originalIdx + 1}
             </h3>
           </div>
           {isCompleted && (
-            <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+            <span className="bg-[#00CCFF] text-white text-xs px-2 py-1 rounded-full font-bold">
               ✓
             </span>
           )}
@@ -221,7 +221,7 @@ const VocabSetCard: React.FC<{
           <div className="w-full bg-slate-100 rounded-full h-1">
             <div 
               className={`h-1 rounded-full transition-all duration-300 ${
-                isCompleted ? 'bg-green-600 w-full' : 'bg-green-600 w-0'
+                isCompleted ? 'bg-[#00CCFF] w-full' : 'bg-[#00CCFF] w-0'
               }`}
             ></div>
           </div>
@@ -368,7 +368,7 @@ const DictationList: React.FC = () => {
             <p className="text-gray-600 mb-4">There are no vocabulary sets available at the moment.</p>
             <button 
               onClick={() => loadVocabularyData()} 
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+              className="bg-[#00CCFF] text-white px-4 py-2 rounded-lg hover:bg-[#0099CC]"
             >
               Refresh
             </button>
