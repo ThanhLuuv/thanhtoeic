@@ -1,19 +1,27 @@
-// Export HTTP Client
-export { httpClient, HTTPClient, APIError } from './httpClient';
+export { firebaseAuthService } from './firebaseAuthService';
 
-// Export Vocabulary Service
-export { toeicVocabularyService } from './toeicVocabularyService';
+export { 
+  FirebaseService, 
+  userService
+} from './firebaseService';
+
+export { vocabularyService as toeicVocabularyService } from './vocabularyService';
+export { topicService } from './topicService';
+
+// Export example generation service
+export { exampleGenerationService } from './exampleGenerationService';
+
+// Export all types from common types file
 export type {
-  ToeicWordType,
-  ToeicTopic,
+  User,
+  RegisterData,
+  LoginData,
+  AuthResponse
+} from './firebaseAuthService';
+
+export type {
+  VocabularyTopic,
   ToeicVocabulary,
   VocabularyItem,
-  VocabSetByTopic,
-} from './toeicVocabularyService';
-
-// Export helper functions
-export { getExistingExamples, generateExampleAPI } from './toeicVocabularyService';
-
-// Export API Configuration
-export { API_CONFIG, API_ENDPOINTS, HTTP_STATUS, HTTP_METHODS } from '../config/api';
-export type { APIResponse, PaginationParams, PaginatedResponse } from '../config/api';
+  VocabSetByTopic
+} from '../types/vocabulary';

@@ -43,12 +43,14 @@ const Login: React.FC = () => {
     } catch (err: any) {
       console.error('Login error:', err);
       
-      // Handle different error types
-      if (err.statusCode === 401) {
+      // Handle Firebase authentication errors
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
         setError('Invalid email or password');
-      } else if (err.statusCode === 400) {
-        setError('Please check your input and try again');
-      } else if (err.statusCode === 0) {
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Invalid email format');
+      } else if (err.code === 'auth/too-many-requests') {
+        setError('Too many failed attempts. Please try again later');
+      } else if (err.code === 'auth/network-request-failed') {
         setError('Network error. Please check your connection');
       } else {
         setError(err.message || 'Login failed. Please try again');

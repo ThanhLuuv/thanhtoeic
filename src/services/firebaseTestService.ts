@@ -1,0 +1,74 @@
+import { db } from '../config/firebase';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+
+// Service để test kết nối Firebase
+class FirebaseTestService {
+  
+  // Test kết nối cơ bản
+  async testConnection(): Promise<boolean> {
+    try {
+      console.log('Testing Firebase connection...');
+      
+      // Thử lấy một document từ collection users
+      const usersRef = collection(db, 'users');
+      const snapshot = await getDocs(usersRef);
+      
+      console.log('Firebase connection successful');
+      console.log('Users count:', snapshot.size);
+      
+      return true;
+    } catch (error) {
+      console.error('Firebase connection failed:', error);
+      return false;
+    }
+  }
+
+  // Test đọc một document cụ thể
+  async testReadDocument(): Promise<boolean> {
+    try {
+      console.log('Testing document read...');
+      
+      // Thử đọc một document test
+      const testDocRef = doc(db, 'test', 'test-doc');
+      const docSnap = await getDoc(testDocRef);
+      
+      if (docSnap.exists()) {
+        console.log('Document read successful:', docSnap.data());
+      } else {
+        console.log('Document does not exist (this is normal for test)');
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Document read failed:', error);
+      return false;
+    }
+  }
+
+  // Test collection list
+  async testListCollections(): Promise<boolean> {
+    try {
+      console.log('Testing collection listing...');
+      
+      // Thử lấy danh sách collections
+      const collections = ['users', 'vocabulary', 'topics'];
+      
+      for (const collectionName of collections) {
+        try {
+          const collectionRef = collection(db, collectionName);
+          const snapshot = await getDocs(collectionRef);
+          console.log(`Collection ${collectionName}: ${snapshot.size} documents`);
+        } catch (error) {
+          console.error(`Failed to access collection ${collectionName}:`, error);
+        }
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Collection listing failed:', error);
+      return false;
+    }
+  }
+}
+
+export const firebaseTestService = new FirebaseTestService();

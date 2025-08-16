@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Tất cả collections đều cho phép đọc dữ liệu (kể cả không đăng nhập)
+    match /{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Cụ thể cho từng collection để đảm bảo
+    match /users/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    match /vocabulary/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    match /topics/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    match /wordTypes/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    match /user_vocabulary/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}

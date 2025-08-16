@@ -1,14 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authService, User } from '../services/authService';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { firebaseAuthService, User } from '../services/firebaseAuthService';
 
 interface AuthContextType {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
+  currentUser: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (userData: any) => Promise<void>;
+  register: (email: string, password: string, fullName: string) => Promise<void>;
   logout: () => Promise<void>;
-  refreshUser: () => Promise<void>;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,104 +19,105 @@ export const useAuth = () => {
   return context;
 };
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Kiểm tra trạng thái đăng nhập khi component mount
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        if (authService.isAuthenticated()) {
-          const currentUser = authService.getCurrentUser();
-          if (currentUser) {
-            setUser(currentUser);
-          } else {
-            // Nếu có token nhưng không có user info, lấy từ API
-            await refreshUser();
-          }
-        }
-      } catch (error) {
-        console.error('Auth check error:', error);
-        // Nếu có lỗi, đăng xuất
-        await logout();
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    try {
+      // Get the service instance
+      const authService = firebaseAuthService();
+      
+      // Use firebaseAuthService to listen to auth state changes
+      const unsubscribe = authService.onAuthStateChanged((user: User | null) => {
+        setCurrentUser(user);
+        setLoading(false);
+      });
 
-    checkAuthStatus();
+      // Set initial user state
+      const initialUser = authService.getCurrentUser();
+      if (initialUser) {
+        setCurrentUser(initialUser);
+      }
+      setLoading(false);
+      
+      setError(null);
+      
+      return unsubscribe;
+    } catch (err: any) {
+      console.error('Error initializing auth service:', err);
+      setError('Failed to initialize authentication service');
+      setLoading(false);
+    }
   }, []);
 
-  // Làm mới thông tin user
-  const refreshUser = async () => {
-    try {
-      const userData = await authService.getProfile();
-      setUser(userData);
-    } catch (error) {
-      console.error('Failed to refresh user:', error);
-      await logout();
-    }
-  };
-
-  // Đăng nhập
   const login = async (email: string, password: string) => {
     try {
-      setIsLoading(true);
-      const response = await authService.login({ email, password });
-      setUser(response.user);
-    } catch (error) {
-      console.error('Login failed:', error);
+      const authService = firebaseAuthService();
+      await authService.login({ email, password });
+      // User is automatically set in the auth state listener above
+    } catch (error: any) {
+      console.error('Login error:', error);
       throw error;
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // Đăng ký
-  const register = async (userData: any) => {
+  const register = async (email: string, password: string, fullName: string) => {
     try {
-      setIsLoading(true);
-      const response = await authService.register(userData);
-      setUser(response.user);
-    } catch (error) {
-      console.error('Registration failed:', error);
+      const authService = firebaseAuthService();
+      await authService.register({ 
+        email, 
+        password, 
+        fullName 
+      });
+      // User is automatically set in the auth state listener above
+    } catch (error: any) {
+      console.error('Registration error:', error);
       throw error;
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // Đăng xuất
   const logout = async () => {
     try {
-      setIsLoading(true);
+      const authService = firebaseAuthService();
       await authService.logout();
-      setUser(null);
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
-      setIsLoading(false);
+      // User is automatically cleared in the auth state listener above
+    } catch (error: any) {
+      console.error('Logout error:', error);
+      throw error;
     }
   };
 
   const value: AuthContextType = {
-    user,
-    isAuthenticated: !!user,
-    isLoading,
+    currentUser,
     login,
     register,
     logout,
-    refreshUser,
+    loading
   };
+
+  // Show error if auth service failed to initialize
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-red-600 mb-2">Authentication Error</h2>
+          <p className="text-gray-600">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

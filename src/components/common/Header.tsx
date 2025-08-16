@@ -7,7 +7,7 @@ const Header: React.FC = () => {
   const [activeNav, setActiveNav] = useState('Luyện đề');
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   const navItems = ['Dictation', 'Grammar'];
 
@@ -81,11 +81,11 @@ const Header: React.FC = () => {
               ))}
             
             {/* Authentication Section */}
-            {isAuthenticated ? (
+            {currentUser ? (
               <div className="flex items-center space-x-4">
                 <span className="text-black/90 text-sm">
                   <span className="font-semibold">Hello, </span>
-                  <span>{user?.fullName || user?.email}</span>
+                  <span>{currentUser.fullName || currentUser.email}</span>
                 </span>
                 <div className="flex items-center space-x-2">
                   <Link to="/profile" className="w-10 h-10 bg-black/20 rounded-full flex items-center justify-center cursor-pointer hover:bg-black/30 transition-all">
@@ -149,11 +149,11 @@ const Header: React.FC = () => {
               )}
               
               {/* Mobile Authentication Section */}
-              {isAuthenticated ? (
+              {currentUser ? (
                 <>
                   <div className="px-3 py-2 text-black/90 text-sm border-t border-gray-200">
                     <span className="font-semibold">Hello, </span>
-                    <span>{user?.fullName || user?.email}</span>
+                    <span>{currentUser.fullName || currentUser.email}</span>
                   </div>
                   <Link
                     to="/profile"

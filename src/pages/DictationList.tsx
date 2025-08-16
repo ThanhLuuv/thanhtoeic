@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toeicVocabularyService, ToeicVocabulary, VocabSetByTopic } from '../services/toeicVocabularyService';
+import { toeicVocabularyService, ToeicVocabulary, VocabSetByTopic } from '../services';
 
 // Constants
 const WORDS_PER_SET = 20;
@@ -11,6 +11,7 @@ interface VocabSet {
   idx: number;
   originalIdx: number;
   topic?: string;
+  topicSetIndex?: number; // Add this to track set index within topic
 }
 
 interface DictationListState {
@@ -35,7 +36,14 @@ const getGlobalVocabIndex = (
 ): number => {
   let globalIndex = 0;
   for (let i = 0; i < topicIndex; i++) {
-    globalIndex += vocabSetsByTopic[i].sets.length;
+    const topicData = vocabSetsByTopic[i];
+    if (topicData.sets && Array.isArray(topicData.sets)) {
+      // Chỉ đếm các set hợp lệ
+      const validSetsCount = topicData.sets.filter(set => 
+        set && Array.isArray(set) && set.length > 0
+      ).length;
+      globalIndex += validSetsCount;
+    }
   }
   return globalIndex + setIndex;
 };
@@ -153,9 +161,9 @@ const VocabSetCard: React.FC<{
   isCompleted: boolean;
   isHovered: boolean;
   onHover: (idx: number | null) => void;
-  onClick: (originalIdx: number) => void;
+  onClick: (originalIdx: number, topic: string, topicSetIndex: number) => void;
 }> = ({ vocabSet, isCompleted, isHovered, onHover, onClick }) => {
-  const { set, idx, originalIdx, topic } = vocabSet;
+  const { set, idx, originalIdx, topic, topicSetIndex } = vocabSet;
 
   return (
     <div
@@ -166,7 +174,7 @@ const VocabSetCard: React.FC<{
           : 'hover:shadow-xl'
         }
       `}
-      onClick={() => onClick(originalIdx)}
+      onClick={() => onClick(originalIdx, topic || 'Other', topicSetIndex || 0)}
       onMouseEnter={() => onHover(idx)}
       onMouseLeave={() => onHover(null)}
     >
@@ -178,7 +186,7 @@ const VocabSetCard: React.FC<{
               style={{ background: '#0284c7' }}
             ></div>
             <h3 className="text-lg font-bold text-slate-800">
-              Vocabulary - Set {originalIdx + 1}
+              {topic} - Set {topicSetIndex !== undefined ? topicSetIndex + 1 : originalIdx + 1}
             </h3>
           </div>
           {isCompleted && (
@@ -199,13 +207,13 @@ const VocabSetCard: React.FC<{
             <svg className="w-4 h-4 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4z" clipRule="evenodd" />
             </svg>
-            <span className="text-slate-600">{getSetType(set)}</span>
+            <span className="text-slate-600">Set {topicSetIndex !== undefined ? topicSetIndex + 1 : originalIdx + 1}</span>
           </div>
           <div className="flex items-center gap-2">
             <svg className="w-4 h-4 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-slate-600">{set.length} words</span>
+            <span className="text-slate-600">Up to {WORDS_PER_SET} words</span>
           </div>
         </div>
         
@@ -260,8 +268,10 @@ const DictationList: React.FC = () => {
   }, [loadVocabularyData, loadCompletedSets]);
 
   // Handle set click
-  const handleSetClick = useCallback((originalIdx: number) => {
-    navigate(`/vocabulary/${originalIdx}`);
+  const handleSetClick = useCallback((originalIdx: number, topic: string, topicSetIndex: number) => {
+    // Encode topic and set index in URL
+    const encodedTopic = encodeURIComponent(topic);
+    navigate(`/dictation/${originalIdx}?topic=${encodedTopic}&setIndex=${topicSetIndex}`);
   }, [navigate]);
 
   // Prepare all sets for rendering
@@ -272,21 +282,52 @@ const DictationList: React.FC = () => {
       return allSets;
     }
     
+    let globalSetIndex = 0;
+    
     vocabSetsByTopic.forEach((topicData, topicIndex) => {
       if (topicData.sets && Array.isArray(topicData.sets)) {
-        topicData.sets.forEach((set, setIndex) => {
+        // Calculate how many sets we can create for this topic
+        const topicVocabularyCount = topicData.sets.reduce((total, set) => {
           if (set && Array.isArray(set) && set.length > 0) {
-            const globalIdx = getGlobalVocabIndex(topicIndex, setIndex, vocabSetsByTopic);
-            allSets.push({
-              set,
-              idx: allSets.length,
-              originalIdx: globalIdx,
-              topic: topicData.topic || 'Other'
-            });
+            return total + set.length;
           }
-        });
+          return total;
+        }, 0);
+        
+        const setsForTopic = Math.ceil(topicVocabularyCount / WORDS_PER_SET);
+        
+        console.log(`[DictationList] Topic "${topicData.topic}": ${topicVocabularyCount} words, ${setsForTopic} sets`);
+        
+        // Create sets for this topic
+        for (let setIndex = 0; setIndex < setsForTopic; setIndex++) {
+          allSets.push({
+            set: [], // We'll load this dynamically
+            idx: allSets.length,
+            originalIdx: globalSetIndex,
+            topic: topicData.topic || 'Other',
+            topicSetIndex: setIndex // Add this to track set index within topic
+          });
+          
+          console.log(`[DictationList] Created set:`, {
+            topic: topicData.topic || 'Other',
+            topicSetIndex: setIndex,
+            globalSetIndex,
+            topicVocabularyCount,
+            setsForTopic
+          });
+          
+          globalSetIndex++;
+        }
       }
     });
+    
+    console.log(`[DictationList] Total sets created:`, allSets.length);
+    console.log(`[DictationList] All sets:`, allSets.map(s => ({
+      originalIdx: s.originalIdx,
+      topic: s.topic,
+      topicSetIndex: s.topicSetIndex,
+      globalSetIndex: s.originalIdx
+    })));
     
     return allSets;
   }, [vocabSetsByTopic]);

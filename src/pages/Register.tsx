@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { RegisterData } from '../services/authService';
+import { User } from '../services/firebaseAuthService';
 
 // Local interface for form data that includes confirmPassword
-interface RegisterFormData extends Omit<RegisterData, 'avatarUrl'> {
+interface RegisterFormData {
+  email: string;
+  password: string;
   confirmPassword: string;
+  fullName: string;
 }
 
 const Register: React.FC = () => {
@@ -67,22 +70,21 @@ const Register: React.FC = () => {
       setIsLoading(true);
       setError(null);
       
-      // Remove confirmPassword before sending to API
-      const { confirmPassword, ...registerData } = formData;
-      
-      await register(registerData);
+      await register(formData.email, formData.password, formData.fullName);
       
       // Redirect to home page after successful registration
       navigate('/');
     } catch (err: any) {
       console.error('Registration error:', err);
       
-      // Handle different error types
-      if (err.statusCode === 409) {
+      // Handle Firebase authentication errors
+      if (err.code === 'auth/email-already-in-use') {
         setError('Email already exists');
-      } else if (err.statusCode === 400) {
-        setError('Please check your input and try again');
-      } else if (err.statusCode === 0) {
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Invalid email format');
+      } else if (err.code === 'auth/weak-password') {
+        setError('Password is too weak. Please use at least 6 characters');
+      } else if (err.code === 'auth/network-request-failed') {
         setError('Network error. Please check your connection');
       } else {
         setError(err.message || 'Registration failed. Please try again');

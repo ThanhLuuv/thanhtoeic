@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Vocabulary Manager</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+        .btn-secondary {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #1976D2;
+        }
+        .btn-info {
+            background-color: #FF9800;
+            color: white;
+        }
+        .btn-info:hover {
+            background-color: #F57C00;
+        }
+        .console {
+            background-color: #1e1e1e;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Firebase Vocabulary Manager</h1>
+        
+        <div class="button-group">
+            <button class="btn-primary" onclick="addAllVocabulary()">Add All Vocabulary</button>
+            <button class="btn-secondary" onclick="listVocabulary()">List Current Vocabulary</button>
+            <button class="btn-info" onclick="clearConsole()">Clear Console</button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+
+        <div id="status"></div>
+        
+        <div class="console" id="console">Welcome to Firebase Vocabulary Manager!
+        
+Click "Add All Vocabulary" to add words to your Firestore database.
+Click "List Current Vocabulary" to see what words already exist.</div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCMBokj99we1G-tTgEzJa-te1ElO3DCD98",
+            authDomain: "thanhtoeic-e1f58.firebaseapp.com",
+            projectId: "thanhtoeic-e1f58",
+            storageBucket: "thanhtoeic-e1f58.firebasestorage.app",
+            messagingSenderId: "225528375762",
+            appId: "1:225528375662:web:a78cb610a102a489af000b",
+            measurementId: "G-NN3GBZ93V6"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Load vocabulary data
+        let vocabularyData = [];
+        async function loadVocabularyData() {
+            try {
+                const response = await fetch('data.json');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data.json: ${response.statusText}`);
+                }
+                const data = await response.json();
+                // Assume data.json is an array of vocabulary items
+                vocabularyData = Array.isArray(data) ? data : [];
+                if (!Array.isArray(vocabularyData)) {
+                    throw new Error('Invalid data format: data.json must be an array of vocabulary items');
+                }
+                log(`📝 Loaded ${vocabularyData.length} words from data.json`);
+                // Log topic distribution
+                logTopicDistribution();
+            } catch (error) {
+                log(`❌ Error loading vocabulary data: ${error.message}`);
+                showStatus(`❌ Failed to load vocabulary data: ${error.message}`, 'error');
+                vocabularyData = [];
+            }
+        }
+
+        const WORDS_PER_SET = 40;
+
+        // Function to log topic distribution
+        function logTopicDistribution() {
+            log('\n📋 Topic Distribution:');
+            for (let idx = 0; idx < vocabularyData.length; idx++) {
+                const topicName = getTopicName(idx);
+                if (idx % WORDS_PER_SET === 0) {
+                    log(`   - ${topicName}: Words ${idx + 1} to ${Math.min(idx + WORDS_PER_SET, vocabularyData.length)}`);
+                }
+            }
+        }
+
+        // Function to get topic name based on index
+        function getTopicName(idx) {
+            if (idx < 40) return 'Tourism';
+            if (idx < 80) return 'Accommodations & Food';
+            if (idx < 120) return 'Transportation';
+            if (idx < 160) return 'Stores';
+            if (idx < 200) return 'Purchase & Warranty';
+            if (idx < 240) return 'Performance';
+            if (idx < 280) return 'Exhibition & Museums';
+            if (idx < 320) return 'Arts';
+            if (idx < 360) return 'Real Estate';
+            if (idx < 400) return 'Media';
+            return 'Unknown';
+        }
+
+        // Function to get topic ID from topic name
+        async function getTopicId(topicName) {
+            try {
+                const topicsRef = collection(db, 'topics');
+                const q = query(topicsRef, where('name', '==', topicName));
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    return querySnapshot.docs[0].id;
+                }
+                return null;
+            } catch (error) {
+                log(`Error getting topic ID for ${topicName}: ${error.message}`);
+                return null;
+            }
+        }
+
+        // Function to check if word already exists
+        async function wordExists(word) {
+            try {
+                const vocabRef = collection(db, 'vocabulary');
+                const q = query(vocabRef, where('word', '==', word));
+                const querySnapshot = await getDocs(q);
+                return !querySnapshot.empty;
+            } catch (error) {
+                log(`Error checking if word exists: ${error.message}`);
+                return false;
+            }
+        }
+
+        // Function to add a single vocabulary item
+        async function addVocabulary(vocabData, topicName, topicId) {
+            try {
+                const vocabRef = collection(db, 'vocabulary');
+                const docRef = await addDoc(vocabRef, {
+                    word: vocabData.word,
+                    wordType: vocabData.type,
+                    phonetic: vocabData.phonetic,
+                    meaning: vocabData.meaning,
+                    englishMeaning: vocabData.englishMeaning || '',
+                    audio: vocabData.audio || '',
+                    topicId: topicId,
+                    topic: topicName,
+                    exampleSentences: vocabData.exampleSentences || [],
+                    usageStats: vocabData.usageStats || {},
+                    tags: vocabData.tags || [],
+                    difficulty: vocabData.difficulty || 1,
+                    isActive: true,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                });
+                log(`✅ Word "${vocabData.word}" added successfully with ID: ${docRef.id}`);
+                return docRef.id;
+            } catch (error) {
+                log(`❌ Error adding word "${vocabData.word}": ${error.message}`);
+                throw error;
+            }
+        }
+
+        // Function to add all vocabulary
+        async function addAllVocabulary() {
+            await loadVocabularyData(); // Ensure data is loaded before proceeding
+            showLoading(true);
+            showStatus('', '');
+            
+            if (vocabularyData.length === 0) {
+                log('❌ No vocabulary data available to add.');
+                showStatus('❌ No vocabulary data available to add.', 'error');
+                showLoading(false);
+                return;
+            }
+
+            log('🚀 Starting to add vocabulary...');
+            log(`📝 Found ${vocabularyData.length} words to add`);
+            
+            const results = {
+                success: [],
+                failed: [],
+                skipped: []
+            };
+
+            for (let idx = 0; idx < vocabularyData.length; idx++) {
+                const vocab = vocabularyData[idx];
+                const topicName = getTopicName(idx);
+                try {
+                    // Check if word already exists
+                    const exists = await wordExists(vocab.word);
+                    
+                    if (exists) {
+                        log(`⏭️  Word "${vocab.word}" already exists, skipping...`);
+                        results.skipped.push(vocab.word);
+                        continue;
+                    }
+
+                    // Get topic ID
+                    const topicId = await getTopicId(topicName);
+                    if (!topicId) {
+                        log(`❌ Topic "${topicName}" not found for word "${vocab.word}"`);
+                        results.failed.push(vocab.word);
+                        continue;
+                    }
+
+                    // Add the vocabulary
+                    const vocabId = await addVocabulary(vocab, topicName, topicId);
+                    results.success.push({ word: vocab.word, id: vocabId });
+                    
+                    // Add a small delay to avoid overwhelming Firestore
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    
+                } catch (error) {
+                    log(`💥 Failed to process word "${vocab.word}": ${error.message}`);
+                    results.failed.push(vocab.word);
+                }
+            }
+
+            // Print summary
+            log('\n📊 SUMMARY:');
+            log(`✅ Successfully added: ${results.success.length} words`);
+            log(`⏭️  Skipped (already exist): ${results.skipped.length} words`);
+            log(`❌ Failed: ${results.failed.length} words`);
+            
+            if (results.success.length > 0) {
+                log('\n✅ Successfully added words:');
+                results.success.forEach(result => {
+                    log(`   - ${result.word} (ID: ${result.id})`);
+                });
+            }
+            
+            if (results.skipped.length > 0) {
+                log('\n⏭️  Skipped words (already exist):');
+                results.skipped.forEach(word => {
+                    log(`   - ${word}`);
+                });
+            }
+            
+            if (results.failed.length > 0) {
+                log('\n❌ Failed words:');
+                results.failed.forEach(word => {
+                    log(`   - ${word}`);
+                });
+            }
+
+            showLoading(false);
+            
+            if (results.success.length > 0) {
+                showStatus(`✅ Successfully added ${results.success.length} words!`, 'success');
+            } else if (results.failed.length > 0) {
+                showStatus(`❌ Failed to add ${results.failed.length} words. Check console for details.`, 'error');
+            } else {
+                showStatus(`⏭️  All words already exist. No new words were added.`, 'info');
+            }
+
+            return results;
+        }
+
+        // Function to list all existing vocabulary
+        async function listVocabulary() {
+            showLoading(true);
+            showStatus('', '');
+            
+            try {
+                const vocabRef = collection(db, 'vocabulary');
+                const querySnapshot = await getDocs(vocabRef);
+                
+                log('\n📚 Current vocabulary in database:');
+                querySnapshot.forEach((doc) => {
+                    const vocab = doc.data();
+                    log(`   - ${vocab.word} (Topic: ${vocab.topic}, ID: ${doc.id})`);
+                });
+                
+                const count = querySnapshot.size;
+                log(`\n📊 Total words: ${count}`);
+                
+                showStatus(`📚 Found ${count} words in database`, 'info');
+                
+            } catch (error) {
+                log(`Error listing vocabulary: ${error.message}`);
+                showStatus(`❌ Error listing vocabulary: ${error.message}`, 'error');
+            }
+            
+            showLoading(false);
+        }
+
+        // Function to clear console
+        function clearConsole() {
+            document.getElementById('console').textContent = 'Console cleared.\n\nClick "Add All Vocabulary" to add words to your Firestore database.\nClick "List Current Vocabulary" to see what words already exist.';
+            showStatus('', '');
+        }
+
+        // Helper functions
+        function log(message) {
+            const console = document.getElementById('console');
+            console.textContent += '\n' + message;
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function showStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function showLoading(show) {
+            const loading = document.getElementById('loading');
+            loading.style.display = show ? 'block' : 'none';
+        }
+
+        // Make functions globally available
+        window.addAllVocabulary = addAllVocabulary;
+        window.listVocabulary = listVocabulary;
+        window.clearConsole = clearConsole;
+
+        // Initialize vocabulary data on page load
+        loadVocabularyData();
+    </script>
+</body>
+</html>

@@ -1,46 +1,122 @@
-# Getting Started with Create React App
+# TOEIC Learning Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Ứng dụng học tập TOEIC được xây dựng với React và Firebase, cung cấp các tính năng học tập và thực hành toàn diện.
 
-## Available Scripts
+## 🚀 Tính năng chính
 
-In the project directory, you can run:
+- **Grammar Game**: Trò chơi ngữ pháp với nhiều chế độ khác nhau
+- **Dictation Practice**: Luyện tập nghe và viết
+- **Vocabulary Learning**: Học từ vựng theo chủ đề
+- **Progress Tracking**: Theo dõi tiến độ học tập
+- **User Authentication**: Hệ thống đăng nhập/đăng ký an toàn
 
-### `npm start`
+## 🛠️ Công nghệ sử dụng
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **Frontend**: React 19 + TypeScript
+- **Backend**: Firebase (Firestore, Authentication, Storage)
+- **Styling**: Tailwind CSS
+- **State Management**: React Context + Hooks
+- **Deployment**: Firebase Hosting
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 📦 Cài đặt
 
-### `npm test`
+### Yêu cầu hệ thống
+- Node.js 16+ 
+- npm hoặc yarn
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Cài đặt dependencies
+```bash
+npm install
+```
 
-### `npm run build`
+### Cấu hình Firebase
+1. Tạo project Firebase mới tại [Firebase Console](https://console.firebase.google.com/)
+2. Bật các service: Authentication, Firestore, Storage
+3. Cập nhật cấu hình trong `src/config/firebase.ts`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Chạy ứng dụng
+```bash
+# Development mode
+npm start
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Production build
+npm run build
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Firebase emulators (local development)
+npm run firebase:emulators
+```
 
-### `npm run eject`
+## 🔧 Scripts có sẵn
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- `npm start` - Chạy ứng dụng ở chế độ development
+- `npm run build` - Build ứng dụng cho production
+- `npm test` - Chạy tests
+- `npm run firebase:emulators` - Chạy Firebase emulators
+- `npm run firebase:deploy` - Deploy lên Firebase Hosting
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🗄️ Cấu trúc Database
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Collections chính:
+- `users` - Thông tin người dùng
+- `toeic_parts` - Các phần của bài thi TOEIC
+- `toeic_topics` - Chủ đề học tập
+- `toeic_questions` - Câu hỏi và bài tập
+- `test_results` - Kết quả bài thi
+- `vocabulary` - Từ vựng và ý nghĩa
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 🔐 Security Rules
 
-## Learn More
+Ứng dụng sử dụng Firebase Security Rules để bảo vệ dữ liệu:
+- Người dùng chỉ có thể đọc/ghi dữ liệu của mình
+- Dữ liệu TOEIC công khai để đọc
+- Chỉ admin mới có thể thêm/sửa/xóa dữ liệu hệ thống
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📱 Responsive Design
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Ứng dụng được thiết kế responsive và hoạt động tốt trên:
+- Desktop (1024px+)
+- Tablet (768px - 1023px)
+- Mobile (320px - 767px)
+
+## 🚀 Deployment
+
+### Firebase Hosting
+```bash
+npm run build
+npm run firebase:deploy
+```
+
+### Vercel
+```bash
+npm run build
+vercel --prod
+```
+
+## 📚 Tài liệu tham khảo
+
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [React Documentation](https://reactjs.org/docs)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+
+## 🤝 Đóng góp
+
+1. Fork project
+2. Tạo feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Mở Pull Request
+
+## 📄 License
+
+Project này được phát hành dưới MIT License - xem file [LICENSE](LICENSE) để biết thêm chi tiết.
+
+## 📞 Hỗ trợ
+
+Nếu bạn gặp vấn đề hoặc có câu hỏi, vui lòng:
+- Tạo issue trên GitHub
+- Liên hệ qua email: support@thanhtoeic.com
+
+---
+
+**Lưu ý**: Đây là phiên bản beta. Một số tính năng có thể chưa hoàn thiện.

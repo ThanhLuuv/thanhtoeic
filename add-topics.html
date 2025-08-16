@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Topics Manager</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+        .btn-secondary {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #1976D2;
+        }
+        .btn-info {
+            background-color: #FF9800;
+            color: white;
+        }
+        .btn-info:hover {
+            background-color: #F57C00;
+        }
+        .console {
+            background-color: #1e1e1e;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Firebase Topics Manager</h1>
+        
+        <div class="button-group">
+            <button class="btn-primary" onclick="addAllTopics()">Add All Topics</button>
+            <button class="btn-secondary" onclick="listTopics()">List Current Topics</button>
+            <button class="btn-info" onclick="clearConsole()">Clear Console</button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+
+        <div id="status"></div>
+        
+        <div class="console" id="console">Welcome to Firebase Topics Manager!
+        
+Click "Add All Topics" to add the new topics to your Firestore database.
+Click "List Current Topics" to see what topics already exist.
+
+Topics to be added:
+• Tourism
+• Accommodations & Food
+• Transportation
+• Stores
+• Purchase & Warranty
+• Performance
+• Exhibition & Museums
+• Arts
+• Real Estate
+• Media</div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCMBokj99we1G-tTgEzJa-te1ElO3DCD98",
+            authDomain: "thanhtoeic-e1f58.firebaseapp.com",
+            projectId: "thanhtoeic-e1f58",
+            storageBucket: "thanhtoeic-e1f58.firebasestorage.app",
+            messagingSenderId: "225528375762",
+            appId: "1:225528375662:web:a78cb610a102a489af000b",
+            measurementId: "G-NN3GBZ93V6"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // New topics to add
+        const newTopics = [
+            {
+                name: 'Tourism',
+                description: 'Travel and tourism related vocabulary and phrases',
+                category: 'travel',
+                difficulty: 'intermediate',
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                name: 'Accommodations & Food',
+                description: 'Hotel, restaurant, and food service vocabulary',
+                category: 'travel',
+                difficulty: 'intermediate',
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                name: 'Transportation',
+                description: 'Public transport, vehicles, and travel vocabulary',
+                category: 'travel',
+                difficulty: 'intermediate',
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                name: 'Stores',
+                description: 'Shopping, retail, and store-related vocabulary',
+                category: 'shopping',
+                difficulty: 'intermediate',
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                name: 'Purchase & Warranty',
+                description: 'Buying, selling, and warranty vocabulary',
+                category: 'shopping',
+                difficulty: 'intermediate',
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                name: 'Performance',
+                description: 'Performance evaluation and assessment vocabulary',
+                category: 'business',
+                difficulty: 'intermediate',
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                name: 'Exhibition & Museums',
+                description: 'Cultural events, exhibitions, and museum vocabulary',
+                category: 'culture',
+                difficulty: 'intermediate',
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                name: 'Arts',
+                description: 'Art, creativity, and artistic expression vocabulary',
+                category: 'culture',
+                difficulty: 'intermediate',
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                name: 'Real Estate',
+                description: 'Property, housing, and real estate vocabulary',
+                category: 'business',
+                difficulty: 'intermediate',
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                name: 'Media',
+                description: 'News, entertainment, and media industry vocabulary',
+                category: 'media',
+                difficulty: 'intermediate',
+                isActive: true,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            }
+        ];
+
+        // Helper functions
+        function log(message) {
+            const console = document.getElementById('console');
+            console.textContent += '\n' + message;
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function showStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function showLoading(show) {
+            const loading = document.getElementById('loading');
+            loading.style.display = show ? 'block' : 'none';
+        }
+
+        // Function to check if topic already exists
+        async function topicExists(topicName) {
+            try {
+                const topicsRef = collection(db, 'topics');
+                const q = query(topicsRef, where('name', '==', topicName));
+                const querySnapshot = await getDocs(q);
+                return !querySnapshot.empty;
+            } catch (error) {
+                log(`Error checking if topic exists: ${error.message}`);
+                return false;
+            }
+        }
+
+        // Function to add a single topic
+        async function addTopic(topicData) {
+            try {
+                const topicsRef = collection(db, 'topics');
+                const docRef = await addDoc(topicsRef, topicData);
+                log(`✅ Topic "${topicData.name}" added successfully with ID: ${docRef.id}`);
+                return docRef.id;
+            } catch (error) {
+                log(`❌ Error adding topic "${topicData.name}": ${error.message}`);
+                throw error;
+            }
+        }
+
+        // Function to add all topics
+        async function addAllTopics() {
+            showLoading(true);
+            showStatus('', '');
+            
+            log('🚀 Starting to add new topics...');
+            log(`📝 Found ${newTopics.length} topics to add`);
+            
+            const results = {
+                success: [],
+                failed: [],
+                skipped: []
+            };
+
+            for (const topic of newTopics) {
+                try {
+                    // Check if topic already exists
+                    const exists = await topicExists(topic.name);
+                    
+                    if (exists) {
+                        log(`⏭️  Topic "${topic.name}" already exists, skipping...`);
+                        results.skipped.push(topic.name);
+                        continue;
+                    }
+
+                    // Add the topic
+                    const topicId = await addTopic(topic);
+                    results.success.push({ name: topic.name, id: topicId });
+                    
+                    // Add a small delay to avoid overwhelming Firestore
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    
+                } catch (error) {
+                    log(`💥 Failed to process topic "${topic.name}": ${error.message}`);
+                    results.failed.push(topic.name);
+                }
+            }
+
+            // Print summary
+            log('\n📊 SUMMARY:');
+            log(`✅ Successfully added: ${results.success.length} topics`);
+            log(`⏭️  Skipped (already exist): ${results.skipped.length} topics`);
+            log(`❌ Failed: ${results.failed.length} topics`);
+            
+            if (results.success.length > 0) {
+                log('\n✅ Successfully added topics:');
+                results.success.forEach(result => {
+                    log(`   - ${result.name} (ID: ${result.id})`);
+                });
+            }
+            
+            if (results.skipped.length > 0) {
+                log('\n⏭️  Skipped topics (already exist):');
+                results.skipped.forEach(name => {
+                    log(`   - ${name}`);
+                });
+            }
+            
+            if (results.failed.length > 0) {
+                log('\n❌ Failed topics:');
+                results.failed.forEach(name => {
+                    log(`   - ${name}`);
+                });
+            }
+
+            showLoading(false);
+            
+            if (results.success.length > 0) {
+                showStatus(`✅ Successfully added ${results.success.length} topics!`, 'success');
+            } else if (results.failed.length > 0) {
+                showStatus(`❌ Failed to add ${results.failed.length} topics. Check console for details.`, 'error');
+            } else {
+                showStatus(`⏭️  All topics already exist. No new topics were added.`, 'info');
+            }
+
+            return results;
+        }
+
+        // Function to list all existing topics
+        async function listTopics() {
+            showLoading(true);
+            showStatus('', '');
+            
+            try {
+                const topicsRef = collection(db, 'topics');
+                const querySnapshot = await getDocs(topicsRef);
+                
+                log('\n📚 Current topics in database:');
+                querySnapshot.forEach((doc) => {
+                    const topic = doc.data();
+                    log(`   - ${topic.name} (ID: ${doc.id})`);
+                });
+                
+                const count = querySnapshot.size;
+                log(`\n📊 Total topics: ${count}`);
+                
+                showStatus(`📚 Found ${count} topics in database`, 'info');
+                
+            } catch (error) {
+                log(`Error listing topics: ${error.message}`);
+                showStatus(`❌ Error listing topics: ${error.message}`, 'error');
+            }
+            
+            showLoading(false);
+        }
+
+        // Function to clear console
+        function clearConsole() {
+            document.getElementById('console').textContent = 'Console cleared.\n\nClick "Add All Topics" to add the new topics to your Firestore database.\nClick "List Current Topics" to see what topics already exist.';
+            showStatus('', '');
+        }
+
+        // Make functions globally available
+        window.addAllTopics = addAllTopics;
+        window.listTopics = listTopics;
+        window.clearConsole = clearConsole;
+    </script>
+</body>
+</html>

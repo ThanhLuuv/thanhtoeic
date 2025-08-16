@@ -9,6 +9,7 @@ import {
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
+import { COLLECTIONS } from '../constants/collections';
 
 // Types
 export interface User {
@@ -17,9 +18,9 @@ export interface User {
   fullName: string;
   role: 'student' | 'teacher' | 'admin';
   status: 'active' | 'inactive' | 'suspended';
-  avatarUrl?: string;
-  phone?: string;
-  dateOfBirth?: string;
+  avatarUrl?: string | null;
+  phone?: string | null;
+  dateOfBirth?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,9 +29,9 @@ export interface RegisterData {
   email: string;
   password: string;
   fullName: string;
-  phone?: string;
-  dateOfBirth?: string;
-  avatarUrl?: string;
+  phone?: string | null;
+  dateOfBirth?: string | null;
+  avatarUrl?: string | null;
 }
 
 export interface LoginData {
@@ -43,30 +44,43 @@ export interface AuthResponse {
   accessToken: string;
 }
 
-// Firebase Authentication Service
 class FirebaseAuthService {
-  private readonly USERS_COLLECTION = 'users';
+  private readonly USERS_COLLECTION = COLLECTIONS.USERS;
   private currentUser: User | null = null;
   private authStateListeners: ((user: User | null) => void)[] = [];
 
   constructor() {
+    console.log('FirebaseAuthService constructor called');
+    console.log('Auth object:', auth);
+    console.log('DB object:', db);
+    console.log('USERS_COLLECTION:', this.USERS_COLLECTION);
+    
     // Listen to auth state changes
-    onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        // Get user data from Firestore
-        const userData = await this.getUserFromFirestore(firebaseUser.uid);
-        this.currentUser = userData;
-        this.notifyAuthStateListeners(userData);
-      } else {
-        this.currentUser = null;
-        this.notifyAuthStateListeners(null);
-      }
-    });
+    try {
+      onAuthStateChanged(auth, async (firebaseUser) => {
+        console.log('Auth state changed:', firebaseUser ? firebaseUser.uid : 'null');
+        
+        if (firebaseUser) {
+          // Get user data from Firestore
+          const userData = await this.getUserFromFirestore(firebaseUser.uid);
+          this.currentUser = userData;
+          this.notifyAuthStateListeners(userData);
+        } else {
+          this.currentUser = null;
+          this.notifyAuthStateListeners(null);
+        }
+      });
+      console.log('Auth state listener set up successfully');
+    } catch (error) {
+      console.error('Error setting up auth state listener:', error);
+    }
   }
 
   // Register new user
   async register(data: RegisterData): Promise<AuthResponse> {
     try {
+      console.log('Starting registration process...', { email: data.email, fullName: data.fullName });
+      
       // Create user in Firebase Auth
       const userCredential: UserCredential = await createUserWithEmailAndPassword(
         auth,
@@ -75,6 +89,7 @@ class FirebaseAuthService {
       );
 
       const firebaseUser = userCredential.user;
+      console.log('Firebase Auth user created:', firebaseUser.uid);
 
       // Create user profile in Firestore
       const userProfile: Omit<User, 'id'> = {
@@ -89,20 +104,47 @@ class FirebaseAuthService {
         updatedAt: new Date()
       };
 
-      await setDoc(doc(db, this.USERS_COLLECTION, firebaseUser.uid), userProfile);
+      console.log('Creating user profile in Firestore:', { collection: this.USERS_COLLECTION, uid: firebaseUser.uid });
+      
+      try {
+        // Filter out undefined values to avoid Firestore errors
+        const cleanUserProfile = Object.fromEntries(
+          Object.entries(userProfile).filter(([_, value]) => value !== undefined)
+        );
+        
+        await setDoc(doc(db, this.USERS_COLLECTION, firebaseUser.uid), cleanUserProfile);
+        console.log('User profile created successfully in Firestore');
+      } catch (firestoreError) {
+        console.error('Error creating user profile in Firestore:', firestoreError);
+        // Try to delete the Firebase Auth user if Firestore fails
+        try {
+          await firebaseUser.delete();
+          console.log('Firebase Auth user deleted due to Firestore failure');
+        } catch (deleteError) {
+          console.error('Error deleting Firebase Auth user:', deleteError);
+        }
+        throw new Error(`Failed to create user profile in database: ${firestoreError}`);
+      }
 
       // Update Firebase Auth profile
-      await updateProfile(firebaseUser, {
-        displayName: data.fullName,
-        photoURL: data.avatarUrl
-      });
+      try {
+        await updateProfile(firebaseUser, {
+          displayName: data.fullName,
+          photoURL: data.avatarUrl
+        });
+        console.log('Firebase Auth profile updated successfully');
+      } catch (profileError) {
+        console.error('Error updating Firebase Auth profile:', profileError);
+        // This is not critical, so we continue
+      }
 
       // Get the created user
       const createdUser = await this.getUserFromFirestore(firebaseUser.uid);
       if (!createdUser) {
-        throw new Error('Failed to create user profile');
+        throw new Error('Failed to retrieve created user profile');
       }
 
+      console.log('User registration completed successfully:', createdUser);
       this.currentUser = createdUser;
 
       return {
@@ -167,13 +209,25 @@ class FirebaseAuthService {
   // Get user from Firestore
   private async getUserFromFirestore(uid: string): Promise<User | null> {
     try {
+      console.log('Getting user from Firestore:', { collection: this.USERS_COLLECTION, uid });
+      
       const userDoc = await getDoc(doc(db, this.USERS_COLLECTION, uid));
+      console.log('Firestore document exists:', userDoc.exists());
+      
       if (userDoc.exists()) {
-        return {
+        const userData = userDoc.data();
+        console.log('User data from Firestore:', userData);
+        
+        const user: User = {
           id: userDoc.id,
-          ...userDoc.data()
+          ...userData
         } as User;
+        
+        console.log('Constructed user object:', user);
+        return user;
       }
+      
+      console.log('User document does not exist in Firestore');
       return null;
     } catch (error) {
       console.error('Error getting user from Firestore:', error);
@@ -188,14 +242,19 @@ class FirebaseAuthService {
         throw new Error('No user logged in');
       }
 
+      // Filter out undefined values to avoid Firestore errors
+      const cleanUpdates = Object.fromEntries(
+        Object.entries(updates).filter(([_, value]) => value !== undefined)
+      );
+
       const userRef = doc(db, this.USERS_COLLECTION, this.currentUser.id);
       await updateDoc(userRef, {
-        ...updates,
+        ...cleanUpdates,
         updatedAt: new Date()
       });
 
       // Update current user
-      this.currentUser = { ...this.currentUser, ...updates };
+      this.currentUser = { ...this.currentUser, ...cleanUpdates };
     } catch (error) {
       console.error('Error updating profile:', error);
       throw error;
@@ -257,5 +316,22 @@ class FirebaseAuthService {
   }
 }
 
-// Export singleton instance
-export const firebaseAuthService = new FirebaseAuthService();
+// Export singleton instance with lazy initialization
+let _firebaseAuthService: FirebaseAuthService | null = null;
+
+export const firebaseAuthService = (): FirebaseAuthService => {
+  if (!_firebaseAuthService) {
+    // Check if Firebase is properly initialized
+    if (!auth || !db) {
+      console.error('Firebase not properly initialized. Auth:', !!auth, 'DB:', !!db);
+      throw new Error('Firebase not properly initialized');
+    }
+    
+    console.log('Creating new FirebaseAuthService instance');
+    _firebaseAuthService = new FirebaseAuthService();
+  }
+  return _firebaseAuthService;
+};
+
+// For backward compatibility, also export the instance directly
+export const firebaseAuthServiceInstance = new FirebaseAuthService();

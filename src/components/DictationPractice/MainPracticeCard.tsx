@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { VocabularyItem } from '../../services/toeicVocabularyService';
+import { VocabularyItem } from '../../services';
 import { SoundToggle, ProgressBar, AudioButton, ActionButtons, AnswerDisplay} from '../common';
 import KeyboardShortcuts from './KeyboardShortcuts';
 

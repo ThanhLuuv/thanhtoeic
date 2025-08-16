@@ -1,0 +1,164 @@
+import { ENV_CONFIG } from '../config/env';
+import type { 
+  ExampleSentenceResponse, 
+  GenerateExampleRequest, 
+  GenerateExampleError 
+} from '../types/example';
+
+// Service for generating example sentences using OpenAI
+class ExampleGenerationService {
+  private apiKey: string;
+  private baseUrl: string;
+
+  constructor() {
+    this.apiKey = ENV_CONFIG.OPENAI_API_KEY;
+    this.baseUrl = 'https://api.openai.com/v1';
+    
+    if (!this.apiKey) {
+      console.warn('OpenAI API key không được cấu hình. Example generation sẽ không hoạt động.');
+    }
+  }
+
+  /**
+   * Generate example sentence using OpenAI API
+   * API key được gửi qua backend để bảo mật
+   */
+  async generateExampleSentence(
+    request: GenerateExampleRequest
+  ): Promise<ExampleSentenceResponse> {
+    try {
+      if (!this.apiKey) {
+        throw new Error('OpenAI API key không được cấu hình');
+      }
+
+      // Tạo danh sách các câu đã tồn tại để tránh trùng lặp
+      const existingExamplesText = request.existingExamples && request.existingExamples.length > 0 
+        ? `\n\nCÁC CÂU ĐÃ TẠO TRƯỚC ĐÓ (KHÔNG ĐƯỢC TẠO LẠI):\n${request.existingExamples.map((example, index) => `${index + 1}. ${example}`).join('\n')}`
+        : '';
+      
+      const prompt = `Tạo một câu mẫu sử dụng từ "${request.word}" (${request.meaning}) - loại từ: ${request.type}.
+
+Yêu cầu:
+1. Tạo một câu tiếng Anh tự nhiên, đúng ngữ pháp ngắn và đơn giản
+2. Sử dụng từ "${request.word}" trong ngữ cảnh phù hợp
+3. Cung cấp bản dịch tiếng Việt
+4. Câu phải dễ hiểu và thực tế
+5. QUAN TRỌNG: KHÔNG được tạo câu giống với các câu đã tạo trước đó${existingExamplesText}
+
+Trả về JSON với format:
+{
+  "exampleSentence": {
+    "english": "Câu tiếng Anh mẫu",
+    "vietnamese": "Bản dịch tiếng Việt",
+    "wordHighlight": "${request.word}",
+    "context": "Giải thích ngắn về cách sử dụng từ này bằng tiếng Việt"
+  }
+}`;
+
+      const response = await fetch(`${this.baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.apiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          messages: [
+            {
+              role: 'system',
+              content: 'Bạn là giáo viên tiếng Anh chuyên tạo câu mẫu để giúp học sinh hiểu cách sử dụng từ vựng trong ngữ cảnh thực tế.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          max_tokens: 500,
+          temperature: 0.7,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw this.handleApiError(response.status, errorData);
+      }
+
+      const data = await response.json();
+      const content = data.choices?.[0]?.message?.content;
+      
+      if (!content) {
+        throw new Error('Không nhận được response từ OpenAI');
+      }
+
+      try {
+        // Tìm JSON trong response
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsedResponse = JSON.parse(jsonMatch[0]);
+          return parsedResponse;
+        } else {
+          throw new Error('Không tìm thấy JSON trong response');
+        }
+      } catch (parseError) {
+        console.error('Error parsing JSON:', parseError);
+        console.log('Raw response:', content);
+        throw new Error('Lỗi phân tích response từ AI');
+      }
+
+    } catch (error) {
+      console.error('Error generating example:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Handle different types of API errors
+   */
+  private handleApiError(status: number, errorData: any): GenerateExampleError {
+    switch (status) {
+      case 401:
+        return {
+          error: 'UNAUTHORIZED',
+          message: 'API key không hợp lệ hoặc đã hết hạn.',
+          status
+        };
+      case 403:
+        return {
+          error: 'FORBIDDEN',
+          message: 'Tài khoản không có quyền truy cập hoặc đã hết credit.',
+          status
+        };
+      case 429:
+        return {
+          error: 'RATE_LIMIT',
+          message: 'Rate limit exceeded. Vui lòng thử lại sau vài phút.',
+          status
+        };
+      case 500:
+        return {
+          error: 'INTERNAL_ERROR',
+          message: 'Lỗi server nội bộ từ OpenAI.',
+          status
+        };
+      default:
+        return {
+          error: 'UNKNOWN_ERROR',
+          message: `Lỗi không xác định: ${status}`,
+          status
+        };
+    }
+  }
+
+  /**
+   * Check if service is available (has API key)
+   */
+  isAvailable(): boolean {
+    return !!this.apiKey;
+  }
+}
+
+// Export singleton instance
+export const exampleGenerationService = new ExampleGenerationService();
+
+// Export the class for testing purposes
+export { ExampleGenerationService };

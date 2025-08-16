@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { toeicVocabularyService, ToeicVocabulary, VocabularyItem } from '../services/toeicVocabularyService';
-import { useParams, useNavigate } from 'react-router-dom';
+import { toeicVocabularyService, ToeicVocabulary, VocabularyItem } from '../services';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
   useAudioManager,
 } from './common';
 import {
   SuccessModal,
   MainPracticeCard,
-  CompletionButtons
 } from './DictationPractice/index';
-import { generateExampleAPI } from '../services/toeicVocabularyService';
+import { exampleGenerationService } from '../services';
 
 // Define interfaces for API responses
 interface ExampleSentence {
@@ -18,17 +17,18 @@ interface ExampleSentence {
   contextInfo?: string;
 }
 
-interface GenerateExampleResponse {
-  success: boolean;
-  example?: ExampleSentence;
-  message?: string;
-}
-
 const NUM_WORDS = 20;
 
 const DictationPractice: React.FC = () => {
   const { setIndex } = useParams<{ setIndex?: string }>();
+  const location = useLocation();
   const setIdx = Number(setIndex) || 0;
+  
+  // Parse query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const topicFromUrl = queryParams.get('topic') || 'Other';
+  const topicSetIndex = Number(queryParams.get('setIndex')) || 0;
+  
   const [vocabList, setVocabList] = useState<VocabularyItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,8 +63,17 @@ const DictationPractice: React.FC = () => {
         setIsSetLoaded(false);
         setError(null);
         
-        // Get the specific vocabulary set by index
-        const currentSetVocab = await toeicVocabularyService.getVocabularySetByIndex(setIdx);
+        console.log(`[DictationPractice] Loading vocabulary for topic: ${topicFromUrl}, set index: ${topicSetIndex}`);
+        
+        // Get the specific vocabulary set by topic and set index
+        const currentSetVocab = await toeicVocabularyService.getVocabularySetByTopicAndSetIndex(topicFromUrl, topicSetIndex);
+        
+        console.log(`[DictationPractice] Loaded vocabulary set:`, {
+          topic: topicFromUrl,
+          topicSetIndex,
+          wordCount: currentSetVocab.length,
+          words: currentSetVocab.map(v => v.word)
+        });
         
         // Convert ToeicVocabulary to VocabularyItem format
         const vocabItems: VocabularyItem[] = currentSetVocab.map((vocab: ToeicVocabulary) => 
@@ -89,6 +98,7 @@ const DictationPractice: React.FC = () => {
         setIsSetLoaded(true);
         
       } catch (err) {
+        console.error(`[DictationPractice] Error loading vocabulary for topic ${topicFromUrl} and set ${topicSetIndex}:`, err);
         setError('Failed to load vocabulary data. Please try again.');
         setVocabList([]);
         setIsSetLoaded(false);
@@ -98,7 +108,7 @@ const DictationPractice: React.FC = () => {
     };
 
     loadVocabulary();
-  }, [setIdx]);
+  }, [topicFromUrl, topicSetIndex]);
 
   const handleInputChange = (value: string) => {
     const newInputs = [...userInputs];
@@ -140,7 +150,9 @@ const DictationPractice: React.FC = () => {
     if (currentIndex === vocabList.length - 1) {
       // Navigate to next set if available
       if (setIdx < totalSets - 1) {
-        navigate(`/dictation/${setIdx + 1}`);
+        const nextSetIndex = topicSetIndex + 1;
+        const encodedTopic = encodeURIComponent(topicFromUrl);
+        navigate(`/dictation/${setIdx + 1}?topic=${encodedTopic}&setIndex=${nextSetIndex}`);
       } else {
         // If no more sets, go back to list
         navigate('/dictation-list');
@@ -165,22 +177,28 @@ const DictationPractice: React.FC = () => {
       setIsGeneratingExample(true);
       setExampleError(null);
       
-      // Call API to generate new example
-      const result = await generateExampleAPI(item.id) as GenerateExampleResponse;
-      if (result.success && result.example) {
+      // Call OpenAI service to generate new example
+      const result = await exampleGenerationService.generateExampleSentence({
+        word: item.word,
+        meaning: item.meaning,
+        type: item.type,
+        existingExamples: currentExamples.map(ex => ex.englishSentence)
+      });
+      
+      if (result.exampleSentence) {
         const newExample = {
-          englishSentence: result.example.englishSentence,
-          vietnameseTranslation: result.example.vietnameseTranslation,
-          contextInfo: result.example.contextInfo,
+          englishSentence: result.exampleSentence.english,
+          vietnameseTranslation: result.exampleSentence.vietnamese,
+          contextInfo: result.exampleSentence.context,
         };
         
         // Add new example to list and display
-        const updatedExamples = [...currentExamples, result.example];
+        const updatedExamples = [...currentExamples, newExample];
         setCurrentExamples(updatedExamples);
         setCurrentExampleIndex(updatedExamples.length - 1); // Show the newest example
         setExampleSentence(newExample);
       } else {
-        setExampleError(result.message || 'Unable to generate new example sentence.');
+        setExampleError('Unable to generate new example sentence.');
       }
     } catch (err: any) {
       console.error('Error generating example:', err);
@@ -304,16 +322,164 @@ const DictationPractice: React.FC = () => {
   // Removed duplicate keydown event listener to avoid conflicts
   // The handleKeyDown function in MainPracticeCard handles all keyboard events
 
-  if (isLoading) return <div>Đang loading...</div>;
-  if (error) return <div style={{ textAlign: 'center', marginTop: 40, color: 'red' }}>{error}</div>;
-  if (vocabList.length === 0) return <div style={{ textAlign: 'center', marginTop: 40 }}>No data available!</div>;
+  if (isLoading) return (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#f7f9fb',
+    }}>
+      <div style={{
+        textAlign: 'center',
+        padding: '40px',
+        backgroundColor: 'white',
+        borderRadius: '16px',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+        maxWidth: '400px',
+        width: '90%',
+      }}>
+        <div style={{
+          width: '48px',
+          height: '48px',
+          border: '4px solid #e2e8f0',
+          borderTop: '4px solid #3b82f6',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+          margin: '0 auto 20px',
+        }}></div>
+        <h3 style={{
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: '#1e293b',
+          marginBottom: '12px',
+        }}>
+          Đang tải...
+        </h3>
+        <p style={{
+          fontSize: '16px',
+          color: '#64748b',
+          margin: 0,
+        }}>
+          Đang tải dữ liệu từ vựng
+        </p>
+      </div>
+    </div>
+  );
+  
+  if (error) return (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#f7f9fb',
+    }}>
+      <div style={{
+        textAlign: 'center',
+        padding: '40px',
+        backgroundColor: 'white',
+        borderRadius: '16px',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+        maxWidth: '400px',
+        width: '90%',
+      }}>
+        <div style={{
+          width: '64px',
+          height: '64px',
+          margin: '0 auto 20px',
+          color: '#ef4444',
+        }}>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+        <h3 style={{
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: '#1e293b',
+          marginBottom: '12px',
+        }}>
+          Có lỗi xảy ra
+        </h3>
+        <p style={{
+          fontSize: '16px',
+          color: '#64748b',
+          marginBottom: '24px',
+        }}>
+          {error}
+        </p>
+        <button 
+          onClick={() => window.location.reload()} 
+          style={{
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            padding: '12px 24px',
+            borderRadius: '8px',
+            fontSize: '16px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3b82f6'}
+        >
+          Thử lại
+        </button>
+      </div>
+    </div>
+  );
+  
+  if (vocabList.length === 0) return (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#f7f9fb',
+    }}>
+      <div style={{
+        textAlign: 'center',
+        padding: '40px',
+        backgroundColor: 'white',
+        borderRadius: '16px',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+        maxWidth: '400px',
+        width: '90%',
+      }}>
+        <div style={{
+          width: '64px',
+          height: '64px',
+          margin: '0 auto 20px',
+          color: '#64748b',
+        }}>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+        <h3 style={{
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: '#1e293b',
+          marginBottom: '12px',
+        }}>
+          Không có dữ liệu
+        </h3>
+        <p style={{
+          fontSize: '16px',
+          color: '#64748b',
+          margin: 0,
+        }}>
+          Không có từ vựng nào khả dụng
+        </p>
+      </div>
+    </div>
+  );
 
   function getSetTopic() {
-    // Get topic from the first word in the current vocabulary list
-    if (vocabList.length > 0 && vocabList[0]) {
-      return vocabList[0].topic || 'Other';
-    }
-    return 'Other';
+    // Use topic from URL instead of from vocabList
+    return topicFromUrl;
   }
   const topic = getSetTopic();
 
@@ -388,7 +554,6 @@ const DictationPractice: React.FC = () => {
   };
 
   const handleNavigateHome = () => navigate('/');
-  const handleNavigateNextSet = () => navigate(`/dictation/${setIdx + 1}`);
 
   return (
     <div style={{
@@ -399,6 +564,43 @@ const DictationPractice: React.FC = () => {
       background: '#f7f9fb',
       position: 'relative',
     }}>
+
+      {/* Back Button */}
+      <button
+        onClick={handleNavigateHome}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          padding: '12px 20px',
+          backgroundColor: '#64748b',
+          color: 'white',
+          border: 'none',
+          borderRadius: '8px',
+          fontSize: '14px',
+          fontWeight: '500',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          transition: 'all 0.2s ease',
+          zIndex: 1000,
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = '#475569';
+          e.currentTarget.style.transform = 'translateY(-1px)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = '#64748b';
+          e.currentTarget.style.transform = 'translateY(0)';
+        }}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to List
+      </button>
 
       {/* Success Modal */}
       <SuccessModal
@@ -444,17 +646,6 @@ const DictationPractice: React.FC = () => {
         onPlayAudio={handlePlayAudio}
         onToggleAnswer={handleToggleAnswer}
         onKeyDown={handleKeyDown}
-      />
-      {/* Completion Buttons */}
-      <CompletionButtons
-        currentIndex={currentIndex}
-        vocabListLength={vocabList.length}
-        isCorrect={isCorrect}
-        setIdx={setIdx}
-        totalSets={totalSets}
-        completedSentences={completedSentences}
-        onNavigateHome={handleNavigateHome}
-        onNavigateNextSet={handleNavigateNextSet}
       />
 
       {/* Responsive style */}
@@ -513,6 +704,14 @@ const DictationPractice: React.FC = () => {
           }
           div[style*='max-width: 400px'][style*='padding: 32px'] div[style*='font-size: 16px'] {
             font-size: 14px !important;
+          }
+          
+          /* Back button responsive */
+          button[onclick*='handleNavigateBack'] {
+            top: 10px !important;
+            left: 10px !important;
+            padding: 8px 12px !important;
+            font-size: 12px !important;
           }
         }
       `}</style>

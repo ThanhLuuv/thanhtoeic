@@ -1,5 +1,5 @@
 import React from 'react';
-import { VocabularyItem } from '../../services/toeicVocabularyService';
+import { VocabularyItem } from '../../services';
 
 interface SuccessModalProps {
   showModal: boolean;

@@ -19,11 +19,19 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+console.log('Firebase app initialized:', app);
 
 // Initialize Firebase services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const analytics = getAnalytics(app);
+
+console.log('Firebase services initialized:', {
+  auth: !!auth,
+  db: !!db,
+  storage: !!storage,
+  analytics: !!analytics
+});
 
 export default app;

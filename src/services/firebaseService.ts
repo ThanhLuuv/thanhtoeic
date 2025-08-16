@@ -16,6 +16,7 @@ import {
   QueryDocumentSnapshot
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
+import { COLLECTIONS } from '../constants/collections';
 
 // Base service class for Firebase operations
 export class FirebaseService {
@@ -201,7 +202,4 @@ export class FirebaseService {
 }
 
 // Export singleton instances for different collections
-export const toeicService = new FirebaseService('toeic');
-export const vocabularyService = new FirebaseService('vocabulary');
-export const userService = new FirebaseService('users');
-export const testResultService = new FirebaseService('testResults');
+export const userService = new FirebaseService(COLLECTIONS.USERS);

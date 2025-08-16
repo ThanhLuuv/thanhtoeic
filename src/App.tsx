@@ -9,12 +9,13 @@ import FloatingFeedback from './components/FloatingFeedback';
 import CookieConsent from './components/common/CookieConsent';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
-// import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 import GrammarGamePage from './pages/GrammarGamePage';
+import { firebaseTestService } from './services/firebaseTestService';
 
 // Extend Window interface for Google Analytics
 declare global {
@@ -26,6 +27,18 @@ declare global {
 }
 
 const App: React.FC = () => {
+  // Test Firebase connection on app start
+  React.useEffect(() => {
+    const testFirebase = async () => {
+      console.log('=== Testing Firebase Connection ===');
+      await firebaseTestService.testConnection();
+      await firebaseTestService.testListCollections();
+      console.log('=== Firebase Test Complete ===');
+    };
+    
+    testFirebase();
+  }, []);
+
   const handleCookieAccept = () => {
     // Load Google Analytics when user accepts cookies
     if (window.loadGoogleAnalytics) {
@@ -43,7 +56,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <>
+    <AuthProvider>
       <Routes>
         {/* Authentication routes - no header/footer */}
         <Route path="/login" element={<Login />} />
@@ -77,7 +90,7 @@ const App: React.FC = () => {
         />
       </Routes>
       <CookieConsent onAccept={handleCookieAccept} onDecline={handleCookieDecline} />
-    </>
+    </AuthProvider>
   );
 };
 
