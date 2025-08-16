@@ -104,7 +104,7 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onAccept, onDecline }) =>
             style={{
               padding: '10px 20px',
               border: 'none',
-              background: '#14B24C',
+              background: '#00CCFF',
               color: 'white',
               borderRadius: 6,
               cursor: 'pointer',
@@ -113,10 +113,10 @@ const CookieConsent: React.FC<CookieConsentProps> = ({ onAccept, onDecline }) =>
               transition: 'all 0.2s'
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.background = '#12A045';
+              e.currentTarget.style.background = '#0099CC';
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.background = '#14B24C';
+              e.currentTarget.style.background = '#00CCFF';
             }}
           >
             Chấp nhận
