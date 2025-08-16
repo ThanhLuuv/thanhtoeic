@@ -11,7 +11,7 @@ class ExampleGenerationService {
   private baseUrl: string;
 
   constructor() {
-    this.apiKey = ENV_CONFIG.OPENAI_API_KEY || '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';
+    this.apiKey = ENV_CONFIG.OPENAI_API_KEY;
     this.baseUrl = 'https://api.openai.com/v1';
     
     if (!this.apiKey) {
