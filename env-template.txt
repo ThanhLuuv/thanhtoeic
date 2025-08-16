@@ -1,0 +1,11 @@
+# Copy file này thành .env và điền các API key thực tế
+# API Keys (Vercel Serverless Function sẽ sử dụng REACT_APP_API_KEY_OPENAI)
+REACT_APP_API_KEY_OPENAI=your_openai_api_key_here
+REACT_APP_GEMINI_API_KEY=your_gemini_api_key_here
+REACT_APP_GOOGLE_TTS_KEY=your_google_tts_key_here
+
+# App Configuration
+REACT_APP_APP_NAME=TOEIC Vocabulary Practice
+REACT_APP_VERSION=1.0.0
+
+# Lưu ý: Khi deploy lên Vercel, thêm REACT_APP_API_KEY_OPENAI vào Environment Variables trên Vercel 

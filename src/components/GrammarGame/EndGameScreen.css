@@ -1,0 +1,30 @@
+.end-game {
+  text-align: center;
+  padding: 50px;
+}
+
+.end-game h1 {
+  color: #4a7c59;
+  margin-bottom: 30px;
+}
+
+.end-game-content {
+  background: white;
+  width: fit-content;
+  border-radius: 20px;
+  padding: 40px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.end-game h2 {
+  color: #2d5016;
+  margin-bottom: 20px;
+}
+
+.final-score {
+  font-size: 48px;
+  font-weight: bold;
+  color: #4caf50;
+  margin-bottom: 30px;
+}

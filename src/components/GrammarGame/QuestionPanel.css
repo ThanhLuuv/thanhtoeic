@@ -1,0 +1,17 @@
+.question-panel {
+  background-color: white;
+  border-radius: 20px;
+  padding: 30px;
+  height: fit-content;
+  box-shadow: 0 10px 30px rgba(46, 125, 50, 0.15);
+  border: 2px solid #e8f5e8;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e8f5e8;
+}

@@ -1,0 +1,57 @@
+.auto-next {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px 30px;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  min-width: 300px;
+}
+
+.auto-next.show {
+  opacity: 1;
+  animation: feedbackIn 0.3s ease;
+}
+
+/* Timeout notification */
+.auto-next.timeout {
+  background-color: #2e7d32;
+  color: white;
+}
+
+/* Correct answer notification */
+.auto-next.correct {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* Incorrect answer notification */
+.auto-next.incorrect {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Animation for feedback */
+@keyframes feedbackIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Hover effect */
+.auto-next:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+  transition: transform 0.2s ease;
+}

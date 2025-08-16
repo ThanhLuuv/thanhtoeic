@@ -1,0 +1,41 @@
+.action-buttons-inline {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 2px solid #e8f5e8;
+}
+
+.btn {
+  padding: 12px 30px;
+  border-radius: 25px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  z-index: 5;
+  display: inline-block;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+
+.btn-primary {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #2e7d32;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.btn-primary:disabled {
+  background-color: #c8e6c9;
+  cursor: not-allowed;
+  transform: none;
+}

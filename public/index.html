@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnToeic</title>
+    <link rel="shortcut icon" href="/logo.png" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Analytics will be loaded dynamically after cookie consent -->
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script>
+        // Function to load Google Analytics after cookie consent
+        window.loadGoogleAnalytics = function() {
+            // Load gtag script
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-91RX7SDKEC';
+            document.head.appendChild(script);
+            
+            // Initialize gtag
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-91RX7SDKEC');
+            
+            // Make gtag available globally
+            window.gtag = gtag;
+        };
+        
+        // Check if user has already consented
+        if (localStorage.getItem('cookie-consent') === 'accepted') {
+            window.loadGoogleAnalytics();
+        }
+    </script>
+</body>
+</html>

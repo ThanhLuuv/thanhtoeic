@@ -1,0 +1,59 @@
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.options.single-column {
+  grid-template-columns: 1fr;
+}
+
+.option-btn {
+  background-color: white;
+  border: 2px solid #c8e6c9;
+  border-radius: 15px;
+  padding: 15px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  position: relative;
+}
+
+.option-btn:hover {
+  border-color: #4caf50;
+  background-color: #f1f8e9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.option-btn.selected {
+  background-color: #4caf50;
+  color: white;
+  border-color: #2e7d32;
+}
+
+.option-letter {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.option-btn.selected .option-letter {
+  background-color: white;
+  color: #4caf50;
+}
+
+@media (max-width: 768px) {
+  .options {
+    grid-template-columns: 1fr;
+  }
+}

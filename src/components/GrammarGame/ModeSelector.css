@@ -1,0 +1,188 @@
+.mode-selector {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+
+.mode-btn {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border: 3px solid transparent;
+  padding: 30px 35px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  min-width: 200px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+/* Hiệu ứng shine */
+.mode-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  transition: left 0.8s ease;
+  z-index: 1;
+}
+
+.mode-btn:hover::after {
+  left: 100%;
+}
+
+/* Hiệu ứng hover */
+.mode-btn:hover:not(.selected) {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 
+    0 15px 35px rgba(76, 175, 80, 0.3),
+    0 8px 25px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 3px solid #4caf50;
+}
+
+/* Hiệu ứng floating particles */
+.mode-btn:hover:not(.selected) .mode-title::before {
+  content: '✨';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  animation: float 2s ease-in-out infinite;
+}
+
+.mode-btn:hover:not(.selected) .mode-title::after {
+  content: '🎯';
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  font-size: 14px;
+  animation: float 2s ease-in-out infinite 0.5s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(10deg); }
+}
+
+.mode-title {
+  font-weight: 800;
+  font-size: 20px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 2;
+  color: #2d5016;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
+}
+
+.mode-desc {
+  font-size: 14px;
+  opacity: 0.85;
+  position: relative;
+  z-index: 2;
+  line-height: 1.5;
+  color: #4a7c59;
+  font-weight: 500;
+}
+
+/* Trạng thái selected */
+.mode-btn.selected {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 
+    0 15px 40px rgba(76, 175, 80, 0.5),
+    0 8px 25px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.mode-btn.selected .mode-title {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.mode-btn.selected .mode-desc {
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Hiệu ứng pulse cho selected
+.mode-btn.selected::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #4caf50, #66bb6a, #81c784, #4caf50);
+  border-radius: 25px;
+  z-index: -1;
+  opacity: 1;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.02); }
+} */
+
+/* Hiệu ứng sparkle cho selected */
+.mode-btn.selected .mode-title::before {
+  content: '🌟';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: translateX(-50%) scale(1.2) rotate(180deg); opacity: 0.8; }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .mode-selector {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 15px;
+  }
+
+  .mode-btn {
+    min-width: 300px;
+    padding: 25px 30px;
+  }
+  
+  .mode-title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mode-btn {
+    min-width: 280px;
+    padding: 22px 25px;
+  }
+
+  .mode-title {
+    font-size: 16px;
+  }
+
+  .mode-desc {
+    font-size: 13px;
+  }
+}
