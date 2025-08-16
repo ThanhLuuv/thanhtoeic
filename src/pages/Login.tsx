@@ -76,12 +76,7 @@ const Login: React.FC = () => {
       <div className="relative z-10 max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-20 w-20 bg-[#00CCFF] rounded-full flex items-center justify-center mb-6">
-            <svg className="h-12 w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-white mb-2">Welcome Back Antoeic</h2>
+          <h2 className="text-3xl font-bold text-white mb-2">Welcome Back T-Toeic</h2>
         </div>
 
         {/* Login Form */}
