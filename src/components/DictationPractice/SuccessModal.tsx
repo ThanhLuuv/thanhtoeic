@@ -204,10 +204,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                 textAlign: 'center',
                 fontWeight: '500'
               }}>
-                Câu mẫu {currentExampleIndex + 1}/{currentExamples.length}
-                <span style={{ color: '#059669', marginLeft: '8px' }}>
-                  (Từ database)
-                </span>
+                Example {currentExampleIndex + 1}/{currentExamples.length}
               </div>
             )}
             
@@ -265,7 +262,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                     opacity: currentExampleIndex === 0 ? 0.5 : 1
                   }}
                 >
-                  ← Trước
+                  ← Previous
                 </button>
                 <button
                   onClick={onNextExample}
@@ -282,7 +279,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                     opacity: currentExampleIndex === currentExamples.length - 1 ? 0.5 : 1
                   }}
                 >
-                  Tiếp →
+                  Next →
                 </button>
               </div>
             )}
