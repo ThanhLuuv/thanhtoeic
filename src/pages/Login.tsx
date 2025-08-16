@@ -79,7 +79,7 @@ const Login: React.FC = () => {
       <div className="relative z-10 max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-20 w-20 bg-green-600 rounded-full flex items-center justify-center mb-6">
+          <div className="mx-auto h-20 w-20 bg-[#00CCFF] rounded-full flex items-center justify-center mb-6">
             <svg className="h-12 w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
@@ -108,7 +108,7 @@ const Login: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-[50px] text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-[50px] text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00CCFF] focus:border-[#00CCFF] transition-colors"
                   placeholder="Enter your email address"
                   autoComplete="email"
                 />
@@ -133,7 +133,7 @@ const Login: React.FC = () => {
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-[50px] text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                  className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-[50px] text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00CCFF] focus:border-[#00CCFF] transition-colors"
                   placeholder="Enter your password"
                   autoComplete="current-password"
                 />
@@ -176,7 +176,7 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-[50px] text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-[50px] text-sm font-medium text-white bg-[#00CCFF] hover:bg-[#0099CC] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00CCFF] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? (
                 <div className="flex items-center">
@@ -208,7 +208,7 @@ const Login: React.FC = () => {
           <div className="mt-6 text-center">
             <Link
               to="/register"
-              className="font-medium text-green-600 hover:text-green-500 transition-colors"
+              className="font-medium text-[#00CCFF] hover:text-[#0099CC] transition-colors"
             >
               Create a new account
             </Link>
