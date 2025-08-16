@@ -68,7 +68,7 @@ const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
       {/* Background with blur */}
       <div className="absolute inset-0" style={{
-        backgroundColor: '#00CCFF',
+        backgroundColor: 'rgb(0 204 255 / 7%)',
         filter: 'blur(10px)'
       }}></div>
       
@@ -76,7 +76,7 @@ const Login: React.FC = () => {
       <div className="relative z-10 max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-white mb-2">Welcome Back T-Toeic</h2>
+          <h2 className="text-3xl font-bold text-gray-700 mb-2">Welcome Back T-Toeic</h2>
         </div>
 
         {/* Login Form */}
