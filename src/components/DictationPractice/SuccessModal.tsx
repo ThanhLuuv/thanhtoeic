@@ -40,6 +40,17 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   onNextExample,
   onPrevExample,
 }) => {
+  // Debug logging
+  console.log('[SuccessModal] Props:', {
+    showModal,
+    isCorrect,
+    showNextButton,
+    item: item?.word,
+    currentExamples: currentExamples.length,
+    currentExampleIndex,
+    exampleSentence: !!exampleSentence
+  });
+
   if (!showModal || !isCorrect || !showNextButton) {
     return null;
   }
@@ -194,6 +205,9 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                 fontWeight: '500'
               }}>
                 Câu mẫu {currentExampleIndex + 1}/{currentExamples.length}
+                <span style={{ color: '#059669', marginLeft: '8px' }}>
+                  (Từ database)
+                </span>
               </div>
             )}
             

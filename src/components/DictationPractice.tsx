@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { toeicVocabularyService, ToeicVocabulary, VocabularyItem } from '../services';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { vocabularyService, ToeicVocabulary, VocabularyItem } from '../services';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
   useAudioManager,
@@ -66,7 +66,7 @@ const DictationPractice: React.FC = () => {
         console.log(`[DictationPractice] Loading vocabulary for topic: ${topicFromUrl}, set index: ${topicSetIndex}`);
         
         // Get the specific vocabulary set by topic and set index
-        const currentSetVocab = await toeicVocabularyService.getVocabularySetByTopicAndSetIndex(topicFromUrl, topicSetIndex);
+        const currentSetVocab = await vocabularyService.getVocabularySetByTopicAndSetIndex(topicFromUrl, topicSetIndex);
         
         console.log(`[DictationPractice] Loaded vocabulary set:`, {
           topic: topicFromUrl,
@@ -77,13 +77,13 @@ const DictationPractice: React.FC = () => {
         
         // Convert ToeicVocabulary to VocabularyItem format
         const vocabItems: VocabularyItem[] = currentSetVocab.map((vocab: ToeicVocabulary) => 
-          toeicVocabularyService.convertToVocabularyItem(vocab)
+          vocabularyService.convertToVocabularyItem(vocab)
         );
         
         setVocabList(vocabItems);
         
         // Get total sets count for navigation
-        const totalSetsCount = await toeicVocabularyService.getTotalSetsCount();
+        const totalSetsCount = await vocabularyService.getTotalSetsCount();
         setTotalSets(totalSetsCount);
         
         // Reset user inputs and results for the new set
@@ -177,13 +177,13 @@ const DictationPractice: React.FC = () => {
       setIsGeneratingExample(true);
       setExampleError(null);
       
-      // Call OpenAI service to generate new example
+      // Call OpenAI service to generate new example with topic
       const result = await exampleGenerationService.generateExampleSentence({
         word: item.word,
         meaning: item.meaning,
         type: item.type,
         existingExamples: currentExamples.map(ex => ex.englishSentence)
-      });
+      }, topicFromUrl);
       
       if (result.exampleSentence) {
         const newExample = {
@@ -239,6 +239,9 @@ const DictationPractice: React.FC = () => {
     if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex > 0) {
       const item = vocabList[currentIndex];
       handlePlayAudio(item.audio, item.word);
+      
+      // Load examples from database for new word
+      loadExamplesFromDatabase(item.word);
     }
     setShowAnswer(false);
     // Chỉ reset showModal khi thực sự chuyển sang từ mới, không phải khi đang check
@@ -246,41 +249,162 @@ const DictationPractice: React.FC = () => {
     if (!isChecked && currentIndex > 0) {
       setShowModal(false);
     }
+    
+    // Don't reset examples here, let loadExamplesFromDatabase handle it
     setExampleSentence(null); // Reset example sentence when moving to next word
     setGeneratedExamples([]); // Reset generated examples for new word
-    setCurrentExamples([]); // Reset current examples
-    setCurrentExampleIndex(0); // Reset example index
     setExampleError(null);
+    
+    // Focus input when moving to new word
     if (inputRef.current) {
       inputRef.current.focus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex, isLoading, isSetLoaded]);
 
-  // Khi vocabList thay đổi (load set mới), kiểm tra examples của từ đầu tiên
+  // Khi vocabList thay đổi (load set mới), kiểm tra examples của từ đầu tiên và focus input
   useEffect(() => {
     if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex === 0) {
       const item = vocabList[currentIndex];
       handlePlayAudio(item.audio, item.word);
       
-      // Check if examples are available
-      if (item.exampleSentences && Array.isArray(item.exampleSentences) && item.exampleSentences.length > 0) {
-        // Convert to ExampleSentence format if needed
-        const examples: ExampleSentence[] = item.exampleSentences.map((ex: any) => ({
-          englishSentence: ex.englishSentence || ex.english || '',
-          vietnameseTranslation: ex.vietnameseTranslation || ex.vietnamese || '',
-          contextInfo: ex.contextInfo || ex.context || '',
-        }));
+      // Load existing examples from database first
+      loadExamplesFromDatabase(item.word);
+      
+      // Focus input when starting new set
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }
+  }, [vocabList, isLoading, isSetLoaded, currentIndex]);
+
+  // Load examples from database for current word
+  const loadExamplesFromDatabase = async (word: string) => {
+    try {
+      console.log(`[DictationPractice] Loading examples from database for word: "${word}"`);
+      
+      // Import exampleService dynamically
+      const { exampleService } = await import('../services/exampleService');
+      const storedExamples = await exampleService.getExampleSentencesByWord(word);
+      
+      console.log(`[DictationPractice] Found ${storedExamples.length} examples in database for word "${word}"`);
+      
+      if (storedExamples.length > 0) {
+        const examples = storedExamples.map(stored => 
+          exampleService.convertToExampleSentence(stored)
+        );
+        
+        console.log(`[DictationPractice] Setting examples:`, examples);
+        
         setCurrentExamples(examples);
         setCurrentExampleIndex(0);
         setExampleSentence(examples[0]);
+        
+        console.log(`[DictationPractice] Successfully loaded ${examples.length} examples from database for word "${word}"`);
       } else {
+        console.log(`[DictationPractice] No examples found in database for word "${word}"`);
+        // Only reset if no examples found in database
         setCurrentExamples([]);
         setCurrentExampleIndex(0);
         setExampleSentence(null);
       }
+    } catch (error) {
+      console.error('Error loading examples from database:', error);
+      // Don't show error to user, just log it
     }
-  }, [vocabList, isLoading, isSetLoaded, currentIndex]);
+  };
+
+  // Load examples when currentIndex changes (for any word)
+  useEffect(() => {
+    if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex >= 0) {
+      const item = vocabList[currentIndex];
+      if (item) {
+        console.log(`[DictationPractice] Current word changed to: "${item.word}", loading examples...`);
+        loadExamplesFromDatabase(item.word);
+      }
+    }
+  }, [currentIndex, vocabList, isLoading, isSetLoaded]);
+
+  // Focus input when set is loaded (with delay to ensure DOM is ready)
+  useEffect(() => {
+    if (vocabList.length > 0 && !isLoading && isSetLoaded) {
+      // Small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [vocabList, isLoading, isSetLoaded]);
+
+  // Force focus input when component is ready (for page reload and initial load)
+  useEffect(() => {
+    if (vocabList.length > 0 && !isLoading && isSetLoaded) {
+      // Multiple attempts to focus with increasing delays
+      const focusAttempts = [50, 150, 300, 500];
+      
+      focusAttempts.forEach(delay => {
+        const timer = setTimeout(() => {
+          if (inputRef.current) {
+            inputRef.current.focus();
+            console.log(`[DictationPractice] Focus attempt after ${delay}ms`);
+          }
+        }, delay);
+        
+        return () => clearTimeout(timer);
+      });
+    }
+  }, [vocabList.length, isLoading, isSetLoaded]);
+
+  // Additional focus when currentIndex is 0 (first word of set)
+  useEffect(() => {
+    if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex === 0) {
+      const timer = setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          console.log('[DictationPractice] Focus on first word');
+        }
+      }, 200);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [vocabList.length, isLoading, isSetLoaded, currentIndex]);
+
+  // Use useLayoutEffect to focus input immediately after DOM render
+  useLayoutEffect(() => {
+    if (vocabList.length > 0 && !isLoading && isSetLoaded) {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        console.log('[DictationPractice] useLayoutEffect focus');
+      }
+    }
+  }, [vocabList.length, isLoading, isSetLoaded]);
+
+  // Use requestAnimationFrame to ensure focus after browser render
+  useEffect(() => {
+    if (vocabList.length > 0 && !isLoading && isSetLoaded) {
+      requestAnimationFrame(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          console.log('[DictationPractice] requestAnimationFrame focus');
+        }
+      });
+    }
+  }, [vocabList.length, isLoading, isSetLoaded]);
+
+  // Use setTimeout with 0 delay to ensure focus after all state updates
+  useEffect(() => {
+    if (vocabList.length > 0 && !isLoading && isSetLoaded) {
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          console.log('[DictationPractice] setTimeout 0 focus');
+        }
+      }, 0);
+    }
+  }, [vocabList.length, isLoading, isSetLoaded]);
 
   // Load completed sentences count from localStorage
   useEffect(() => {
@@ -323,156 +447,45 @@ const DictationPractice: React.FC = () => {
   // The handleKeyDown function in MainPracticeCard handles all keyboard events
 
   if (isLoading) return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: '#f7f9fb',
-    }}>
-      <div style={{
-        textAlign: 'center',
-        padding: '40px',
-        backgroundColor: 'white',
-        borderRadius: '16px',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-        maxWidth: '400px',
-        width: '90%',
-      }}>
-        <div style={{
-          width: '48px',
-          height: '48px',
-          border: '4px solid #e2e8f0',
-          borderTop: '4px solid #3b82f6',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-          margin: '0 auto 20px',
-        }}></div>
-        <h3 style={{
-          fontSize: '24px',
-          fontWeight: 'bold',
-          color: '#1e293b',
-          marginBottom: '12px',
-        }}>
-          Đang tải...
-        </h3>
-        <p style={{
-          fontSize: '16px',
-          color: '#64748b',
-          margin: 0,
-        }}>
-          Đang tải dữ liệu từ vựng
-        </p>
+    <div className="min-h-screen bg-slate-50">
+      <div className="container mx-auto px-6 py-12 max-w-6xl">
+        <div className="text-center py-20">
+          <h3 className="text-2xl font-bold text-gray-800 mb-3">Loading...</h3>
+        </div>
       </div>
     </div>
   );
   
   if (error) return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: '#f7f9fb',
-    }}>
-      <div style={{
-        textAlign: 'center',
-        padding: '40px',
-        backgroundColor: 'white',
-        borderRadius: '16px',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-        maxWidth: '400px',
-        width: '90%',
-      }}>
-        <div style={{
-          width: '64px',
-          height: '64px',
-          margin: '0 auto 20px',
-          color: '#ef4444',
-        }}>
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-          </svg>
+    <div className="min-h-screen bg-slate-50">
+      <div className="container mx-auto px-6 py-12 max-w-6xl">
+        <div className="text-center py-20">
+          <h3 className="text-xl font-bold text-gray-800 mb-3">Error</h3>
+          <p className="text-gray-600">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Try again
+          </button>
         </div>
-        <h3 style={{
-          fontSize: '24px',
-          fontWeight: 'bold',
-          color: '#1e293b',
-          marginBottom: '12px',
-        }}>
-          Có lỗi xảy ra
-        </h3>
-        <p style={{
-          fontSize: '16px',
-          color: '#64748b',
-          marginBottom: '24px',
-        }}>
-          {error}
-        </p>
-        <button 
-          onClick={() => window.location.reload()} 
-          style={{
-            backgroundColor: '#3b82f6',
-            color: 'white',
-            border: 'none',
-            padding: '12px 24px',
-            borderRadius: '8px',
-            fontSize: '16px',
-            fontWeight: '500',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3b82f6'}
-        >
-          Thử lại
-        </button>
       </div>
     </div>
   );
   
   if (vocabList.length === 0) return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: '#f7f9fb',
-    }}>
-      <div style={{
-        textAlign: 'center',
-        padding: '40px',
-        backgroundColor: 'white',
-        borderRadius: '16px',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-        maxWidth: '400px',
-        width: '90%',
-      }}>
-        <div style={{
-          width: '64px',
-          height: '64px',
-          margin: '0 auto 20px',
-          color: '#64748b',
-        }}>
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-          </svg>
+    <div className="min-h-screen bg-slate-50">
+      <div className="container mx-auto px-6 py-12 max-w-6xl">
+        <div className="text-center py-20">
+          <h3 className="text-2xl font-bold text-gray-800 mb-3">No data available!</h3>
+          <p className="text-gray-600 mb-4">There are no vocabulary sets available at the moment.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Refresh
+          </button>
         </div>
-        <h3 style={{
-          fontSize: '24px',
-          fontWeight: 'bold',
-          color: '#1e293b',
-          marginBottom: '12px',
-        }}>
-          Không có dữ liệu
-        </h3>
-        <p style={{
-          fontSize: '16px',
-          color: '#64748b',
-          margin: 0,
-        }}>
-          Không có từ vựng nào khả dụng
-        </p>
       </div>
     </div>
   );

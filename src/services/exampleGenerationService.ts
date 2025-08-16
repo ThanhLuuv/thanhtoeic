@@ -11,7 +11,7 @@ class ExampleGenerationService {
   private baseUrl: string;
 
   constructor() {
-    this.apiKey = ENV_CONFIG.OPENAI_API_KEY;
+    this.apiKey = ENV_CONFIG.OPENAI_API_KEY || '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';
     this.baseUrl = 'https://api.openai.com/v1';
     
     if (!this.apiKey) {
@@ -20,11 +20,11 @@ class ExampleGenerationService {
   }
 
   /**
-   * Generate example sentence using OpenAI API
-   * API key được gửi qua backend để bảo mật
+   * Generate example sentence using OpenAI API and save to database
    */
   async generateExampleSentence(
-    request: GenerateExampleRequest
+    request: GenerateExampleRequest,
+    topic?: string
   ): Promise<ExampleSentenceResponse> {
     try {
       if (!this.apiKey) {
@@ -95,6 +95,12 @@ Trả về JSON với format:
         const jsonMatch = content.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           const parsedResponse = JSON.parse(jsonMatch[0]);
+          
+          // Save to database if generation was successful
+          if (parsedResponse.exampleSentence) {
+            await this.saveExampleToDatabase(request.word, parsedResponse.exampleSentence, topic);
+          }
+          
           return parsedResponse;
         } else {
           throw new Error('Không tìm thấy JSON trong response');
@@ -108,6 +114,30 @@ Trả về JSON với format:
     } catch (error) {
       console.error('Error generating example:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Save generated example to database
+   */
+  private async saveExampleToDatabase(word: string, example: any, topic?: string): Promise<void> {
+    try {
+      // Import exampleService dynamically to avoid circular dependency
+      const { exampleService } = await import('./exampleService');
+      
+      await exampleService.createExampleSentence({
+        word: word.toLowerCase(),
+        englishSentence: example.english,
+        vietnameseTranslation: example.vietnamese,
+        contextInfo: example.context,
+        topic: topic || 'Other',
+      });
+      
+      console.log(`[ExampleGenerationService] Saved example for word "${word}" to database`);
+    } catch (error) {
+      console.error('Error saving example to database:', error);
+      // Don't throw error here, just log it
+      // The example generation was successful, we just couldn't save it
     }
   }
 

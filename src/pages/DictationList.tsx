@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toeicVocabularyService, ToeicVocabulary, VocabSetByTopic } from '../services';
+import { vocabularyService, ToeicVocabulary, VocabSetByTopic } from '../services';
 
 // Constants
 const WORDS_PER_SET = 20;
@@ -96,7 +96,7 @@ const useVocabularyData = () => {
       setLoading(true);
       setError(null);
       
-      const vocabSetsByTopicData = await toeicVocabularyService.getVocabularySetsByTopic();
+      const vocabSetsByTopicData = await vocabularyService.getVocabularySetsByTopic();
       setVocabSetsByTopic(vocabSetsByTopicData);
       
     } catch (error) {
@@ -186,7 +186,7 @@ const VocabSetCard: React.FC<{
               style={{ background: '#0284c7' }}
             ></div>
             <h3 className="text-lg font-bold text-slate-800">
-              {topic} - Set {topicSetIndex !== undefined ? topicSetIndex + 1 : originalIdx + 1}
+              Set {topicSetIndex !== undefined ? topicSetIndex + 1 : originalIdx + 1}
             </h3>
           </div>
           {isCompleted && (
