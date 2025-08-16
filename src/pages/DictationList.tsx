@@ -139,7 +139,7 @@ const useCompletedSets = () => {
 // Components
 const LoadingSpinner: React.FC = () => (
   <div className="text-center py-20">
-      <h3 className="text-2xl font-bold text-gray-800 mb-3">Đang tải...</h3>
+      <h3 className="text-2xl font-bold text-gray-800 mb-3">Loading...</h3>
   </div>
 );
 
@@ -151,7 +151,7 @@ const ErrorMessage: React.FC<{ error: string }> = ({ error }) => (
         onClick={() => window.location.reload()} 
         className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
       >
-        Thử lại
+        Try again
       </button>
   </div>
 );
