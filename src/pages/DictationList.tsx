@@ -101,6 +101,7 @@ const useVocabularyData = () => {
       setVocabSetsByTopic(vocabSetsByTopicData);
       
     } catch (error) {
+      console.error('Error loading vocabulary:', error);
       setError('Failed to load vocabulary data. Please try again.');
       setVocabSetsByTopic([]);
     } finally {
@@ -178,7 +179,7 @@ const VocabSetCard: React.FC<{
           <div className={styles.cardTitleSection}>
             <div className={styles.cardIndicator}></div>
             <h3 className={styles.cardTitle}>
-              Set {topicSetIndex !== undefined ? topicSetIndex + 1 : originalIdx + 1}
+              Vocabulary
             </h3>
           </div>
           {isCompleted && (
@@ -256,6 +257,15 @@ const DictationList: React.FC = () => {
     loadVocabularyData();
     loadCompletedSets();
   }, [loadVocabularyData, loadCompletedSets]);
+
+  // Simple logging for debugging
+  useEffect(() => {
+    if (vocabSetsByTopic.length > 0) {
+      console.log(`DictationList: ${vocabSetsByTopic.length} topics loaded`);
+      const topics = vocabSetsByTopic.map(t => t.topic);
+      console.log('Topics:', topics);
+    }
+  }, [vocabSetsByTopic]);
 
   // Handle set click
   const handleSetClick = useCallback((originalIdx: number, topic: string, topicSetIndex: number) => {

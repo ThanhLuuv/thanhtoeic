@@ -28,7 +28,7 @@ class ExampleGenerationService {
   ): Promise<ExampleSentenceResponse> {
     try {
       if (!this.apiKey) {
-        throw new Error('OpenAI API key không được cấu hình');
+        throw new Error('Error creating example sentence');
       }
 
       // Tạo danh sách các câu đã tồn tại để tránh trùng lặp

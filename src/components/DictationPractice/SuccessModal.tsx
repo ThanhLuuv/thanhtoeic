@@ -41,16 +41,6 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   onNextExample,
   onPrevExample,
 }) => {
-  // Debug logging
-  console.log('[SuccessModal] Props:', {
-    showModal,
-    isCorrect,
-    showNextButton,
-    item: item?.word,
-    currentExamples: currentExamples.length,
-    currentExampleIndex,
-    exampleSentence: !!exampleSentence
-  });
 
   if (!showModal || !isCorrect || !showNextButton) {
     return null;
@@ -59,18 +49,13 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h2 className={styles.title}>
-          Correct!
-        </h2>
         <div className={styles.wordCard}>
           <div className={styles.meaning}>
             {item.meaning}
           </div>
-          <div className={styles.phonetic}>
-            {item.phonetic}
-          </div>
-          <div className={styles.word}>
-            {item.word}
+          <div className={styles.wordRow}>
+            <span className={styles.word}>{item.word}</span>
+            <span className={styles.phonetic}>{item.phonetic}</span>
           </div>
         </div>
 
@@ -87,7 +72,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
             </>
           ) : (
             <>
-              {currentExamples.length > 0 ? 'Create New Example' : 'Create Example'}
+              {currentExamples.length > 0 ? 'Create new example' : 'Create example'}
             </>
           )}
         </button>
@@ -150,14 +135,16 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
         >
           {currentIndex === vocabListLength - 1 
             ? (setIdx < totalSets - 1 ? 'Next Set →' : 'Finish →')
-            : 'Next Word →'
+            : '→'
           }
         </button>
-        
-        {/* Keyboard shortcut hint */}
-        <div className={styles.keyboardHint}>
-          Press <kbd>Enter</kbd> to continue
-        </div>
+        {
+          (
+            <div className={styles.keyboardHint}>
+              Press <kbd>Enter</kbd> to continue
+            </div>
+          )
+        }
       </div>
     </div>
   );

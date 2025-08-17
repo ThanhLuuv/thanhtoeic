@@ -200,15 +200,11 @@ const DictationPractice: React.FC = () => {
         justCheckedRef.current = false;
       }, 500);
       
-      // Play success sound and wait for it to finish, then play word audio
+      // Play success sound only, don't play word audio to avoid duplicate audio
       try {
         await playSuccessSound();
-        // Play word audio after success sound finishes
-        handlePlayAudio(currentItem.audio, currentItem.word);
       } catch (error) {
         console.error('Error playing success sound:', error);
-        // If success sound fails, still play word audio
-        handlePlayAudio(currentItem.audio, currentItem.word);
       }
     } else {
       // Play error sound in background (non-blocking)
@@ -339,7 +335,7 @@ const DictationPractice: React.FC = () => {
     }
     
     // Only reset states when moving to a new word, not on initial load
-    if (currentIndex > 0 || hasPlayedInitialAudio) {
+    if (currentIndex > 0) {
       if (isMounted) {
         setShowAnswer(false);
         // Chỉ reset showModal khi thực sự chuyển sang từ mới, không phải khi đang check
@@ -363,7 +359,7 @@ const DictationPractice: React.FC = () => {
       isMounted = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentIndex, isLoading, isSetLoaded, hasPlayedInitialAudio]);
+  }, [currentIndex, isLoading, isSetLoaded]); // Remove hasPlayedInitialAudio dependency to prevent audio replay
 
   // Khi vocabList thay đổi (load set mới), kiểm tra examples của từ đầu tiên và focus input
   useEffect(() => {
@@ -413,12 +409,13 @@ const DictationPractice: React.FC = () => {
 
   // Load examples when currentIndex changes (for any word)
   useEffect(() => {
-    
-    
     if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex >= 0) {
       const item = vocabList[currentIndex];
       if (item) {
-        loadExamplesFromDatabase(item.word);
+        // Only load examples when moving to a new word, not when checking answers
+        if (!justCheckedRef.current) {
+          loadExamplesFromDatabase(item.word);
+        }
       }
     }
   }, [currentIndex, vocabList, isLoading, isSetLoaded]);
@@ -455,8 +452,6 @@ const DictationPractice: React.FC = () => {
 
   // Handle audio when vocabList changes (new set loaded) - only play once when set is first loaded
   useEffect(() => {
-    
-    
     let isMounted = true;
     
     if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex === 0 && !hasPlayedInitialAudio) {
@@ -478,7 +473,7 @@ const DictationPractice: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [vocabList, isLoading, isSetLoaded, hasPlayedInitialAudio]); // Added hasPlayedInitialAudio dependency
+  }, [vocabList, isLoading, isSetLoaded]); // Remove hasPlayedInitialAudio dependency to prevent infinite loop
 
   // Safety check to ensure currentIndex is within bounds
   const safeCurrentIndex = Math.min(currentIndex, vocabList.length - 1);
@@ -500,17 +495,15 @@ const DictationPractice: React.FC = () => {
       setCompletedSentences(completedCount);
       localStorage.setItem('vocab-completed-sentences', JSON.stringify(completedCount));
     }
-  }, [result, completedSentences]);
+  }, [result]); // Remove completedSentences dependency to prevent infinite loop
 
   // Reset result array when vocabList changes (only when length actually changes)
   useEffect(() => {
-    
-    
     if (vocabList.length > 0 && (result.length !== vocabList.length || userInputs.length !== vocabList.length)) {
       setResult(Array(vocabList.length).fill(null));
       setUserInputs(Array(vocabList.length).fill(''));
     }
-  }, [vocabList.length, userInputs.length]); // Removed result.length dependency to prevent infinite loop
+  }, [vocabList.length]); // Remove userInputs.length dependency to prevent infinite loop
 
   // Reset states when currentIndex changes (when navigating between words)
   useEffect(() => {
@@ -520,7 +513,7 @@ const DictationPractice: React.FC = () => {
       setShowAnswer(false);
       setShowModal(false);
     }
-  }, [currentIndex, hasPlayedInitialAudio]);
+  }, [currentIndex]); // Remove hasPlayedInitialAudio dependency to prevent infinite loop
 
   // Global keyboard event listener for Enter key when modal is shown
   useEffect(() => {

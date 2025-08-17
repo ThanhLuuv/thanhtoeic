@@ -1,4 +1,3 @@
-import { query, where } from 'firebase/firestore';
 import { COLLECTIONS } from '../constants/collections';
 import type { 
   ToeicVocabulary, 
@@ -57,7 +56,8 @@ class VocabularyService extends BaseVocabularyService {
   }
 
   async getActiveVocabulary(): Promise<ToeicVocabulary[]> {
-    return this.getWhere('isActive', true);
+    // Thay vì filter isActive, lấy tất cả vocabulary như Admin
+    return this.getAll<ToeicVocabulary>();
   }
 
   async getVocabularyById(id: string): Promise<ToeicVocabulary | null> {
@@ -168,20 +168,9 @@ class VocabularyService extends BaseVocabularyService {
         }
       });
       
-      console.log(`[VocabularyService] Requested set index: ${setIndex}`);
-      console.log(`[VocabularyService] Total available sets: ${allSets.length}`);
-      console.log(`[VocabularyService] All sets:`, allSets.map((set, idx) => ({
-        index: idx,
-        count: set.length,
-        firstWord: set[0]?.word || 'N/A'
-      })));
       
       if (setIndex >= 0 && setIndex < allSets.length) {
         const selectedSet = allSets[setIndex];
-        console.log(`[VocabularyService] Selected set ${setIndex}:`, {
-          count: selectedSet.length,
-          words: selectedSet.map(v => v.word)
-        });
         return selectedSet;
       } else {
         throw new Error(
@@ -197,8 +186,6 @@ class VocabularyService extends BaseVocabularyService {
   // New method: Get vocabulary set by topic and set index
   async getVocabularySetByTopicAndSetIndex(topicName: string, setIndex: number): Promise<ToeicVocabulary[]> {
     try {
-      console.log(`[VocabularyService] Getting vocabulary for topic: ${topicName}, set index: ${setIndex}`);
-      
       // Get all vocabulary for the specific topic
       let topicVocabulary: ToeicVocabulary[] = [];
       
@@ -221,13 +208,10 @@ class VocabularyService extends BaseVocabularyService {
       
       // Remove duplicates and sort
       const uniqueVocabulary = VocabularyTransformer.removeDuplicates(topicVocabulary);
-      console.log(`[VocabularyService] Found ${uniqueVocabulary.length} unique words for topic "${topicName}"`);
       
       // Calculate start and end index for the set
       const startIndex = setIndex * WORDS_PER_SET;
       const endIndex = startIndex + WORDS_PER_SET;
-      
-      console.log(`[VocabularyService] Set ${setIndex}: words ${startIndex} to ${endIndex - 1}`);
       
       if (startIndex >= uniqueVocabulary.length) {
         throw new Error(`Set index ${setIndex} is out of range for topic "${topicName}". Available words: ${uniqueVocabulary.length}`);
@@ -235,12 +219,6 @@ class VocabularyService extends BaseVocabularyService {
       
       // Get the words for this set
       const setWords = uniqueVocabulary.slice(startIndex, endIndex);
-      
-      console.log(`[VocabularyService] Returning ${setWords.length} words for set ${setIndex}:`, {
-        startIndex,
-        endIndex,
-        words: setWords.map(v => v.word)
-      });
       
       return setWords;
     } catch (error) {

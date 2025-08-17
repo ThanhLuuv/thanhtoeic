@@ -1,10 +1,4 @@
 import React from 'react';
-import { 
-  ArrowBack, 
-  CheckCircle, 
-  ArrowForward, 
-  FastForward 
-} from '@mui/icons-material';
 import styles from './ActionButtons.module.css';
 
 interface ActionButton {

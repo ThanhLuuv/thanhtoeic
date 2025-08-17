@@ -148,7 +148,7 @@
   transition: all 0.3s ease;
   transform: translateY(0);
   background: white;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--primary-dark);
 }
 
 .vocabCard:hover {
@@ -167,9 +167,13 @@
 }
 
 .cardHeader {
+  position: relative;
   display: flex;
+  background-color: var(--primary-dark);
+  border-radius: 0.75rem;
   align-items: center;
-  justify-content: space-between;
+  color: white;
+  justify-content: center;
 }
 
 .cardTitleSection {
@@ -188,16 +192,20 @@
 .cardTitle {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #1e293b;
+  text-align: center;
 }
 
 .completedBadge {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
   background: var(--primary-color);
   color: white;
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
   border-radius: 9999px;
   font-weight: 700;
+  z-index: 10;
 }
 
 .cardInfo {
@@ -250,7 +258,7 @@
 }
 
 .progressFill.completed {
-  background: var(--primary-color);
+  background: var(--primary-dark);
   width: 100%;
 }
 

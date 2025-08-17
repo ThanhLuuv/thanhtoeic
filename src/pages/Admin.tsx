@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { adminService, Topic, Vocabulary } from '../services/adminService';
@@ -26,6 +26,7 @@ const Admin: React.FC = () => {
   const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string; type: 'topic' | 'vocabulary' } | null>(null);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; text: string; visible: boolean } | null>(null);
   const [ttsConfig, setTTSConfig] = useState<TTSConfig>(defaultTTSConfig);
+  const wordInputRef = useRef<HTMLInputElement>(null);
 
   // Topic form state
   const [topicForm, setTopicForm] = useState<Topic>({
@@ -59,6 +60,13 @@ const Admin: React.FC = () => {
     loadTopics();
     loadVocabularies();
   }, [currentUser, navigate]);
+
+  // Simple logging for debugging
+  useEffect(() => {
+    if (topics.length > 0 && vocabularies.length > 0) {
+      console.log(`Admin: ${topics.length} topics, ${vocabularies.length} vocabulary items`);
+    }
+  }, [topics, vocabularies]);
 
   const loadTopics = async () => {
     try {
@@ -152,13 +160,18 @@ const Admin: React.FC = () => {
       // Update local state
       setVocabularies(prev => [newVocab, ...prev]);
       
-      // Reset form
+      // Reset form but keep the selected topic
       setVocabForm({
         word: '',
         type: '',
         meaning: '',
-        topicId: ''
+        topicId: vocabForm.topicId // Keep the selected topic
       });
+      
+      // Focus back to word input for quick entry
+      setTimeout(() => {
+        wordInputRef.current?.focus();
+      }, 100);
       
     } catch (error) {
       setToast({ type: 'error', text: 'Failed to create vocabulary', visible: true });
@@ -387,6 +400,65 @@ const Admin: React.FC = () => {
     } catch (error) {
       console.error('Import error:', error);
       setToast({ type: 'error', text: 'Failed to import vocabulary from data.json', visible: true });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleExportData = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Prepare export data
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        topics: topics.map(topic => ({
+          id: topic.id,
+          name: topic.name,
+          description: topic.description,
+          category: topic.category,
+          difficulty: topic.difficulty,
+          isActive: topic.isActive
+        })),
+        vocabulary: vocabularies.map(vocab => ({
+          id: vocab.id,
+          word: vocab.word,
+          type: vocab.type,
+          meaning: vocab.meaning,
+          phonetic: vocab.phonetic,
+          audio: vocab.audio,
+          topicId: vocab.topicId,
+          topicName: topics.find(t => t.id === vocab.topicId)?.name || 'Unknown Topic'
+        }))
+      };
+
+      // Create and download JSON file
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `firebase-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      URL.revokeObjectURL(url);
+      
+      setToast({ 
+        type: 'success', 
+        text: `Successfully exported ${exportData.topics.length} topics and ${exportData.vocabulary.length} vocabulary items!`,
+        visible: true
+      });
+      
+      setTimeout(() => {
+        setToast(prev => prev ? { ...prev, visible: false } : null);
+      }, 3000);
+      
+    } catch (error) {
+      console.error('Export error:', error);
+      setToast({ type: 'error', text: 'Failed to export data', visible: true });
     } finally {
       setIsLoading(false);
     }
@@ -664,17 +736,18 @@ const Admin: React.FC = () => {
                </div>
                              <form onSubmit={editingVocab ? handleUpdateVocab : handleVocabSubmit} className={styles.form}>
                 <div className={styles.formGrid}>
-                  <div className={styles.formField}>
+                                    <div className={styles.formField}>
                     <label className={styles.formLabel}>
                       Word
                     </label>
-                                         <input
-                       type="text"
-                       value={vocabForm.word}
-                       onChange={(e) => setVocabForm(prev => ({ ...prev, word: e.target.value }))}
-                       className={styles.formInput}
-                       required
-                     />
+                    <input
+                      ref={wordInputRef}
+                      type="text"
+                      value={vocabForm.word}
+                      onChange={(e) => setVocabForm(prev => ({ ...prev, word: e.target.value }))}
+                      className={styles.formInput}
+                      required
+                    />
                   </div>
                   <div className={styles.formField}>
                     <label className={styles.formLabel}>
@@ -690,36 +763,42 @@ const Admin: React.FC = () => {
                      />
                   </div>
                 </div>
+                                <div className={styles.formField}>
+                  <label className={styles.formLabel}>
+                    Meaning
+                  </label>
+                  <input
+                    type="text"
+                    value={vocabForm.meaning}
+                    onChange={(e) => setVocabForm(prev => ({ ...prev, meaning: e.target.value }))}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !editingVocab) {
+                        e.preventDefault();
+                        handleVocabSubmit(e);
+                      }
+                    }}
+                    className={styles.formInput}
+                    required
+                  />
+                </div>
                 <div className={styles.formField}>
                   <label className={styles.formLabel}>
                     Topic
                   </label>
-                                         <select
-                       value={vocabForm.topicId}
-                       onChange={(e) => setVocabForm(prev => ({ ...prev, topicId: e.target.value }))}
-                       className={styles.formSelect}
-                       required
-                     >
-                      <option value="">Select a topic</option>
-                      {topics.map((topic) => (
-                        <option key={topic.id} value={topic.id}>
-                          {topic.name}
-                        </option>
-                      ))}
-                    </select>
-                </div>
-                <div className={styles.formField}>
-                  <label className={styles.formLabel}>
-                    Meaning
-                  </label>
-                  <textarea
-                    value={vocabForm.meaning}
-                    onChange={(e) => setVocabForm(prev => ({ ...prev, meaning: e.target.value }))}
-                    rows={2}
-                    className={styles.formTextarea}
+                  <select
+                    value={vocabForm.topicId}
+                    onChange={(e) => setVocabForm(prev => ({ ...prev, topicId: e.target.value }))}
+                    className={styles.formSelect}
                     required
-                  />
-                </div>
+                  >
+                   <option value="">Select a topic</option>
+                   {topics.map((topic) => (
+                     <option key={topic.id} value={topic.id}>
+                       {topic.name}
+                     </option>
+                   ))}
+                 </select>
+               </div>
                 
 
                   <div className={styles.formButtons}>
@@ -786,12 +865,22 @@ const Admin: React.FC = () => {
                    </select>
                  </div>
                  
-                 {/* Import Button */}
-                 <div className="flex items-end">
-                                        <button
-                       onClick={() => setShowImportModal(true)}
-                       className={styles.importButton}
-                     >
+                 {/* Import and Export Buttons */}
+                 <div className="flex items-end gap-2">
+                   <button
+                     onClick={handleExportData}
+                     disabled={isLoading}
+                     className={styles.exportButton}
+                   >
+                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                     </svg>
+                     <span>Export</span>
+                   </button>
+                   <button
+                     onClick={() => setShowImportModal(true)}
+                     className={styles.importButton}
+                   >
                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                      </svg>
@@ -963,7 +1052,7 @@ const Admin: React.FC = () => {
          {showDeleteVocabModal && (
            <div className={styles.modalOverlay}>
              <div className={styles.modal}>
-                                <div className={styles.modalHeader}>
+                <div className={styles.modalHeader}>
                  <div className={`${styles.modalIcon} ${styles.error}`}>
                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
