@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { User } from '../services/firebaseAuthService';
+// import { User } from '../services/firebaseAuthService';
 import styles from './Register.module.css';
 
 // Local interface for form data that includes confirmPassword

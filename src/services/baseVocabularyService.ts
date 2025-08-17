@@ -7,14 +7,14 @@ import {
   updateDoc, 
   deleteDoc, 
   query, 
-  where, 
-  orderBy, 
-  limit,
-  QueryConstraint
+  where
+  // orderBy, 
+  // limit,
+  // QueryConstraint
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { COLLECTIONS } from '../constants/collections';
-import type { VocabularyTopic, ToeicVocabulary } from '../types/vocabulary';
+// import { COLLECTIONS } from '../constants/collections';
+// import type { VocabularyTopic, ToeicVocabulary } from '../types/vocabulary';
 
 // Base service class for vocabulary operations
 export abstract class BaseVocabularyService {

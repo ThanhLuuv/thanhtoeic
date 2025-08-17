@@ -24,30 +24,30 @@ interface DictationListState {
 }
 
 // Utility functions
-const getSetType = (set: ToeicVocabulary[]): string => {
-  if (!set || set.length === 0) return '0 words';
-  const hasPhrase = set.some(item => item.word && item.word.includes(' '));
-  return hasPhrase ? '1 words or more' : '1 word';
-};
+// const getSetType = (set: ToeicVocabulary[]): string => {
+//   if (!set || set.length === 0) return '0 words';
+//   const hasPhrase = set.some(item => item.word && item.word.includes(' '));
+//   return hasPhrase ? '1 words or more' : '1 word';
+// };
 
-const getGlobalVocabIndex = (
-  topicIndex: number, 
-  setIndex: number, 
-  vocabSetsByTopic: VocabSetByTopic[]
-): number => {
-  let globalIndex = 0;
-  for (let i = 0; i < topicIndex; i++) {
-    const topicData = vocabSetsByTopic[i];
-    if (topicData.sets && Array.isArray(topicData.sets)) {
-      // Chỉ đếm các set hợp lệ
-      const validSetsCount = topicData.sets.filter(set => 
-        set && Array.isArray(set) && set.length > 0
-      ).length;
-      globalIndex += validSetsCount;
-    }
-  }
-  return globalIndex + setIndex;
-};
+// const getGlobalVocabIndex = (
+//   topicIndex: number, 
+//   setIndex: number, 
+//   vocabSetsByTopic: VocabSetByTopic[]
+// ): number => {
+//   let globalIndex = 0;
+//   for (let i = 0; i < topicIndex; i++) {
+//     const topicData = vocabSetsByTopic[i];
+//     if (topicData.sets && Array.isArray(topicData.sets)) {
+//             // Chỉ đếm các set hợp lệ
+//       const validSetsCount = topicData.sets.filter(set => 
+//         set && Array.isArray(set) && set.length > 0
+//       ).length;
+//       globalIndex += validSetsCount;
+//     }
+//   }
+//   return globalIndex + setIndex;
+// };
 
 // Custom hooks
 const useDictationListState = () => {
@@ -165,7 +165,7 @@ const VocabSetCard: React.FC<{
   onHover: (idx: number | null) => void;
   onClick: (originalIdx: number, topic: string, topicSetIndex: number) => void;
 }> = ({ vocabSet, isCompleted, isHovered, onHover, onClick }) => {
-  const { set, idx, originalIdx, topic, topicSetIndex } = vocabSet;
+  const { idx, originalIdx, topic, topicSetIndex } = vocabSet;
 
   return (
     <div

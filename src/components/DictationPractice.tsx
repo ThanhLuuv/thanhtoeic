@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { vocabularyService, ToeicVocabulary, VocabularyItem } from '../services';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
@@ -57,7 +57,7 @@ const DictationPractice: React.FC = () => {
   const [hasPlayedInitialAudio, setHasPlayedInitialAudio] = useState(false);
   const [exampleSentence, setExampleSentence] = useState<ExampleSentence | null>(null);
   const [isGeneratingExample, setIsGeneratingExample] = useState(false);
-  const [generatedExamples, setGeneratedExamples] = useState<string[]>([]);
+  const [generatedExamples] = useState<string[]>([]);
   const [exampleError, setExampleError] = useState<string | null>(null);
   const [currentExamples, setCurrentExamples] = useState<ExampleSentence[]>([]);
   const [currentExampleIndex, setCurrentExampleIndex] = useState(0);
@@ -345,7 +345,7 @@ const DictationPractice: React.FC = () => {
         
         // Don't reset examples here, let loadExamplesFromDatabase handle it
         setExampleSentence(null); // Reset example sentence when moving to next word
-        setGeneratedExamples([]); // Reset generated examples for new word
+        // setGeneratedExamples([]); // Reset generated examples for new word
         setExampleError(null);
         
         // Focus input when moving to new word
@@ -484,7 +484,7 @@ const DictationPractice: React.FC = () => {
   const isCorrect = result[currentIndex] === true;
   const progress = Math.round(((safeCurrentIndex + 1) / vocabList.length) * 100);
   const showNextButton = isChecked && isCorrect;
-  const isSetCompleted = isCorrect && safeCurrentIndex === vocabList.length - 1;
+  // const isSetCompleted = isCorrect && safeCurrentIndex === vocabList.length - 1;
 
   
 
@@ -628,12 +628,12 @@ const DictationPractice: React.FC = () => {
   ];
 
   // Answer display configuration
-  const answerItems = showAnswer ? [{
-    word: item.word,
-    phonetic: item.phonetic,
-    type: item.type,
-    meaning: item.meaning
-  }] : [];
+  // const answerItems = showAnswer ? [{
+  //   word: item.word,
+  //   phonetic: item.phonetic,
+  //   type: item.type,
+  //   meaning: item.meaning
+  // }] : [];
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
 
