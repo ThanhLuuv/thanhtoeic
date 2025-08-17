@@ -26,21 +26,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     try {
-      console.log('AuthContext: Initializing...');
       
       // Get the service instance
       const authService = firebaseAuthService();
       
       // Use firebaseAuthService to listen to auth state changes
       const unsubscribe = authService.onAuthStateChanged((user: User | null) => {
-        console.log('AuthContext: Auth state changed, user:', user);
         setCurrentUser(user);
         setLoading(false);
       });
 
       // Set initial user state
       const initialUser = authService.getCurrentUser();
-      console.log('AuthContext: Initial user:', initialUser);
       
       if (initialUser) {
         setCurrentUser(initialUser);
