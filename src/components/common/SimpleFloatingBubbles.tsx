@@ -66,3 +66,4 @@ const SimpleFloatingBubbles: React.FC<SimpleFloatingBubblesProps> = ({
 };
 
 export default SimpleFloatingBubbles;
+
