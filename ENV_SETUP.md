@@ -2,7 +2,7 @@
 
 ## OpenAI API Configuration
 
-Để sử dụng tính năng generate example sentences, bạn cần cấu hình OpenAI API key:
+Để sử dụng tính năng generate example sentences và phonetic transcriptions, bạn cần cấu hình OpenAI API key:
 
 ### 1. Lấy OpenAI API Key
 - Truy cập: https://platform.openai.com/api-keys
@@ -13,7 +13,7 @@ Tạo file `.env` trong thư mục gốc của project:
 
 ```bash
 # OpenAI Configuration
-REACT_APP_OPENAI_API_KEY=your_actual_api_key_here
+REACT_APP_API_KEY_OPENAI=your_actual_api_key_here
 
 # Environment
 NODE_ENV=development
@@ -33,7 +33,7 @@ Sau khi cấu hình, restart development server:
 npm start
 ```
 
-Tính năng generate example sẽ tự động hoạt động nếu API key được cấu hình đúng.
+Tính năng generate example và phonetic transcriptions sẽ tự động hoạt động nếu API key được cấu hình đúng.
 
 ### 5. Troubleshooting
 - Nếu gặp lỗi "API key không được cấu hình": Kiểm tra file `.env` và restart server

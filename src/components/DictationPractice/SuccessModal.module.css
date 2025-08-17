@@ -1,0 +1,228 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: modalSlideIn 0.15s ease-out;
+}
+
+.title {
+  color: var(--primary-color);
+  margin: 0 0 16px 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.wordCard {
+  background: var(--primary-bg);
+  border: 2px solid var(--primary-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.meaning {
+  font-size: 28px;
+  font-weight: bold;
+  color: #dc2626;
+  margin-bottom: 8px;
+}
+
+.phonetic {
+  font-size: 14px;
+  color: var(--primary-dark);
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.word {
+  font-size: 16px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.exampleButton {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto 16px auto;
+}
+
+.exampleButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+}
+
+.exampleButton:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.errorMessage {
+  color: #dc2626;
+  font-size: 14px;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: #fef2f2;
+  border-radius: 6px;
+  border: 1px solid #fecaca;
+}
+
+.exampleCard {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 2px solid #8b5cf6;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.1);
+}
+
+.exampleCounter {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.englishSentence {
+  font-size: 16px;
+  color: #1f2937;
+  margin-bottom: 8px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.vietnameseTranslation {
+  font-size: 14px;
+  color: #6b7280;
+  font-style: italic;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.contextInfo {
+  font-size: 12px;
+  color: var(--primary-dark);
+  padding: 8px 12px;
+  background: var(--primary-bg);
+  border-radius: 6px;
+  border: 1px solid var(--primary-border);
+}
+
+.navigationButtons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.navButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navButton:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.navButton:disabled {
+  background: #e5e7eb;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.nextButton {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 171, 253, 0.3);
+  transition: all 0.2s ease;
+}
+
+.nextButton:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 171, 253, 0.4);
+}
+
+.keyboardHint {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.keyboardHint kbd {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-family: monospace;
+  color: #374151;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

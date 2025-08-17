@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import styles from './Header.module.css';
 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -40,24 +41,24 @@ const Header: React.FC = () => {
   const isDictationPage = location.pathname.includes('/vocabulary') ||location.pathname === '/grammar-game' || location.pathname.includes('/dictation-list') || location.pathname.includes('/dictation-practice/');
 
   return (
-    <header className="gradient-bg-header shadow-lg sticky top-0 z-50">
-      <nav className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+    <header className={styles.header}>
+      <nav className={styles.nav}>
+        <div className={styles.navContainer}>
+          <div className={styles.leftSection}>
             {isDictationPage && (
-              <button onClick={goBack} className="back-btn text-black hover:text-gray-700 flex items-center space-x-2">
+              <button onClick={goBack} className={styles.backButton}>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
                 <span>Back</span>
               </button>
             )}
-            <a href="/" className="flex items-center space-x-4 hover:opacity-80 transition-opacity">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center">
-                <img src="/logo.png" alt="Antoree TOEIC" className="w-full h-full rounded-full object-contain" />
+            <a href="/" className={styles.logoLink}>
+              <div className={styles.logoContainer}>
+                <img src="/logo.png" alt="Antoree TOEIC" className={styles.logo} />
               </div>
               <div>
-                <span className="text-black text-xl">
+                <span className={styles.brandText}>
                   {
                    location.pathname === '/' ? 'T-TOEIC' :
                    location.pathname === '/grammar-game' ? 'Grammar' :
@@ -68,12 +69,12 @@ const Header: React.FC = () => {
             </a>
           </div>
 
-          <div className="hidden md:flex items-center space-x-6">
+          <div className={styles.navItems}>
               {navItems.map((item) => (
                 <a
                   key={item}
                   href={item === 'T-TOEIC' ? '/' : item === 'Grammar' ? '/grammar-game' : '/grammar'}
-                  className={`nav-item text-black font-medium px-4 py-2 transition-all duration-300 ${activeNav === item ? 'border-b-2 border-[#00CCFF]' : ''}`}
+                  className={`${styles.navItem} ${activeNav === item ? styles.active : ''}`}
                   onClick={() => handleNavClick(item)}
                 >
                   {item}
@@ -82,36 +83,36 @@ const Header: React.FC = () => {
             
             {/* Authentication Section */}
             {currentUser ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-black/90 text-sm">
-                  <span className="font-semibold">Hello, </span>
+              <div className={styles.authSection}>
+                <span className={styles.userInfo}>
+                  <span className={styles.userName}>Hello, </span>
                   <span>{currentUser.fullName || currentUser.email}</span>
                 </span>
-                <div className="flex items-center space-x-2">
-                  <Link to="/profile" className="w-10 h-10 bg-black/20 rounded-full flex items-center justify-center cursor-pointer hover:bg-black/30 transition-all">
-                    <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 20 20">
+                <div className={styles.authButtons}>
+                  <Link to="/profile" className={styles.profileButton}>
+                    <svg className={styles.profileIcon} fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path>
                     </svg>
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="px-4 py-2 text-sm font-medium text-black hover:text-gray-700 transition-colors"
+                    className={styles.logoutButton}
                   >
                     Logout
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center space-x-3">
+              <div className={styles.authSection}>
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-sm font-medium text-black hover:text-gray-700 transition-colors"
+                  className={styles.loginButton}
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="px-4 py-2 text-sm font-medium bg-[#00CCFF] text-white rounded-full hover:bg-[#0099CC] transition-colors"
+                  className={styles.registerButton}
                 >
                   Register
                 </Link>
@@ -119,7 +120,7 @@ const Header: React.FC = () => {
             )}
           </div>
 
-          <button className="md:hidden text-black" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <button className={styles.mobileMenuButton} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
@@ -128,15 +129,15 @@ const Header: React.FC = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-sm rounded-lg mt-4 shadow-lg">
+          <div className={styles.mobileMenu}>
+            <div className={styles.mobileMenuContent}>
               {!isDictationPage && (
-                <>
+                <div className={styles.mobileNavItems}>
                   {navItems.map((item) => (
                     <a
                       key={item}
                       href={item === 'T-TOEIC' ? '/' : item === 'Grammar' ? '/grammar-game' : '/grammar'}
-                      className="block px-3 py-2 text-black font-medium hover:bg-[#E6F7FF] rounded-md transition-colors"
+                      className={styles.mobileNavItem}
                       onClick={() => {
                         handleNavClick(item);
                         setIsMobileMenuOpen(false);
@@ -145,19 +146,19 @@ const Header: React.FC = () => {
                       {item}
                     </a>
                   ))}
-                </>
+                </div>
               )}
               
               {/* Mobile Authentication Section */}
               {currentUser ? (
                 <>
-                  <div className="px-3 py-2 text-black/90 text-sm border-t border-gray-200">
-                    <span className="font-semibold">Hello, </span>
+                  <div className={styles.mobileUserInfo}>
+                    <span className={styles.userName}>Hello, </span>
                     <span>{currentUser.fullName || currentUser.email}</span>
                   </div>
                   <Link
                     to="/profile"
-                    className="block px-3 py-2 text-black font-medium hover:bg-[#E6F7FF] rounded-md transition-colors"
+                    className={styles.mobileAuthButton}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Profile
@@ -167,7 +168,7 @@ const Header: React.FC = () => {
                       handleLogout();
                       setIsMobileMenuOpen(false);
                     }}
-                    className="block w-full text-left px-3 py-2 text-black font-medium hover:bg-[#E6F7FF] rounded-md transition-colors"
+                    className={styles.mobileAuthButton}
                   >
                     Logout
                   </button>
@@ -176,14 +177,14 @@ const Header: React.FC = () => {
                 <>
                   <Link
                     to="/login"
-                    className="block px-3 py-2 text-black font-medium hover:bg-[#E6F7FF] rounded-md transition-colors"
+                    className={styles.mobileAuthButton}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="block px-3 py-2 text-black font-medium hover:bg-[#E6F7FF] rounded-md transition-colors"
+                    className={styles.mobileAuthButton}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Register

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { vocabularyService, ToeicVocabulary, VocabSetByTopic } from '../services';
+import styles from './DictationList.module.css';
 
 // Constants
 const WORDS_PER_SET = 20;
@@ -138,18 +139,18 @@ const useCompletedSets = () => {
 
 // Components
 const LoadingSpinner: React.FC = () => (
-  <div className="text-center py-20">
-      <h3 className="text-2xl font-bold text-gray-800 mb-3">Loading...</h3>
+  <div className={styles.loadingSpinner}>
+      <h3 className={styles.loadingTitle}>Loading...</h3>
   </div>
 );
 
 const ErrorMessage: React.FC<{ error: string }> = ({ error }) => (
-  <div className="text-center py-20">
-      <h3 className="text-xl font-bold text-gray-800 mb-3">Error</h3>
-      <p className="text-gray-600">{error}</p>
+  <div className={styles.errorMessage}>
+      <h3 className={styles.errorTitle}>Error</h3>
+      <p className={styles.errorText}>{error}</p>
       <button 
         onClick={() => window.location.reload()} 
-        className="mt-4 bg-[#00CCFF] text-white px-4 py-2 rounded-lg hover:bg-[#0099CC]"
+        className={styles.retryButton}
       >
         Try again
       </button>
@@ -167,65 +168,54 @@ const VocabSetCard: React.FC<{
 
   return (
     <div
-      className={`
-        relative rounded-xl p-5 cursor-pointer transition-all duration-300 transform bg-white shadow-lg
-        ${isHovered 
-          ? 'shadow-xl scale-105 -translate-y-1' 
-          : 'hover:shadow-xl'
-        }
-      `}
+      className={`${styles.vocabCard} ${isHovered ? styles.hovered : ''}`}
       onClick={() => onClick(originalIdx, topic || 'Other', topicSetIndex || 0)}
       onMouseEnter={() => onHover(idx)}
       onMouseLeave={() => onHover(null)}
     >
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div
-              className="w-2 h-2 rounded-full"
-              style={{ background: '#00CCFF' }}
-            ></div>
-            <h3 className="text-lg font-bold text-slate-800">
+      <div className={styles.cardContent}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardTitleSection}>
+            <div className={styles.cardIndicator}></div>
+            <h3 className={styles.cardTitle}>
               Set {topicSetIndex !== undefined ? topicSetIndex + 1 : originalIdx + 1}
             </h3>
           </div>
           {isCompleted && (
-            <span className="bg-[#00CCFF] text-white text-xs px-2 py-1 rounded-full font-bold">
+            <span className={styles.completedBadge}>
               ✓
             </span>
           )}
         </div>
         
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
+        <div className={styles.cardInfo}>
+          <div className={styles.infoItem}>
+            <svg className={styles.infoIcon} fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
             </svg>
-            <span className="text-slate-700 font-medium">{topic}</span>
+            <span className={styles.infoText}>{topic}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
+          <div className={styles.infoItem}>
+            <svg className={styles.infoIcon} fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4z" clipRule="evenodd" />
             </svg>
-            <span className="text-slate-600">Set {topicSetIndex !== undefined ? topicSetIndex + 1 : originalIdx + 1}</span>
+            <span className={`${styles.infoText} ${styles.secondary}`}>Set {topicSetIndex !== undefined ? topicSetIndex + 1 : originalIdx + 1}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
+          <div className={styles.infoItem}>
+            <svg className={styles.infoIcon} fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-slate-600">Up to {WORDS_PER_SET} words</span>
+            <span className={`${styles.infoText} ${styles.secondary}`}>Up to {WORDS_PER_SET} words</span>
           </div>
         </div>
         
-        <div className="pt-2">
-          <div className="w-full bg-slate-100 rounded-full h-1">
+        <div className={styles.progressSection}>
+          <div className={styles.progressBar}>
             <div 
-              className={`h-1 rounded-full transition-all duration-300 ${
-                isCompleted ? 'bg-[#00CCFF] w-full' : 'bg-[#00CCFF] w-0'
-              }`}
+              className={`${styles.progressFill} ${isCompleted ? styles.completed : styles.incomplete}`}
             ></div>
           </div>
-          <p className="text-xs text-slate-500 mt-1 text-center">
+          <p className={styles.progressText}>
             {isCompleted ? 'Completed' : 'Start'}
           </p>
         </div>
@@ -235,17 +225,17 @@ const VocabSetCard: React.FC<{
 };
 
 const Header: React.FC = () => (
-  <div className="text-center mb-4">
-    <p className="text-slate-600 text-lg">Practice dictation with vocabulary</p>
-    <div className="mt-4 flex justify-center items-center gap-4 text-sm text-slate-500">
-      <div className="flex items-center gap-2">
-        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+  <div className={styles.header}>
+    <p className={styles.headerSubtitle}>Practice dictation with vocabulary</p>
+    <div className={styles.headerFeatures}>
+      <div className={styles.featureItem}>
+        <svg className={styles.featureIcon} fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4z" clipRule="evenodd" />
         </svg>
         <span>Vocabulary practice</span>
       </div>
-      <div className="flex items-center gap-2">
-        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+      <div className={styles.featureItem}>
+        <svg className={styles.featureIcon} fill="currentColor" viewBox="0 0 20 20">
           <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <span>Progress tracking</span>
@@ -296,8 +286,6 @@ const DictationList: React.FC = () => {
         
         const setsForTopic = Math.ceil(topicVocabularyCount / WORDS_PER_SET);
         
-        console.log(`[DictationList] Topic "${topicData.topic}": ${topicVocabularyCount} words, ${setsForTopic} sets`);
-        
         // Create sets for this topic
         for (let setIndex = 0; setIndex < setsForTopic; setIndex++) {
           allSets.push({
@@ -308,35 +296,18 @@ const DictationList: React.FC = () => {
             topicSetIndex: setIndex // Add this to track set index within topic
           });
           
-          console.log(`[DictationList] Created set:`, {
-            topic: topicData.topic || 'Other',
-            topicSetIndex: setIndex,
-            globalSetIndex,
-            topicVocabularyCount,
-            setsForTopic
-          });
-          
           globalSetIndex++;
         }
       }
-    });
-    
-    console.log(`[DictationList] Total sets created:`, allSets.length);
-    console.log(`[DictationList] All sets:`, allSets.map(s => ({
-      originalIdx: s.originalIdx,
-      topic: s.topic,
-      topicSetIndex: s.topicSetIndex,
-      globalSetIndex: s.originalIdx
-    })));
-    
+    });    
     return allSets;
   }, [vocabSetsByTopic]);
 
   // Render content
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <div className="container mx-auto px-6 py-12 max-w-6xl">
+      <div className={styles.mainContainer}>
+        <div className={styles.contentContainer}>
           <Header />
           <LoadingSpinner />
         </div>
@@ -346,8 +317,8 @@ const DictationList: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <div className="container mx-auto px-6 py-12 max-w-6xl">
+      <div className={styles.mainContainer}>
+        <div className={styles.contentContainer}>
           <Header />
           <ErrorMessage error={error} />
         </div>
@@ -360,15 +331,15 @@ const DictationList: React.FC = () => {
   // Handle empty state
   if (allSets.length === 0 && !isLoading && !error) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <div className="container mx-auto px-6 py-12 max-w-6xl">
+      <div className={styles.mainContainer}>
+        <div className={styles.contentContainer}>
           <Header />
-          <div className="text-center py-20">
-            <h3 className="text-2xl font-bold text-gray-800 mb-3">No Vocabulary Sets Available</h3>
-            <p className="text-gray-600 mb-4">There are no vocabulary sets available at the moment.</p>
+          <div className={styles.emptyState}>
+            <h3 className={styles.emptyTitle}>No Vocabulary Sets Available</h3>
+            <p className={styles.emptyText}>There are no vocabulary sets available at the moment.</p>
             <button 
               onClick={() => loadVocabularyData()} 
-              className="bg-[#00CCFF] text-white px-4 py-2 rounded-lg hover:bg-[#0099CC]"
+              className={styles.refreshButton}
             >
               Refresh
             </button>
@@ -379,11 +350,11 @@ const DictationList: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="container mx-auto px-6 py-12 max-w-6xl">
+    <div className={styles.mainContainer}>
+      <div className={styles.contentContainer}>
         <Header />
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className={styles.vocabGrid}>
           {allSets.map((vocabSet) => (
             <VocabSetCard
               key={`vocab-${vocabSet.originalIdx}`}

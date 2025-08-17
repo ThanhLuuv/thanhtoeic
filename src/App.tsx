@@ -13,6 +13,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
 import GrammarGamePage from './pages/GrammarGamePage';
 import { firebaseTestService } from './services/firebaseTestService';
@@ -61,6 +62,7 @@ const App: React.FC = () => {
         {/* Authentication routes - no header/footer */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/admin" element={<Admin />} />
         
         {/* Dictation practice route - no header/footer */}
         <Route

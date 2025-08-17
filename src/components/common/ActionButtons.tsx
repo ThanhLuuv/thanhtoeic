@@ -1,7 +1,15 @@
 import React from 'react';
+import { 
+  ArrowBack, 
+  CheckCircle, 
+  ArrowForward, 
+  FastForward 
+} from '@mui/icons-material';
+import styles from './ActionButtons.module.css';
 
 interface ActionButton {
   text: string;
+  icon?: React.ReactNode;
   onClick: () => void;
   variant: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
   disabled?: boolean;
@@ -14,67 +22,50 @@ interface ActionButtonsProps {
   marginBottom?: number;
 }
 
-export const ActionButtons: React.FC<ActionButtonsProps> = ({ 
+export const 
+ActionButtons: React.FC<ActionButtonsProps> = ({ 
   buttons, 
   gap = 14, 
   marginBottom = 10 
 }) => {
-  const getButtonStyle = (variant: string, disabled: boolean = false, text: string) => {
-    // Check if button should be circular (for navigation buttons)
-    const isCircular = text === '←' || text === '⏭';
-    // Check if button should have rounded border (for Check and Next buttons)
+  const getButtonClasses = (variant: string, text: string) => {
+    const isCircular = text === 'ArrowBack' || text === 'FastForward';
     const isRounded = text === 'Check' || text === 'Next';
     
-    const baseStyle = {
-      border: 'none',
-      borderRadius: isCircular ? '50%' : (isRounded ? 24 : 8),
-      padding: isCircular ? '12px' : '8px 22px',
-      width: isCircular ? '44px' : 'auto',
-      height: isCircular ? '44px' : 'auto',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontWeight: 600,
-      fontSize: isCircular ? 18 : 15,
-      cursor: disabled ? 'not-allowed' : 'pointer',
-      boxShadow: '0 1px 4px #e0e0e0',
-      opacity: disabled ? 0.7 : 1,
-      transition: 'all 0.2s ease'
-    };
-
-    switch (variant) {
-      case 'primary':
-        return { ...baseStyle, background: '#1976d2', color: 'white' };
-      case 'secondary':
-        return { ...baseStyle, background: '#6b7280', color: 'white' };
-      case 'success':
-        return { ...baseStyle, background: '#4caf50', color: 'white' };
-      case 'warning':
-        return { ...baseStyle, background: '#ff9800', color: 'white' };
-      case 'danger':
-        return { ...baseStyle, background: '#f44336', color: 'white' };
-      default:
-        return { ...baseStyle, background: '#1976d2', color: 'white' };
+    let sizeClass = styles.default;
+    if (isCircular) {
+      sizeClass = styles.circular;
+    } else if (isRounded) {
+      sizeClass = styles.rounded;
     }
+    
+    return `${styles.button} ${sizeClass} ${styles[variant]}`;
+  };
+
+  const shouldShowBothIconAndText = (text: string) => {
+    return text === 'Check' || text === 'Next';
   };
 
   const visibleButtons = buttons.filter(button => button.show !== false);
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      gap, 
-      marginBottom 
-    }}>
+    <div className={styles.container} style={{ gap, marginBottom }}>
       {visibleButtons.map((button, index) => (
         <button
           key={index}
           onClick={button.onClick}
           disabled={button.disabled}
-          style={getButtonStyle(button.variant, button.disabled, button.text)}
+          className={getButtonClasses(button.variant, button.text)}
+          title={button.text}
         >
-          {button.text}
+          {shouldShowBothIconAndText(button.text) && button.icon ? (
+            <>
+              {button.icon}
+              <span style={{ marginLeft: '8px' }}>{button.text}</span>
+            </>
+          ) : (
+            button.icon || button.text
+          )}
         </button>
       ))}
     </div>

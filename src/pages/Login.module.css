@@ -1,0 +1,312 @@
+/* Login.module.css - Styles for Login page */
+
+/* Main container */
+.mainContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  position: relative;
+}
+
+@media (min-width: 640px) {
+  .mainContainer {
+    padding: 3rem 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mainContainer {
+    padding: 3rem 2rem;
+  }
+}
+
+/* Background with blur */
+.backgroundBlur {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(0 204 255 / 7%);
+  filter: blur(10px);
+}
+
+/* Content wrapper */
+.contentWrapper {
+  position: relative;
+  z-index: 10;
+  max-width: 28rem;
+  width: 100%;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.headerTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+/* Login form container */
+.formContainer {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Form field */
+.formField {
+  display: flex;
+  flex-direction: column;
+}
+
+.formLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+/* Input wrapper */
+.inputWrapper {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.inputIcon svg {
+  height: 1.25rem;
+  width: 1.25rem;
+  color: #9ca3af;
+}
+
+/* Form inputs */
+.formInput {
+  display: block;
+  width: 100%;
+  padding-left: 2.5rem;
+  padding-right: 0.75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  color: #111827;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+.formInput::placeholder {
+  color: #6b7280;
+}
+
+.formInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Password input with toggle button */
+.passwordInput {
+  padding-right: 3rem;
+}
+
+.passwordToggle {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.passwordToggle svg {
+  height: 1.25rem;
+  width: 1.25rem;
+  color: #9ca3af;
+  transition: color 0.2s ease;
+}
+
+.passwordToggle:hover svg {
+  color: #4b5563;
+}
+
+/* Error message */
+.errorMessage {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 9999px;
+  padding: 0.75rem 1rem;
+}
+
+.errorContent {
+  display: flex;
+}
+
+.errorIcon {
+  flex-shrink: 0;
+}
+
+.errorIcon svg {
+  height: 1.25rem;
+  width: 1.25rem;
+  color: #f87171;
+}
+
+.errorText {
+  margin-left: 0.75rem;
+  font-size: 0.875rem;
+  color: #991b1b;
+}
+
+/* Submit button */
+.submitButton {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  background: var(--primary-color, #00ABFD);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--primary-dark, #00587C);
+}
+
+.submitButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary-color), 0 0 0 4px white;
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading state in button */
+.buttonContent {
+  display: flex;
+  align-items: center;
+}
+
+.loadingSpinner {
+  animation: spin 1s linear infinite;
+  margin-right: 0.75rem;
+  height: 1.25rem;
+  width: 1.25rem;
+  color: white;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingSpinner circle {
+  opacity: 0.25;
+}
+
+.loadingSpinner path {
+  opacity: 0.75;
+}
+
+/* Divider */
+.divider {
+  margin-top: 1.5rem;
+}
+
+.dividerLine {
+  position: relative;
+}
+
+.dividerBorder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+}
+
+.dividerBorder::before {
+  content: '';
+  width: 100%;
+  border-top: 1px solid #d1d5db;
+}
+
+.dividerText {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  font-size: 0.875rem;
+  background: white;
+  padding: 0 0.5rem;
+  color: #6b7280;
+}
+
+/* Register link */
+.registerLink {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.registerButton {
+  font-weight: 500;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.registerButton:hover {
+  color: var(--primary-dark);
+}
+
+/* Footer */
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .formContainer {
+    padding: 1.5rem;
+  }
+  
+  .headerTitle {
+    font-size: 1.5rem;
+  }
+}

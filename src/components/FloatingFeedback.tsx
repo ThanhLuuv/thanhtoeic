@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styles from './FloatingFeedback.module.css';
 
 const FloatingFeedback: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -32,25 +33,25 @@ const FloatingFeedback: React.FC = () => {
   
 
   return (
-    <div className="fixed bottom-6 left-6 z-50">
+    <div className={styles.container}>
       {!open && (
         <button
-        className="text-blue-600 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 group"
+        className={styles.feedbackButton}
         onClick={() => setOpen(true)}
         title="Send feedback"
       >
-        <div className="flex items-center justify-center px-4 py-3 min-w-14 min-h-14">
-          <span role="img" aria-label="feedback" className="text-2xl group-hover:scale-110 transition-transform duration-150">💬</span>
-          <span className="ml-2 text-base font-semibold hidden sm:inline">Feedback</span>
+        <div className={styles.buttonContent}>
+          <span role="img" aria-label="feedback" className={styles.emoji}>💬</span>
+          <span className={styles.buttonText}>Feedback</span>
         </div>
       </button>
       )}
       {open && (
-        <div className="bg-white rounded-2xl shadow-2xl p-4 w-80 animate-fade-in flex flex-col items-stretch">
-          <div className="flex justify-between items-center mb-2">
-            <span className="font-bold text-blue-700">Feedback</span>
+        <div className={styles.feedbackForm}>
+          <div className={styles.formHeader}>
+            <span className={styles.formTitle}>Feedback</span>
             <button
-              className="text-gray-400 hover:text-gray-600 text-xl font-bold px-2"
+              className={styles.closeButton}
               onClick={() => setOpen(false)}
               title="Close"
             >
@@ -58,11 +59,11 @@ const FloatingFeedback: React.FC = () => {
             </button>
           </div>
           {submitted ? (
-            <div className="text-blue-600 text-center py-6 font-semibold">Thank you for your feedback!</div>
+            <div className={styles.successMessage}>Thank you for your feedback!</div>
           ) : (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={styles.form}>
               <textarea
-                className="w-full border border-gray-300 rounded-lg p-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+                className={styles.textarea}
                 rows={4}
                 placeholder="Enter feedback, suggestions or bug reports..."
                 value={feedback}
@@ -71,7 +72,7 @@ const FloatingFeedback: React.FC = () => {
               />
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors"
+                className={styles.submitButton}
                 disabled={!feedback.trim()}
               >
                 Submit

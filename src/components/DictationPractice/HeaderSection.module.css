@@ -1,0 +1,222 @@
+.headerSection {
+  background: var(--primary-dark);
+  color: white;
+  height: 60px;
+  padding: 0 2rem;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 1200px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.backButton {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  min-width: 80px;
+  justify-content: center;
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.backButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.backButton span {
+  font-size: 0.9rem;
+}
+
+
+.topicInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.topicTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.setInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.setNumber {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.totalSets {
+  opacity: 0.8;
+  font-size: 0.8rem;
+}
+
+.progressSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progressInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.wordCounter {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.completedCount {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.progressBarContainer {
+  width: 120px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: var(--primary-light);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  box-shadow: 0 2px 4px rgba(113, 217, 255, 0.4);
+}
+
+.progressPercentage {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary-light);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  min-width: 35px;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .headerSection {
+    padding: 0 1rem;
+    height: 50px;
+    gap: 1rem;
+  }
+
+  .backButton {
+    padding: 0.4rem 0.8rem;
+    min-width: 70px;
+    font-size: 0.8rem;
+  }
+
+  .backButton span {
+    font-size: 0.8rem;
+  }
+
+  .topicTitle {
+    font-size: 1rem;
+  }
+
+  .progressSection {
+    gap: 0.5rem;
+  }
+
+  .progressInfo {
+    gap: 0.5rem;
+  }
+
+  .progressBarContainer {
+    width: 80px;
+  }
+
+  .wordCounter,
+  .completedCount {
+    padding: 0.15rem 0.4rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerSection {
+    padding: 0 0.8rem;
+    height: 45px;
+    gap: 0.8rem;
+  }
+
+  .backButton {
+    padding: 0.3rem 0.6rem;
+    min-width: 60px;
+    font-size: 0.7rem;
+  }
+
+  .backButton span {
+    font-size: 0.7rem;
+  }
+
+  .backButton svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .topicTitle {
+    font-size: 0.9rem;
+  }
+
+  .setInfo {
+    font-size: 0.8rem;
+  }
+
+  .progressInfo {
+    font-size: 0.8rem;
+  }
+
+  .progressBarContainer {
+    width: 60px;
+    height: 6px;
+  }
+
+  .progressPercentage {
+    font-size: 0.8rem;
+  }
+}

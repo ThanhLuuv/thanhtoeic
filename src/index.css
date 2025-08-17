@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary-color: #00CCFF;
-  --primary-light: #33D6FF;
-  --primary-dark: #0099CC;
-  --primary-bg: #E6F7FF;
-  --primary-border: #B3E6FF;
+  --primary-color: #00ABFD;
+  --primary-light: #71D9FF;
+  --primary-dark: #00587C;
+  --primary-bg: #CDF1FF;
+  --primary-border: #003140;
 }
 
 body {
@@ -60,35 +60,6 @@ body {
     opacity: 0.2;
 }
 
-
-/* .part-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-} */
-/* 
-.part-card:nth-child(2) {
-    background: linear-gradient(135deg, #434343 0%, #635959 100%);
-}
-
-.part-card:nth-child(3) {
-    background: linear-gradient(135deg, #0575e6 0%, #021b79 100%);
-}
-
-.part-card:nth-child(4) {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.part-card:nth-child(5) {
-    background: linear-gradient(135deg, #4776e6 0%, #8e54e9 100%);
-}
-
-.part-card:nth-child(6) {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-}
-
-.part-card:nth-child(7) {
-    background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
-} */
-
 .floating-animation {
     animation: floating 3s ease-in-out infinite;
 }
@@ -109,7 +80,6 @@ body {
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 .gradient-bg-header {
-    /* background: linear-gradient(135deg, #14B24C 0%, #16a34a 100%); */
     background: #ffffff;
 }
 

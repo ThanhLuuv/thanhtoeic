@@ -1,0 +1,209 @@
+/* FloatingBubbles.module.css - Hiệu ứng bong bóng nổi */
+
+.floatingParticles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  animation: float 15s infinite linear;
+}
+
+/* Bong bóng cơ bản */
+.bubble {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 70%);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Ngôi sao */
+.star {
+  background: radial-gradient(circle, rgba(255, 255, 0, 0.9) 0%, rgba(255, 255, 0, 0.1) 70%);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  box-shadow: 0 0 8px rgba(255, 255, 0, 0.4);
+}
+
+/* Bông tuyết */
+.snowflake {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.1) 70%);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+}
+
+/* Animation chính cho bong bóng bay lên */
+@keyframes float {
+  0% {
+    transform: translateY(100vh) rotate(0deg) scale(0.5);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(90vh) rotate(36deg) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(50vh) rotate(180deg) scale(1);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(10vh) rotate(324deg) scale(0.8);
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Hiệu ứng phụ cho một số bong bóng */
+.bubble:nth-child(3n) {
+  background: radial-gradient(circle, rgba(173, 216, 230, 0.5) 0%, rgba(173, 216, 230, 0.1) 70%);
+  animation-duration: 18s;
+}
+
+.bubble:nth-child(5n) {
+  background: radial-gradient(circle, rgba(255, 182, 193, 0.4) 0%, rgba(255, 182, 193, 0.1) 70%);
+  animation-duration: 12s;
+}
+
+.bubble:nth-child(7n) {
+  background: radial-gradient(circle, rgba(144, 238, 144, 0.3) 0%, rgba(144, 238, 144, 0.1) 70%);
+  animation-duration: 20s;
+}
+
+.bubble:nth-child(11n) {
+  background: radial-gradient(circle, rgba(255, 218, 185, 0.4) 0%, rgba(255, 218, 185, 0.1) 70%);
+  animation-duration: 16s;
+}
+
+.bubble:nth-child(13n) {
+  background: radial-gradient(circle, rgba(221, 160, 221, 0.4) 0%, rgba(221, 160, 221, 0.1) 70%);
+  animation-duration: 14s;
+}
+
+/* Hiệu ứng cho sao */
+.star:nth-child(3n) {
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.6) 0%, rgba(255, 215, 0, 0.1) 70%);
+  animation-duration: 16s;
+}
+
+.star:nth-child(5n) {
+  background: radial-gradient(circle, rgba(255, 140, 0, 0.5) 0%, rgba(255, 140, 0, 0.1) 70%);
+  animation-duration: 14s;
+}
+
+.star:nth-child(11n) {
+  background: radial-gradient(circle, rgba(255, 69, 0, 0.4) 0%, rgba(255, 69, 0, 0.1) 70%);
+  animation-duration: 13s;
+}
+
+.star:nth-child(17n) {
+  background: radial-gradient(circle, rgba(255, 20, 147, 0.4) 0%, rgba(255, 20, 147, 0.1) 70%);
+  animation-duration: 15s;
+}
+
+/* Hiệu ứng cho bông tuyết */
+.snowflake:nth-child(3n) {
+  background: radial-gradient(circle, rgba(240, 248, 255, 0.8) 0%, rgba(240, 248, 255, 0.1) 70%);
+  animation-duration: 18s;
+}
+
+.snowflake:nth-child(5n) {
+  background: radial-gradient(circle, rgba(230, 230, 250, 0.7) 0%, rgba(230, 230, 250, 0.1) 70%);
+  animation-duration: 16s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .bubble {
+    animation-duration: 12s;
+  }
+  
+  .bubble:nth-child(3n) {
+    animation-duration: 15s;
+  }
+  
+  .bubble:nth-child(5n) {
+    animation-duration: 10s;
+  }
+  
+  .bubble:nth-child(7n) {
+    animation-duration: 16s;
+  }
+  
+  .star {
+    animation-duration: 10s;
+  }
+  
+  .star:nth-child(3n) {
+    animation-duration: 13s;
+  }
+  
+  .star:nth-child(5n) {
+    animation-duration: 11s;
+  }
+  
+  .snowflake {
+    animation-duration: 14s;
+  }
+  
+  .snowflake:nth-child(3n) {
+    animation-duration: 16s;
+  }
+  
+  .snowflake:nth-child(5n) {
+    animation-duration: 13s;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .bubble {
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.05) 70%);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+  }
+  
+  .bubble:nth-child(3n) {
+    background: radial-gradient(circle, rgba(100, 149, 237, 0.4) 0%, rgba(100, 149, 237, 0.05) 70%);
+  }
+  
+  .bubble:nth-child(5n) {
+    background: radial-gradient(circle, rgba(255, 105, 180, 0.3) 0%, rgba(255, 105, 180, 0.05) 70%);
+  }
+  
+  .bubble:nth-child(7n) {
+    background: radial-gradient(circle, rgba(50, 205, 50, 0.3) 0%, rgba(50, 205, 50, 0.05) 70%);
+  }
+  
+  .star {
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.6) 0%, rgba(255, 215, 0, 0.05) 70%);
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
+  }
+  
+  .star:nth-child(3n) {
+    background: radial-gradient(circle, rgba(255, 140, 0, 0.5) 0%, rgba(255, 140, 0, 0.05) 70%);
+  }
+  
+  .star:nth-child(5n) {
+    background: radial-gradient(circle, rgba(255, 69, 0, 0.4) 0%, rgba(255, 69, 0, 0.05) 70%);
+  }
+  
+  .snowflake {
+    background: radial-gradient(circle, rgba(240, 248, 255, 0.5) 0%, rgba(240, 248, 255, 0.05) 70%);
+    box-shadow: 0 0 5px rgba(240, 248, 255, 0.2);
+  }
+  
+  .snowflake:nth-child(3n) {
+    background: radial-gradient(circle, rgba(230, 230, 250, 0.4) 0%, rgba(230, 230, 250, 0.05) 70%);
+  }
+  
+  .snowflake:nth-child(5n) {
+    background: radial-gradient(circle, rgba(220, 220, 255, 0.3) 0%, rgba(220, 220, 255, 0.05) 70%);
+  }
+}

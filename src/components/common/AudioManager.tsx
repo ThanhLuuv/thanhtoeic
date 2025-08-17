@@ -5,6 +5,8 @@ export const useAudioManager = (soundEnabled: boolean) => {
   const currentSpeech = useRef<SpeechSynthesisUtterance | null>(null);
   const audioContext = useRef<AudioContext | null>(null);
   const isPlayingRef = useRef<boolean>(false);
+  const successAudioRef = useRef<HTMLAudioElement | null>(null);
+  const errorAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const initAudioContext = () => {
     try {
@@ -66,6 +68,10 @@ export const useAudioManager = (soundEnabled: boolean) => {
         successAudio.load();
         errorAudio.load();
         
+        // Store references for reuse
+        successAudioRef.current = successAudio;
+        errorAudioRef.current = errorAudio;
+        
         console.log('Audio elements initialized successfully');
       } catch (error) {
         console.log('Failed to initialize audio elements:', error);
@@ -101,90 +107,124 @@ export const useAudioManager = (soundEnabled: boolean) => {
     isPlayingRef.current = false;
   };
 
-  const playSuccessSound = async () => {
-    console.log('playSuccessSound called, soundEnabled:', soundEnabled);
+  const playSuccessSound = async (): Promise<void> => {
     if (!soundEnabled) return;
     
-    const playSound = async () => {
-      try {
-        stopCurrentAudio();
-        
-        const audio = new Audio('/asset/audio/success-sound.mp3');
-        audio.volume = 0.3;
+    try {
+      // Use preloaded audio if available
+      if (successAudioRef.current) {
+        const audio = successAudioRef.current;
+        audio.currentTime = 0; // Reset to start
         currentAudio.current = audio;
         
-        // Add event listeners
+        // Return a promise that resolves when audio ends
+        return new Promise((resolve, reject) => {
+          audio.addEventListener('ended', () => {
+            currentAudio.current = null;
+            resolve();
+          });
+          
+          audio.addEventListener('error', () => {
+            console.log('Success sound failed to play');
+            currentAudio.current = null;
+            reject(new Error('Success sound failed to play'));
+          });
+          
+          audio.play().catch(reject);
+        });
+      }
+      
+      // Fallback to creating new audio if preloaded not available
+      const audio = new Audio('/asset/audio/success-sound.mp3');
+      audio.volume = 0.3;
+      currentAudio.current = audio;
+      
+      // Return a promise that resolves when audio ends
+      return new Promise((resolve, reject) => {
         audio.addEventListener('ended', () => {
           currentAudio.current = null;
+          resolve();
         });
         
         audio.addEventListener('error', () => {
           console.log('Success sound failed to play');
           currentAudio.current = null;
+          reject(new Error('Success sound failed to play'));
         });
         
-        await audio.play();
-        console.log('Success sound played');
-      } catch (error) {
-        console.log('Error playing success sound:', error);
-        currentAudio.current = null;
-      }
-    };
-
-    try {
-      await resumeAudioContext();
-      await playSound();
+        audio.play().catch(reject);
+      });
     } catch (error) {
       console.log('Failed to play success sound:', error);
+      throw error;
     }
   };
 
-  const playErrorSound = async () => {
-    console.log('playErrorSound called, soundEnabled:', soundEnabled);
+  const playErrorSound = async (): Promise<void> => {
     if (!soundEnabled) return;
     
-    const playSound = async () => {
-      try {
-        stopCurrentAudio();
-        
-        const audio = new Audio('/asset/audio/error-sound.mp3');
-        audio.volume = 0.3;
+    try {
+      // Use preloaded audio if available
+      if (errorAudioRef.current) {
+        const audio = errorAudioRef.current;
+        audio.currentTime = 0; // Reset to start
         currentAudio.current = audio;
         
-        // Add event listeners
+        // Return a promise that resolves when audio ends
+        return new Promise((resolve, reject) => {
+          audio.addEventListener('ended', () => {
+            currentAudio.current = null;
+            resolve();
+          });
+          
+          audio.addEventListener('error', () => {
+            console.log('Error sound failed to play');
+            currentAudio.current = null;
+            reject(new Error('Error sound failed to play'));
+          });
+          
+          audio.play().catch(reject);
+        });
+      }
+      
+      // Fallback to creating new audio if preloaded not available
+      const audio = new Audio('/asset/audio/error-sound.mp3');
+      audio.volume = 0.3;
+      currentAudio.current = audio;
+      
+      // Return a promise that resolves when audio ends
+      return new Promise((resolve, reject) => {
         audio.addEventListener('ended', () => {
           currentAudio.current = null;
+          resolve();
         });
         
         audio.addEventListener('error', () => {
           console.log('Error sound failed to play');
           currentAudio.current = null;
+          reject(new Error('Error sound failed to play'));
         });
         
-        await audio.play();
-        console.log('Error sound played');
-      } catch (error) {
-        console.log('Error playing error sound:', error);
-        currentAudio.current = null;
-      }
-    };
-
-    try {
-      await resumeAudioContext();
-      await playSound();
+        audio.play().catch(reject);
+      });
     } catch (error) {
       console.log('Failed to play error sound:', error);
+      throw error;
     }
   };
 
   const handlePlayAudio = async (audioUrl?: string, text?: string) => {
     if (!soundEnabled) return;
-    // If a play is already in-flight, ignore to prevent double-trigger causing AbortError
-    if (isPlayingRef.current) return;
-    isPlayingRef.current = true;
     
     // Stop any currently playing audio first
     stopCurrentAudio();
+    
+    // If a play is already in-flight, wait a bit before proceeding
+    if (isPlayingRef.current) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    isPlayingRef.current = true;
     
     // Ensure audio context is ready
     await resumeAudioContext();
@@ -227,7 +267,11 @@ export const useAudioManager = (soundEnabled: boolean) => {
           console.log('Audio play failed, trying text-to-speech:', playError);
           currentAudio.current = null;
           isPlayingRef.current = false;
-          throw playError; // This will trigger the catch block below
+          
+          // Don't throw error for AbortError, just fallback to TTS
+          if (playError && typeof playError === 'object' && 'name' in playError && playError.name !== 'AbortError') {
+            throw playError; // This will trigger the catch block below
+          }
         }
         
       } catch (error) {

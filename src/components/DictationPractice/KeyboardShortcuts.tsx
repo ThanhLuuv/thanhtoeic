@@ -1,39 +1,17 @@
 import React from 'react';
+import styles from './KeyboardShortcuts.module.css';
 
 const KeyboardShortcuts: React.FC = () => {
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      gap: '20px',
-      marginBottom: '16px',
-      fontSize: '11px',
-      color: '#888',
-      fontFamily: 'monospace'
-    }}>
-      <span style={{
-        background: '#f8f9fa',
-        padding: '2px 6px',
-        borderRadius: '4px',
-        border: '1px solid #e9ecef'
-      }}>
-        <kbd style={{ background: '#fff', border: '1px solid #ccc', borderRadius: '3px', padding: '1px 4px', fontSize: '10px' }}>Enter</kbd> Check/Next
+    <div className={styles.container}>
+      <span className={styles.shortcutItem}>
+        <kbd className={styles.keyboardKey}>Enter</kbd> Check/Next
       </span>
-      <span style={{
-        background: '#f8f9fa',
-        padding: '2px 6px',
-        borderRadius: '4px',
-        border: '1px solid #e9ecef'
-      }}>
-        <kbd style={{ background: '#fff', border: '1px solid #ccc', borderRadius: '3px', padding: '1px 4px', fontSize: '10px' }}>Shift</kbd> Audio
+      <span className={styles.shortcutItem}>
+        <kbd className={styles.keyboardKey}>Shift</kbd> Audio
       </span>
-      <span style={{
-        background: '#f8f9fa',
-        padding: '2px 6px',
-        borderRadius: '4px',
-        border: '1px solid #e9ecef'
-      }}>
-        <kbd style={{ background: '#fff', border: '1px solid #ccc', borderRadius: '3px', padding: '1px 4px', fontSize: '10px' }}>Ctrl</kbd> Show Answer
+      <span className={styles.shortcutItem}>
+        <kbd className={styles.keyboardKey}>Ctrl</kbd> Show Answer
       </span>
     </div>
   );

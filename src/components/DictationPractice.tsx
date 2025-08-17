@@ -1,14 +1,24 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { vocabularyService, ToeicVocabulary, VocabularyItem } from '../services';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { 
+  ArrowBack, 
+  CheckCircle,
+  ArrowForward, 
+  FastForward 
+} from '@mui/icons-material';
 import {
   useAudioManager,
+  FloatingBubbles,
 } from './common';
 import {
   SuccessModal,
-  MainPracticeCard,
+  HeaderSection,
+  MainSection,
+  FooterSection,
 } from './DictationPractice/index';
 import { exampleGenerationService } from '../services';
+import styles from './DictationPractice.module.css';
 
 // Define interfaces for API responses
 interface ExampleSentence {
@@ -44,6 +54,7 @@ const DictationPractice: React.FC = () => {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [completedSentences, setCompletedSentences] = useState<number>(0);
   const [isSetLoaded, setIsSetLoaded] = useState(false);
+  const [hasPlayedInitialAudio, setHasPlayedInitialAudio] = useState(false);
   const [exampleSentence, setExampleSentence] = useState<ExampleSentence | null>(null);
   const [isGeneratingExample, setIsGeneratingExample] = useState(false);
   const [generatedExamples, setGeneratedExamples] = useState<string[]>([]);
@@ -57,8 +68,12 @@ const DictationPractice: React.FC = () => {
 
   // Load vocabulary data from API
   useEffect(() => {
+    let isMounted = true;
+    
     const loadVocabulary = async () => {
       try {
+        if (!isMounted) return;
+        
         setIsLoading(true);
         setIsSetLoaded(false);
         setError(null);
@@ -67,6 +82,8 @@ const DictationPractice: React.FC = () => {
         
         // Get the specific vocabulary set by topic and set index
         const currentSetVocab = await vocabularyService.getVocabularySetByTopicAndSetIndex(topicFromUrl, topicSetIndex);
+        
+        if (!isMounted) return;
         
         console.log(`[DictationPractice] Loaded vocabulary set:`, {
           topic: topicFromUrl,
@@ -84,6 +101,9 @@ const DictationPractice: React.FC = () => {
         
         // Get total sets count for navigation
         const totalSetsCount = await vocabularyService.getTotalSetsCount();
+        
+        if (!isMounted) return;
+        
         setTotalSets(totalSetsCount);
         
         // Reset user inputs and results for the new set
@@ -96,28 +116,51 @@ const DictationPractice: React.FC = () => {
         
         // Mark set as loaded
         setIsSetLoaded(true);
+        setHasPlayedInitialAudio(false); // Reset for new set
         
       } catch (err) {
+        if (!isMounted) return;
+        
         console.error(`[DictationPractice] Error loading vocabulary for topic ${topicFromUrl} and set ${topicSetIndex}:`, err);
         setError('Failed to load vocabulary data. Please try again.');
         setVocabList([]);
         setIsSetLoaded(false);
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     loadVocabulary();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [topicFromUrl, topicSetIndex]);
 
   const handleInputChange = (value: string) => {
     const newInputs = [...userInputs];
     newInputs[currentIndex] = value;
     setUserInputs(newInputs);
-    // Reset result for this word so user can retry immediately
-    const newResult = [...result];
-    newResult[currentIndex] = null;
-    setResult(newResult);
+    
+    // Only reset result and hide modal if user is changing their answer after checking
+    if (result[currentIndex] !== null) {
+      const newResult = [...result];
+      newResult[currentIndex] = null;
+      setResult(newResult);
+      
+      // Hide answer and modal if they were shown, so user can retry
+      if (showAnswer) {
+        setShowAnswer(false);
+      }
+      if (showModal) {
+        setShowModal(false);
+      }
+    } else if (showModal) {
+      // If no result yet but modal is shown, hide it when user types
+      setShowModal(false);
+    }
   };
 
   const handleCheck = async () => {
@@ -127,27 +170,60 @@ const DictationPractice: React.FC = () => {
         .normalize('NFC')
         .replace(/\W/g, '')
         .toLowerCase();
-    const newResult = [...result];
-    const currentItem = vocabList[currentIndex];
-    const isCorrectNow = normalize(currentItem.word) === normalize(userInputs[currentIndex]);
-    newResult[currentIndex] = isCorrectNow;
-    setResult(newResult);
     
+    // Use currentIndex directly for consistency
+    const currentItem = vocabList[currentIndex];
+    if (!currentItem) {
+      console.error('No current item found');
+      return;
+    }
+    
+    const isCorrectNow = normalize(currentItem.word) === normalize(userInputs[currentIndex] || '');
+    
+
+    
+    // Update result state
+    setResult(prevResult => {
+      const newResult = [...prevResult];
+      newResult[currentIndex] = isCorrectNow;
+      return newResult;
+    });
     
     if (isCorrectNow) {
-      await playSuccessSound();
+      // Set states immediately for instant feedback
       setShowAnswer(true);
       setShowModal(true);
-      // Reset justCheckedRef để người dùng có thể nhấn Enter ngay lập tức
-      justCheckedRef.current = false;
+      justCheckedRef.current = true; // Set flag to prevent reset effect from running
+      
+      // Reset the flag after a delay to allow normal navigation
+      setTimeout(() => {
+        justCheckedRef.current = false;
+      }, 500);
+      
+      // Play success sound and wait for it to finish, then play word audio
+      try {
+        await playSuccessSound();
+        // Play word audio after success sound finishes
+        handlePlayAudio(currentItem.audio, currentItem.word);
+      } catch (error) {
+        console.error('Error playing success sound:', error);
+        // If success sound fails, still play word audio
+        handlePlayAudio(currentItem.audio, currentItem.word);
+      }
     } else {
-      await playErrorSound();
+      // Play error sound in background (non-blocking)
+      playErrorSound().catch(console.error);
     }
   };
 
   const handleNext = () => {
+    // Reset states immediately when moving to next word
+    setShowAnswer(false);
+    setShowModal(false);
+    justCheckedRef.current = false; // Reset flag when moving to next word
+    
     // If this is the last word in the current set
-    if (currentIndex === vocabList.length - 1) {
+    if (safeCurrentIndex === vocabList.length - 1) {
       // Navigate to next set if available
       if (setIdx < totalSets - 1) {
         const nextSetIndex = topicSetIndex + 1;
@@ -159,15 +235,20 @@ const DictationPractice: React.FC = () => {
       }
     } else {
       // Move to next word in current set
-      setCurrentIndex(currentIndex + 1);
+      setCurrentIndex(safeCurrentIndex + 1);
+      
+      // Reset result and user input for the new word to ensure clean state
+      const newResult = [...result];
+      const newUserInputs = [...userInputs];
+      newResult[safeCurrentIndex + 1] = null;
+      newUserInputs[safeCurrentIndex + 1] = '';
+      setResult(newResult);
+      setUserInputs(newUserInputs);
     }
-    setShowModal(false);
-    // Reset justCheckedRef khi chuyển sang từ mới
-    justCheckedRef.current = false;
   };
 
   const handlePrev = () => {
-    if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
+    if (safeCurrentIndex > 0) setCurrentIndex(safeCurrentIndex - 1);
   };
 
   const handleGenerateExample = async () => {
@@ -236,37 +317,58 @@ const DictationPractice: React.FC = () => {
 
   // Khi chuyển sang từ mới, kiểm tra examples có sẵn
   useEffect(() => {
+    let isMounted = true;
+    
     if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex > 0) {
       const item = vocabList[currentIndex];
-      handlePlayAudio(item.audio, item.word);
+      // Only play audio when moving to a new word, not when first loading
+      // Add delay to avoid audio conflicts
+      const timer = setTimeout(() => {
+        if (isMounted) {
+          handlePlayAudio(item.audio, item.word);
+        }
+      }, 300);
       
       // Load examples from database for new word
       loadExamplesFromDatabase(item.word);
-    }
-    setShowAnswer(false);
-    // Chỉ reset showModal khi thực sự chuyển sang từ mới, không phải khi đang check
-    // Và chỉ reset khi không phải là lần đầu load
-    if (!isChecked && currentIndex > 0) {
-      setShowModal(false);
+      
+      return () => {
+        clearTimeout(timer);
+        isMounted = false;
+      };
     }
     
-    // Don't reset examples here, let loadExamplesFromDatabase handle it
-    setExampleSentence(null); // Reset example sentence when moving to next word
-    setGeneratedExamples([]); // Reset generated examples for new word
-    setExampleError(null);
-    
-    // Focus input when moving to new word
-    if (inputRef.current) {
-      inputRef.current.focus();
+    // Only reset states when moving to a new word, not on initial load
+    if (currentIndex > 0 || hasPlayedInitialAudio) {
+      if (isMounted) {
+        setShowAnswer(false);
+        // Chỉ reset showModal khi thực sự chuyển sang từ mới, không phải khi đang check
+        if (!isChecked && currentIndex > 0) {
+          setShowModal(false);
+        }
+        
+        // Don't reset examples here, let loadExamplesFromDatabase handle it
+        setExampleSentence(null); // Reset example sentence when moving to next word
+        setGeneratedExamples([]); // Reset generated examples for new word
+        setExampleError(null);
+        
+        // Focus input when moving to new word
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }
     }
+    
+    return () => {
+      isMounted = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentIndex, isLoading, isSetLoaded]);
+  }, [currentIndex, isLoading, isSetLoaded, hasPlayedInitialAudio]);
 
   // Khi vocabList thay đổi (load set mới), kiểm tra examples của từ đầu tiên và focus input
   useEffect(() => {
     if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex === 0) {
       const item = vocabList[currentIndex];
-      handlePlayAudio(item.audio, item.word);
       
       // Load existing examples from database first
       loadExamplesFromDatabase(item.word);
@@ -281,28 +383,23 @@ const DictationPractice: React.FC = () => {
   // Load examples from database for current word
   const loadExamplesFromDatabase = async (word: string) => {
     try {
-      console.log(`[DictationPractice] Loading examples from database for word: "${word}"`);
       
       // Import exampleService dynamically
       const { exampleService } = await import('../services/exampleService');
       const storedExamples = await exampleService.getExampleSentencesByWord(word);
       
-      console.log(`[DictationPractice] Found ${storedExamples.length} examples in database for word "${word}"`);
       
       if (storedExamples.length > 0) {
         const examples = storedExamples.map(stored => 
           exampleService.convertToExampleSentence(stored)
         );
         
-        console.log(`[DictationPractice] Setting examples:`, examples);
         
         setCurrentExamples(examples);
         setCurrentExampleIndex(0);
         setExampleSentence(examples[0]);
         
-        console.log(`[DictationPractice] Successfully loaded ${examples.length} examples from database for word "${word}"`);
       } else {
-        console.log(`[DictationPractice] No examples found in database for word "${word}"`);
         // Only reset if no examples found in database
         setCurrentExamples([]);
         setCurrentExampleIndex(0);
@@ -316,95 +413,32 @@ const DictationPractice: React.FC = () => {
 
   // Load examples when currentIndex changes (for any word)
   useEffect(() => {
+    
+    
     if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex >= 0) {
       const item = vocabList[currentIndex];
       if (item) {
-        console.log(`[DictationPractice] Current word changed to: "${item.word}", loading examples...`);
         loadExamplesFromDatabase(item.word);
       }
     }
   }, [currentIndex, vocabList, isLoading, isSetLoaded]);
 
-  // Focus input when set is loaded (with delay to ensure DOM is ready)
+  // Single focus effect when set is loaded
   useEffect(() => {
+    
+    
     if (vocabList.length > 0 && !isLoading && isSetLoaded) {
-      // Small delay to ensure DOM is ready
+      // Single focus attempt with reasonable delay
       const timer = setTimeout(() => {
         if (inputRef.current) {
           inputRef.current.focus();
-        }
-      }, 100);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [vocabList, isLoading, isSetLoaded]);
-
-  // Force focus input when component is ready (for page reload and initial load)
-  useEffect(() => {
-    if (vocabList.length > 0 && !isLoading && isSetLoaded) {
-      // Multiple attempts to focus with increasing delays
-      const focusAttempts = [50, 150, 300, 500];
-      
-      focusAttempts.forEach(delay => {
-        const timer = setTimeout(() => {
-          if (inputRef.current) {
-            inputRef.current.focus();
-            console.log(`[DictationPractice] Focus attempt after ${delay}ms`);
-          }
-        }, delay);
-        
-        return () => clearTimeout(timer);
-      });
-    }
-  }, [vocabList.length, isLoading, isSetLoaded]);
-
-  // Additional focus when currentIndex is 0 (first word of set)
-  useEffect(() => {
-    if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex === 0) {
-      const timer = setTimeout(() => {
-        if (inputRef.current) {
-          inputRef.current.focus();
-          console.log('[DictationPractice] Focus on first word');
+          
         }
       }, 200);
       
       return () => clearTimeout(timer);
     }
-  }, [vocabList.length, isLoading, isSetLoaded, currentIndex]);
-
-  // Use useLayoutEffect to focus input immediately after DOM render
-  useLayoutEffect(() => {
-    if (vocabList.length > 0 && !isLoading && isSetLoaded) {
-      if (inputRef.current) {
-        inputRef.current.focus();
-        console.log('[DictationPractice] useLayoutEffect focus');
-      }
-    }
-  }, [vocabList.length, isLoading, isSetLoaded]);
-
-  // Use requestAnimationFrame to ensure focus after browser render
-  useEffect(() => {
-    if (vocabList.length > 0 && !isLoading && isSetLoaded) {
-      requestAnimationFrame(() => {
-        if (inputRef.current) {
-          inputRef.current.focus();
-          console.log('[DictationPractice] requestAnimationFrame focus');
-        }
-      });
-    }
-  }, [vocabList.length, isLoading, isSetLoaded]);
-
-  // Use setTimeout with 0 delay to ensure focus after all state updates
-  useEffect(() => {
-    if (vocabList.length > 0 && !isLoading && isSetLoaded) {
-      setTimeout(() => {
-        if (inputRef.current) {
-          inputRef.current.focus();
-          console.log('[DictationPractice] setTimeout 0 focus');
-        }
-      }, 0);
-    }
-  }, [vocabList.length, isLoading, isSetLoaded]);
+  }, [vocabList, isLoading, isSetLoaded]);
 
   // Load completed sentences count from localStorage
   useEffect(() => {
@@ -419,20 +453,45 @@ const DictationPractice: React.FC = () => {
     setIsSetLoaded(false);
   }, [setIndex]);
 
-  // Handle audio when vocabList changes (new set loaded)
+  // Handle audio when vocabList changes (new set loaded) - only play once when set is first loaded
   useEffect(() => {
-    if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex === 0) {
+    
+    
+    let isMounted = true;
+    
+    if (vocabList.length > 0 && !isLoading && isSetLoaded && currentIndex === 0 && !hasPlayedInitialAudio) {
       const item = vocabList[currentIndex];
-      handlePlayAudio(item.audio, item.word);
+      // Only play audio once when the set is first loaded, with a small delay to avoid conflicts
+      const timer = setTimeout(() => {
+        if (isMounted) {
+          handlePlayAudio(item.audio, item.word);
+          setHasPlayedInitialAudio(true); // Mark as played
+        }
+      }, 500); // Delay to avoid audio conflicts
+      
+      return () => {
+        clearTimeout(timer);
+        isMounted = false;
+      };
     }
-  }, [vocabList, isLoading, isSetLoaded, currentIndex]);
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [vocabList, isLoading, isSetLoaded, hasPlayedInitialAudio]); // Added hasPlayedInitialAudio dependency
 
-  const item = vocabList[currentIndex];
+  // Safety check to ensure currentIndex is within bounds
+  const safeCurrentIndex = Math.min(currentIndex, vocabList.length - 1);
+  const item = vocabList[safeCurrentIndex];
+  
+  // Use currentIndex for result checking to ensure consistency
   const isChecked = result[currentIndex] !== null;
   const isCorrect = result[currentIndex] === true;
-  const progress = Math.round(((currentIndex + 1) / vocabList.length) * 100);
+  const progress = Math.round(((safeCurrentIndex + 1) / vocabList.length) * 100);
   const showNextButton = isChecked && isCorrect;
-  const isSetCompleted = isCorrect && currentIndex === vocabList.length - 1;
+  const isSetCompleted = isCorrect && safeCurrentIndex === vocabList.length - 1;
+
+  
 
   // Count completed sentences and save to localStorage
   useEffect(() => {
@@ -443,28 +502,69 @@ const DictationPractice: React.FC = () => {
     }
   }, [result, completedSentences]);
 
+  // Reset result array when vocabList changes (only when length actually changes)
+  useEffect(() => {
+    
+    
+    if (vocabList.length > 0 && (result.length !== vocabList.length || userInputs.length !== vocabList.length)) {
+      setResult(Array(vocabList.length).fill(null));
+      setUserInputs(Array(vocabList.length).fill(''));
+    }
+  }, [vocabList.length, userInputs.length]); // Removed result.length dependency to prevent infinite loop
+
+  // Reset states when currentIndex changes (when navigating between words)
+  useEffect(() => {
+    // Only reset states when actually moving to a different word, not on initial load or when checking answers
+    // Use a ref to track if we're in the middle of checking an answer
+    if ((currentIndex > 0 || hasPlayedInitialAudio) && !justCheckedRef.current) {
+      setShowAnswer(false);
+      setShowModal(false);
+    }
+  }, [currentIndex, hasPlayedInitialAudio]);
+
+  // Global keyboard event listener for Enter key when modal is shown
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && showModal && showNextButton && !justCheckedRef.current) {
+        e.preventDefault();
+        justCheckedRef.current = true;
+        handleNext();
+        // Reset justCheckedRef after a short delay
+        setTimeout(() => { justCheckedRef.current = false; }, 100);
+      }
+    };
+
+    if (showModal && showNextButton) {
+      document.addEventListener('keydown', handleGlobalKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleGlobalKeyDown);
+    };
+  }, [showModal, showNextButton]);
+
   // Removed duplicate keydown event listener to avoid conflicts
   // The handleKeyDown function in MainPracticeCard handles all keyboard events
 
   if (isLoading) return (
-    <div className="min-h-screen bg-slate-50">
+    <div className={styles.loadingContainer}>
       <div className="container mx-auto px-6 py-12 max-w-6xl">
-        <div className="text-center py-20">
-          <h3 className="text-2xl font-bold text-gray-800 mb-3">Loading...</h3>
+        <div className={styles.loadingContent}>
+          <h3 className={styles.loadingTitle}>Loading...</h3>
         </div>
       </div>
     </div>
   );
   
   if (error) return (
-    <div className="min-h-screen bg-slate-50">
+    <div className={styles.errorContainer}>
       <div className="container mx-auto px-6 py-12 max-w-6xl">
-        <div className="text-center py-20">
-          <h3 className="text-xl font-bold text-gray-800 mb-3">Error</h3>
-          <p className="text-gray-600">{error}</p>
+        <div className={styles.errorContent}>
+          <h3 className={styles.errorTitle}>Error</h3>
+          <p className={styles.errorMessage}>{error}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className={styles.retryButton}
           >
             Try again
           </button>
@@ -474,14 +574,14 @@ const DictationPractice: React.FC = () => {
   );
   
   if (vocabList.length === 0) return (
-    <div className="min-h-screen bg-slate-50">
+    <div className={styles.noDataContainer}>
       <div className="container mx-auto px-6 py-12 max-w-6xl">
-        <div className="text-center py-20">
-          <h3 className="text-2xl font-bold text-gray-800 mb-3">No data available!</h3>
-          <p className="text-gray-600 mb-4">There are no vocabulary sets available at the moment.</p>
+        <div className={styles.noDataContent}>
+          <h3 className={styles.noDataTitle}>No data available!</h3>
+          <p className={styles.noDataMessage}>There are no vocabulary sets available at the moment.</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className={styles.refreshButton}
           >
             Refresh
           </button>
@@ -499,7 +599,8 @@ const DictationPractice: React.FC = () => {
   // Action buttons configuration
   const actionButtons = [
     {
-      text: '←',
+      text: 'ArrowBack',
+      icon: <ArrowBack />,
       onClick: handlePrev,
       variant: 'secondary' as const,
       disabled: currentIndex === 0,
@@ -507,24 +608,29 @@ const DictationPractice: React.FC = () => {
     },
     {
       text: 'Check',
+      icon: <CheckCircle />,
       onClick: handleCheck,
       variant: 'success' as const,
       disabled: !userInputs[currentIndex],
       show: !isChecked
     },
     {
-      text: currentIndex === vocabList.length - 1 
+      text: safeCurrentIndex === vocabList.length - 1 
         ? (setIdx < totalSets - 1 ? 'Next Set' : 'Finish')
         : 'Next',
+      icon: <ArrowForward />,
       onClick: handleNext,
       variant: 'primary' as const,
+      disabled: false,
       show: showNextButton
     },
     {
-      text: '⏭',
+      text: 'FastForward',
+      icon: <FastForward />,
       onClick: handleNext,
       variant: 'warning' as const,
-      show: currentIndex !== vocabList.length - 1
+      disabled: false,
+      show: safeCurrentIndex !== vocabList.length - 1
     }
   ];
 
@@ -536,13 +642,21 @@ const DictationPractice: React.FC = () => {
     meaning: item.meaning
   }] : [];
 
-  const handleKeyDown = async (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+
+    
     if (e.key === 'Enter') {
+      
+      
       if (!isChecked) {
-        await handleCheck();
+        
+        e.preventDefault(); // Prevent default form submission
+        handleCheck().catch(console.error); // Handle async function properly
         // Không set justCheckedRef ngay lập tức, để người dùng có thể nhấn Enter để tiếp tục
         // justCheckedRef chỉ được set khi thực sự nhấn Next
       } else if (showNextButton && !justCheckedRef.current) {
+        
+        e.preventDefault(); // Prevent default form submission
         justCheckedRef.current = true; // Set flag khi thực sự nhấn Next
         handleNext();
       }
@@ -569,51 +683,12 @@ const DictationPractice: React.FC = () => {
   const handleNavigateHome = () => navigate('/');
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: '#f7f9fb',
-      position: 'relative',
-    }}>
+    <div className={styles.container}>
+      
+      {/* Floating Bubbles Background Effect */}
+      <FloatingBubbles particleCount={40} variant="mixed" />
+      
 
-      {/* Back Button */}
-      <button
-        onClick={handleNavigateHome}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          padding: '12px 20px',
-          backgroundColor: '#64748b',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          fontSize: '14px',
-          fontWeight: '500',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          transition: 'all 0.2s ease',
-          zIndex: 1000,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = '#475569';
-          e.currentTarget.style.transform = 'translateY(-1px)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = '#64748b';
-          e.currentTarget.style.transform = 'translateY(0)';
-        }}
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M19 12H5M12 19l-7-7 7-7"/>
-        </svg>
-        Back to List
-      </button>
 
       {/* Success Modal */}
       <SuccessModal
@@ -636,98 +711,44 @@ const DictationPractice: React.FC = () => {
         onPrevExample={handlePrevExample}
       />
 
-      {/* Main Practice Card */}
-      <MainPracticeCard
-        item={item}
+      {/* Section 1: Header - Progress, Topic, Word Count */}
+      <HeaderSection
+        topic={topic}
         currentIndex={currentIndex}
         vocabListLength={vocabList.length}
         progress={progress}
-        soundEnabled={soundEnabled}
+        setIdx={setIdx}
+        totalSets={totalSets}
+        completedSentences={completedSentences}
+        onBack={handleNavigateHome}
+      />
+
+      {/* Section 2: Main - Audio, Input, Buttons */}
+      <MainSection
+        item={item}
+        currentIndex={currentIndex}
+        vocabListLength={vocabList.length}
         userInputs={userInputs}
         result={result}
         showAnswer={showAnswer}
         showNextButton={showNextButton}
         isChecked={isChecked}
         isCorrect={isCorrect}
-        topic={topic}
-        setIdx={setIdx}
-        completedSentences={completedSentences}
+        soundEnabled={soundEnabled}
         actionButtons={actionButtons}
-        answerItems={answerItems}
-        onSoundToggle={() => setSoundEnabled(!soundEnabled)}
         onInputChange={handleInputChange}
         onPlayAudio={handlePlayAudio}
         onToggleAnswer={handleToggleAnswer}
         onKeyDown={handleKeyDown}
+        onSoundToggle={() => setSoundEnabled(!soundEnabled)}
       />
 
-      {/* Responsive style */}
-      <style>{`
-        @keyframes modalSlideIn {
-          from {
-            opacity: 0;
-            transform: scale(0.9) translateY(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-        
-        @keyframes spin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-        
-        @media (max-width: 600px) {
-          div[style*='max-width: 400px'] {
-            max-width: 98vw !important;
-            padding: 10px !important;
-          }
-          input[type='text'] {
-            width: 90vw !important;
-            min-width: 0 !important;
-            font-size: 16px !important;
-          }
-          div[style*='gap: 20px'] {
-            gap: 8px !important;
-            flex-wrap: wrap !important;
-          }
-          div[style*='gap: 20px'] span {
-            font-size: 10px !important;
-            padding: 1px 4px !important;
-          }
-          div[style*='gap: 20px'] kbd {
-            font-size: 9px !important;
-            padding: 1px 3px !important;
-          }
-          div[style*='max-width: 400px'][style*='padding: 32px'] {
-            padding: 20px !important;
-            margin: 10px !important;
-          }
-          div[style*='max-width: 400px'][style*='padding: 32px'] h2 {
-            font-size: 20px !important;
-          }
-          div[style*='max-width: 400px'][style*='padding: 32px'] div[style*='font-size: 28px'] {
-            font-size: 24px !important;
-          }
-          div[style*='max-width: 400px'][style*='padding: 32px'] div[style*='font-size: 16px'] {
-            font-size: 14px !important;
-          }
-          
-          /* Back button responsive */
-          button[onclick*='handleNavigateBack'] {
-            top: 10px !important;
-            left: 10px !important;
-            padding: 8px 12px !important;
-            font-size: 12px !important;
-          }
-        }
-      `}</style>
+      {/* Section 3: Footer - Keyboard Shortcuts, Status, Tips */}
+      <FooterSection
+        showAnswer={showAnswer}
+        isChecked={isChecked}
+        isCorrect={isCorrect}
+      />
     </div>
   );
 };

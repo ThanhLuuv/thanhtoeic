@@ -1,0 +1,39 @@
+.audioButton {
+  border-radius: 50%;
+  border: 2px solid var(--primary-color);
+  background: #ffffff;
+  color: var(--primary-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audioButton:hover {
+  background: var(--primary-color);
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* Size variants */
+.small {
+  padding: 8px;
+  min-width: 36px;
+  min-height: 36px;
+  font-size: 16px;
+}
+
+.medium {
+  padding: 12px;
+  min-width: 48px;
+  min-height: 48px;
+  font-size: 20px;
+}
+
+.large {
+  padding: 16px;
+  min-width: 60px;
+  min-height: 60px;
+  font-size: 24px;
+}

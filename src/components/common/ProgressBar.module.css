@@ -1,0 +1,55 @@
+.progressBarContainer {
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 18px;
+}
+
+.progressBarContainer.default {
+  height: 8px;
+  background: #f0f0f0;
+}
+
+.progressBarContainer.thin {
+  height: 4px;
+  background: #f0f0f0;
+}
+
+.progressBarContainer.medium {
+  height: 12px;
+  background: #f0f0f0;
+}
+
+.progressBarContainer.thick {
+  height: 16px;
+  background: #f0f0f0;
+}
+
+.progressBarFill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.progressBarFill.primary {
+  background: var(--primary-color);
+}
+
+.progressBarFill.success {
+  background: #4caf50;
+}
+
+.progressBarFill.warning {
+  background: #ff9800;
+}
+
+.progressBarFill.danger {
+  background: #f44336;
+}
+
+.progressBarFill.secondary {
+  background: #6b7280;
+}
+
+/* Custom height variants */
+.progressBarContainer.custom {
+  background: #f0f0f0;
+}
