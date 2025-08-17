@@ -1,36 +1,26 @@
-import { ENV_CONFIG } from '../config/env';
 import type { 
   ExampleSentenceResponse, 
   GenerateExampleRequest, 
   GenerateExampleError 
 } from '../types/example';
 
-// Service for generating example sentences using OpenAI
+// Service for generating example sentences using our secure API endpoint
 class ExampleGenerationService {
-  private apiKey: string;
-  private baseUrl: string;
+  private apiEndpoint: string;
 
   constructor() {
-    this.apiKey = ENV_CONFIG.OPENAI_API_KEY;
-    this.baseUrl = 'https://api.openai.com/v1';
-    
-    if (!this.apiKey) {
-      console.warn('OpenAI API key không được cấu hình. Example generation sẽ không hoạt động.');
-    }
+    // Sử dụng API endpoint thay vì gọi trực tiếp OpenAI
+    this.apiEndpoint = '/api/chat';
   }
 
   /**
-   * Generate example sentence using OpenAI API and save to database
+   * Generate example sentence using our secure API endpoint and save to database
    */
   async generateExampleSentence(
     request: GenerateExampleRequest,
     topic?: string
   ): Promise<ExampleSentenceResponse> {
     try {
-      if (!this.apiKey) {
-        throw new Error('Error creating example sentence');
-      }
-
       // Tạo danh sách các câu đã tồn tại để tránh trùng lặp
       const existingExamplesText = request.existingExamples && request.existingExamples.length > 0 
         ? `\n\nCÁC CÂU ĐÃ TẠO TRƯỚC ĐÓ (KHÔNG ĐƯỢC TẠO LẠI):\n${request.existingExamples.map((example, index) => `${index + 1}. ${example}`).join('\n')}`
@@ -55,11 +45,10 @@ Trả về JSON với format:
   }
 }`;
 
-      const response = await fetch(`${this.baseUrl}/chat/completions`, {
+      const response = await fetch(this.apiEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
         },
         body: JSON.stringify({
           model: 'gpt-4o',
@@ -180,10 +169,10 @@ Trả về JSON với format:
   }
 
   /**
-   * Check if service is available (has API key)
+   * Check if service is available (always true since we use our API endpoint)
    */
   isAvailable(): boolean {
-    return !!this.apiKey;
+    return true;
   }
 }
 
