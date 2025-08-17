@@ -78,19 +78,11 @@ const DictationPractice: React.FC = () => {
         setIsSetLoaded(false);
         setError(null);
         
-        console.log(`[DictationPractice] Loading vocabulary for topic: ${topicFromUrl}, set index: ${topicSetIndex}`);
         
         // Get the specific vocabulary set by topic and set index
         const currentSetVocab = await vocabularyService.getVocabularySetByTopicAndSetIndex(topicFromUrl, topicSetIndex);
         
         if (!isMounted) return;
-        
-        console.log(`[DictationPractice] Loaded vocabulary set:`, {
-          topic: topicFromUrl,
-          topicSetIndex,
-          wordCount: currentSetVocab.length,
-          words: currentSetVocab.map(v => v.word)
-        });
         
         // Convert ToeicVocabulary to VocabularyItem format
         const vocabItems: VocabularyItem[] = currentSetVocab.map((vocab: ToeicVocabulary) => 

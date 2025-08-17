@@ -258,15 +258,6 @@ const DictationList: React.FC = () => {
     loadCompletedSets();
   }, [loadVocabularyData, loadCompletedSets]);
 
-  // Simple logging for debugging
-  useEffect(() => {
-    if (vocabSetsByTopic.length > 0) {
-      console.log(`DictationList: ${vocabSetsByTopic.length} topics loaded`);
-      const topics = vocabSetsByTopic.map(t => t.topic);
-      console.log('Topics:', topics);
-    }
-  }, [vocabSetsByTopic]);
-
   // Handle set click
   const handleSetClick = useCallback((originalIdx: number, topic: string, topicSetIndex: number) => {
     // Encode topic and set index in URL

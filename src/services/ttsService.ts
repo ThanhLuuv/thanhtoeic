@@ -139,7 +139,6 @@ export class TTSService {
         throw new Error(`Failed to delete audio: ${response.status} - ${errorText}`);
       }
 
-      console.log(`Successfully deleted audio: ${publicId}`);
     } catch (error) {
       console.error('Error deleting audio from Cloudinary:', error);
       // Don't throw error here to avoid blocking vocabulary deletion

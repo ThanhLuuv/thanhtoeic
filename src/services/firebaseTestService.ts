@@ -7,14 +7,10 @@ class FirebaseTestService {
   // Test kết nối cơ bản
   async testConnection(): Promise<boolean> {
     try {
-      console.log('Testing Firebase connection...');
       
       // Thử lấy một document từ collection users
       const usersRef = collection(db, 'users');
       const snapshot = await getDocs(usersRef);
-      
-      console.log('Firebase connection successful');
-      console.log('Users count:', snapshot.size);
       
       return true;
     } catch (error) {
@@ -26,16 +22,13 @@ class FirebaseTestService {
   // Test đọc một document cụ thể
   async testReadDocument(): Promise<boolean> {
     try {
-      console.log('Testing document read...');
       
       // Thử đọc một document test
       const testDocRef = doc(db, 'test', 'test-doc');
       const docSnap = await getDoc(testDocRef);
       
       if (docSnap.exists()) {
-        console.log('Document read successful:', docSnap.data());
       } else {
-        console.log('Document does not exist (this is normal for test)');
       }
       
       return true;
@@ -48,7 +41,6 @@ class FirebaseTestService {
   // Test collection list
   async testListCollections(): Promise<boolean> {
     try {
-      console.log('Testing collection listing...');
       
       // Thử lấy danh sách collections
       const collections = ['users', 'vocabulary', 'topics'];
@@ -57,7 +49,6 @@ class FirebaseTestService {
         try {
           const collectionRef = collection(db, collectionName);
           const snapshot = await getDocs(collectionRef);
-          console.log(`Collection ${collectionName}: ${snapshot.size} documents`);
         } catch (error) {
           console.error(`Failed to access collection ${collectionName}:`, error);
         }

@@ -96,7 +96,6 @@ Trả về JSON với format:
         }
       } catch (parseError) {
         console.error('Error parsing JSON:', parseError);
-        console.log('Raw response:', content);
         throw new Error('Lỗi phân tích response từ AI');
       }
 
@@ -122,7 +121,6 @@ Trả về JSON với format:
         topic: topic || 'Other',
       });
       
-      console.log(`[ExampleGenerationService] Saved example for word "${word}" to database`);
     } catch (error) {
       console.error('Error saving example to database:', error);
       // Don't throw error here, just log it

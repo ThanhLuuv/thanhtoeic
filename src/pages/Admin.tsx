@@ -64,7 +64,6 @@ const Admin: React.FC = () => {
   // Simple logging for debugging
   useEffect(() => {
     if (topics.length > 0 && vocabularies.length > 0) {
-      console.log(`Admin: ${topics.length} topics, ${vocabularies.length} vocabulary items`);
     }
   }, [topics, vocabularies]);
 

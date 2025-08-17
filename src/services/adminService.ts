@@ -100,7 +100,6 @@ class AdminService {
         if (vocabData.audio && vocabData.audio.trim() !== '') {
           try {
             await ttsService.deleteAudioFromCloudinary(vocabData.audio);
-            console.log(`Audio deleted for vocabulary: ${vocabData.word}`);
           } catch (error) {
             console.error('Failed to delete audio, but continuing:', error);
           }
@@ -227,7 +226,6 @@ class AdminService {
         if (vocabData.audio && vocabData.audio.trim() !== '') {
           try {
             await ttsService.deleteAudioFromCloudinary(vocabData.audio);
-            console.log(`Audio deleted for vocabulary: ${vocabData.word}`);
           } catch (error) {
             console.error('Failed to delete audio, but continuing with vocabulary deletion:', error);
             // Don't throw error here to avoid blocking vocabulary deletion
