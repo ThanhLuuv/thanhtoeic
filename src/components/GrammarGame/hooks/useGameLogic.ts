@@ -19,8 +19,8 @@ export const useGameLogic = () => {
     isGameEnded: false
   });
 
-  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const tickIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const tickIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const getCurrentQuestion = useCallback((): Question => {
     const modeQuestions = questions[gameState.currentMode];
