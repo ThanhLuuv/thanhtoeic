@@ -31,10 +31,8 @@ const App: React.FC = () => {
   // Test Firebase connection on app start
   React.useEffect(() => {
     const testFirebase = async () => {
-      console.log('=== Testing Firebase Connection ===');
       await firebaseTestService.testConnection();
       await firebaseTestService.testListCollections();
-      console.log('=== Firebase Test Complete ===');
     };
     
     testFirebase();
@@ -49,7 +47,6 @@ const App: React.FC = () => {
 
   const handleCookieDecline = () => {
     // Handle when user declines cookies
-    console.log('User declined cookies');
     // Optionally track decline event
     if (window.gtag) {
       window.gtag('event', 'cookie_consent_declined');
