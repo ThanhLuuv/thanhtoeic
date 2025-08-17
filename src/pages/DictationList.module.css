@@ -182,7 +182,7 @@
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 9999px;
-  background: var(--primary-color);
+  background: var(--primary-dark);
 }
 
 .cardTitle {
@@ -221,6 +221,10 @@
 .infoText {
   color: #475569;
   font-weight: 500;
+}
+
+.infoText.primary {
+  color: #1e293b;
 }
 
 .infoText.secondary {

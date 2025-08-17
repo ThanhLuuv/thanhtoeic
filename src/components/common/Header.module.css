@@ -103,7 +103,7 @@
   transform: translateX(-50%);
   width: 30px;
   height: 3px;
-  background: var(--primary-color);
+  background: var(--primary-dark);
   border-radius: 2px;
 }
 
@@ -184,7 +184,7 @@
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  background: var(--primary-color);
+  background: var(--primary-dark);
   color: #ffffff;
   border-radius: 9999px;
   transition: all 0.3s ease;
