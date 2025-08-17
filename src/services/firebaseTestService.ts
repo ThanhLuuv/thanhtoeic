@@ -1,5 +1,5 @@
 import { db } from '../config/firebase';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 
 // Service để test kết nối Firebase
 class FirebaseTestService {
@@ -15,25 +15,6 @@ class FirebaseTestService {
       return true;
     } catch (error) {
       console.error('Firebase connection failed:', error);
-      return false;
-    }
-  }
-
-  // Test đọc một document cụ thể
-  async testReadDocument(): Promise<boolean> {
-    try {
-      
-      // Thử đọc một document test
-      const testDocRef = doc(db, 'test', 'test-doc');
-      const docSnap = await getDoc(testDocRef);
-      
-      if (docSnap.exists()) {
-      } else {
-      }
-      
-      return true;
-    } catch (error) {
-      console.error('Document read failed:', error);
       return false;
     }
   }
