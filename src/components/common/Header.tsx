@@ -23,6 +23,11 @@ const Header: React.FC = () => {
 
   const handleNavClick = (item: string) => {
     setActiveNav(item);
+    if (item === 'Dictation') {
+      navigate('/');
+    } else if (item === 'Grammar') {
+      navigate('/grammar-game');
+    }
   };
 
   const goBack = () => {
@@ -53,7 +58,7 @@ const Header: React.FC = () => {
                 <span>Back</span>
               </button>
             )}
-            <a href="/" className={styles.logoLink}>
+            <Link to="/" className={styles.logoLink}>
               <div className={styles.logoContainer}>
                 <img src="/logo.png" alt="Antoree TOEIC" className={styles.logo} />
               </div>
@@ -66,19 +71,18 @@ const Header: React.FC = () => {
                    'Antoeic '}
                 </span>
               </div>
-            </a>
+            </Link>
           </div>
 
           <div className={styles.navItems}>
               {navItems.map((item) => (
-                <a
+                <button
                   key={item}
-                  href={item === 'T-TOEIC' ? '/' : item === 'Grammar' ? '/grammar-game' : '/grammar'}
                   className={`${styles.navItem} ${activeNav === item ? styles.active : ''}`}
                   onClick={() => handleNavClick(item)}
                 >
                   {item}
-                </a>
+                </button>
               ))}
             
             {/* Authentication Section */}
@@ -134,9 +138,8 @@ const Header: React.FC = () => {
               {!isDictationPage && (
                 <div className={styles.mobileNavItems}>
                   {navItems.map((item) => (
-                    <a
+                    <button
                       key={item}
-                      href={item === 'T-TOEIC' ? '/' : item === 'Grammar' ? '/grammar-game' : '/grammar'}
                       className={styles.mobileNavItem}
                       onClick={() => {
                         handleNavClick(item);
@@ -144,7 +147,7 @@ const Header: React.FC = () => {
                       }}
                     >
                       {item}
-                    </a>
+                    </button>
                   ))}
                 </div>
               )}

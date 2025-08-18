@@ -56,37 +56,76 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <Routes>
+        {/* Routes with header/footer */}
+        <Route
+          path="/"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <DictationList />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        <Route
+          path="/vocabulary/:setIndex"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <DictationPractice />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        <Route
+          path="/profile"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <Profile />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        <Route
+          path="/not-found"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <NotFound />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
         {/* Authentication routes - no header/footer */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        
+        {/* Admin route - no header/footer */}
         <Route path="/admin" element={<Admin />} />
+        
+        {/* Grammar game route - no header/footer */}
+        <Route path="/grammar-game" element={<GrammarGamePage />} />
+        
+        {/* Test route for debugging */}
+        <Route path="/test" element={<div>Test Route Working!</div>} />
         
         {/* Dictation practice route - no header/footer */}
         <Route
           path="/dictation/:setIndex"
           element={<DictationPractice />}
         />
-
-        {/* Grammar game route - no header/footer */}
-        <Route path="/grammar-game" element={<GrammarGamePage />} />
         
-        {/* Other routes with header/footer */}
-        <Route
-          path="*"
-          element={
-            <div className="bg-gray-50 min-h-screen">
-              <Header />
-              <Routes>
-                <Route path="/" element={<DictationList />} />
-                <Route path="/vocabulary/:setIndex" element={<DictationPractice />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/not-found" element={<NotFound />} />
-              </Routes>
-              <Footer />
-              <FloatingFeedback />
-            </div>
-          }
-        />
+        {/* Catch all other routes */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <CookieConsent onAccept={handleCookieAccept} onDecline={handleCookieDecline} />
     </AuthProvider>

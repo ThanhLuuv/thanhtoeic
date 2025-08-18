@@ -51,9 +51,19 @@ const Admin: React.FC = () => {
       return;
     }
     
-    // Check if user is admin (you can modify this logic)
-    if (currentUser.email !== 'admin@example.com') {
-      navigate('/');
+    // Check if user is admin - more flexible approach
+    // You can modify this logic based on your needs
+    const isAdmin = currentUser.email === 'admin@example.com' || 
+                   currentUser.email?.includes('admin') ||
+                   currentUser.role === 'admin' ||
+                   currentUser.id === 'admin'; // Add your admin ID here
+    
+    if (!isAdmin) {
+      // Instead of redirecting to home, show access denied message
+      setToast({ type: 'error', text: 'Access denied. Admin privileges required.', visible: true });
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
       return;
     }
     
