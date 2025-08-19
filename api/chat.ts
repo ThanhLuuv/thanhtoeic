@@ -17,7 +17,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .filter(Boolean)
 
   const allowedOrigins = new Set<string>([...defaultAllowedOrigins, ...extraAllowedOrigins])
-  const isAllowedOrigin = origin ? allowedOrigins.has(origin) : false
+
+  const hostHeader = req.headers.host || ''
+  const sameOriginCandidates = hostHeader
+    ? new Set([`https://${hostHeader}`, `http://${hostHeader}`])
+    : new Set<string>()
+
+  const isSameOrigin = origin ? sameOriginCandidates.has(origin) : false
+  const isAllowedOrigin = origin ? (allowedOrigins.has(origin) || isSameOrigin) : false
 
   if (isAllowedOrigin) {
     res.setHeader('Access-Control-Allow-Origin', origin)
