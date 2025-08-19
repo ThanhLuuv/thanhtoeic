@@ -9,8 +9,10 @@ class ExampleGenerationService {
   private apiEndpoint: string;
 
   constructor() {
-    // Sử dụng API endpoint thay vì gọi trực tiếp OpenAI
-    this.apiEndpoint = '/api/chat';
+    // Ưu tiên dùng base URL cấu hình qua biến môi trường khi frontend không chạy cùng domain với API
+    const baseFromEnv = (process.env.REACT_APP_API_BASE_URL || '').trim();
+    const normalizedBase = baseFromEnv ? baseFromEnv.replace(/\/$/, '') : '';
+    this.apiEndpoint = `${normalizedBase}/api/chat` || '/api/chat';
   }
 
   /**

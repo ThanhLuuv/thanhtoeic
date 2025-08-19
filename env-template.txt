@@ -9,6 +9,10 @@ REACT_APP_GOOGLE_TTS_KEY=your_google_tts_key_here
 # App Configuration
 REACT_APP_APP_NAME=TOEIC Vocabulary Practice
 REACT_APP_VERSION=1.0.0
+# Nếu frontend và API chạy khác domain (ví dụ: deploy FE lên Firebase, API trên Vercel)
+# thì cấu hình base URL của API tại đây, ví dụ: https://toeic.thanhlaptrinh.online
+# Để trống nếu dùng chung domain (vercel dev hoặc deploy đồng thời trên Vercel)
+REACT_APP_API_BASE_URL=
 
 # Lưu ý: Khi deploy lên Vercel:
 # 1. Thêm OPENAI_API_KEY vào Environment Variables trên Vercel (không phải REACT_APP_)

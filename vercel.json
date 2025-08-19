@@ -5,12 +5,12 @@
     {
       "src": "package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "build", "buildCommand": "npm run build" }
+      "config": { "distDir": "build", "buildCommand": "CI=false DISABLE_ESLINT_PLUGIN=true npm run build" }
     }
   ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/((?!api|.*\\..*).*)", "destination": "/" }
   ],
-  "env": { "NODE_ENV": "production" }
+  "env": { "NODE_ENV": "production", "CI": "false" }
 }

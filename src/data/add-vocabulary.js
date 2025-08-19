@@ -1,7 +1,7 @@
 // Script to add vocabulary to Firestore
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, getDocs, query, where } from 'firebase/firestore';
-import vocabularyData from './data.json' assert { type: 'json' };
+import vocabularyData from '../../data.json' assert { type: 'json' };
 
 // Firebase configuration - replace with your actual config
 const firebaseConfig = {
