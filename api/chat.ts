@@ -60,6 +60,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({
+        error: 'CONFIG_ERROR',
+        message: 'OPENAI_API_KEY is not set. Add it in Vercel env (or local env when running vercel dev).'
+      })
+    }
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -75,8 +82,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      return res.status(response.status).json(errorData)
+      // Thử parse JSON, nếu không được thì trả về raw text để dễ debug
+      const text = await response.text().catch(() => '')
+      try {
+        const json = JSON.parse(text)
+        return res.status(response.status).json(json)
+      } catch {
+        return res.status(response.status).json({
+          error: 'OPENAI_ERROR',
+          message: text || `OpenAI returned status ${response.status}`
+        })
+      }
     }
 
     const data = await response.json()
