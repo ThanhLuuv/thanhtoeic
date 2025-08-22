@@ -12,7 +12,7 @@ class TranslationService {
   private baseUrl: string;
 
   constructor() {
-    this.apiKey = process.env.REACT_APP_API_KEY_OPENAI || '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';
+    this.apiKey = process.env.REACT_APP_API_KEY_OPENAI || '';
     this.baseUrl = 'https://api.openai.com/v1/chat/completions';
   }
 
