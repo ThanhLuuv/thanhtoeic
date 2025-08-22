@@ -5,6 +5,7 @@ import styles from './Header.module.css';
 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const [activeNav, setActiveNav] = useState('Luyện đề');
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,7 +44,20 @@ const Header: React.FC = () => {
     }
     
   };
+
   const isDictationPage = location.pathname.includes('/vocabulary') ||location.pathname === '/grammar-game' || location.pathname.includes('/dictation-list') || location.pathname.includes('/dictation-practice/');
+
+  // Close more menu when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMoreMenuOpen && !(event.target as Element).closest(`.${styles.moreMenuContainer}`)) {
+        setIsMoreMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMoreMenuOpen]);
 
   return (
     <header className={styles.header}>
@@ -84,6 +98,53 @@ const Header: React.FC = () => {
                   {item}
                 </button>
               ))}
+            
+            {/* More Menu Dropdown */}
+            <div className={styles.moreMenuContainer}>
+              <button
+                className={`${styles.navItem} ${styles.moreButton}`}
+                onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
+                onMouseEnter={() => setIsMoreMenuOpen(true)}
+              >
+                More
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+              
+              {isMoreMenuOpen && (
+                <div 
+                  className={styles.moreDropdown}
+                  onMouseLeave={() => setIsMoreMenuOpen(false)}
+                >
+                  <div className={styles.dropdownSection}>
+                    <h4 className={styles.dropdownTitle}>Company</h4>
+                    <Link to="/about" className={styles.dropdownItem} onClick={() => setIsMoreMenuOpen(false)}>
+                      About Us
+                    </Link>
+                    <Link to="/contact" className={styles.dropdownItem} onClick={() => setIsMoreMenuOpen(false)}>
+                      Contact
+                    </Link>
+                  </div>
+                  
+                  <div className={styles.dropdownSection}>
+                    <h4 className={styles.dropdownTitle}>Legal</h4>
+                    <Link to="/terms" className={styles.dropdownItem} onClick={() => setIsMoreMenuOpen(false)}>
+                      Terms of Service
+                    </Link>
+                    <Link to="/privacy" className={styles.dropdownItem} onClick={() => setIsMoreMenuOpen(false)}>
+                      Privacy Policy
+                    </Link>
+                    <Link to="/cookies" className={styles.dropdownItem} onClick={() => setIsMoreMenuOpen(false)}>
+                      Cookie Policy
+                    </Link>
+                    <Link to="/refund" className={styles.dropdownItem} onClick={() => setIsMoreMenuOpen(false)}>
+                      Refund Policy
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
             
             {/* Authentication Section */}
             {currentUser ? (
@@ -151,6 +212,55 @@ const Header: React.FC = () => {
                   ))}
                 </div>
               )}
+              
+              {/* Mobile Legal Links */}
+              <div className={styles.mobileLegalSection}>
+                <h4 className={styles.mobileSectionTitle}>Company</h4>
+                <Link
+                  to="/about"
+                  className={styles.mobileLegalLink}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  About Us
+                </Link>
+                <Link
+                  to="/contact"
+                  className={styles.mobileLegalLink}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Contact
+                </Link>
+                
+                <h4 className={styles.mobileSectionTitle}>Legal</h4>
+                <Link
+                  to="/terms"
+                  className={styles.mobileLegalLink}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Terms of Service
+                </Link>
+                <Link
+                  to="/privacy"
+                  className={styles.mobileLegalLink}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Privacy Policy
+                </Link>
+                <Link
+                  to="/cookies"
+                  className={styles.mobileLegalLink}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Cookie Policy
+                </Link>
+                <Link
+                  to="/refund"
+                  className={styles.mobileLegalLink}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Refund Policy
+                </Link>
+              </div>
               
               {/* Mobile Authentication Section */}
               {currentUser ? (
