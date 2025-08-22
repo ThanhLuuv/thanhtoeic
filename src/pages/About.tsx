@@ -8,7 +8,7 @@ const About: React.FC = () => {
         
         <div className="prose prose-lg max-w-none">
           <p className="text-gray-600 mb-6">
-            T-TOEIC là nền tảng học tập TOEIC cá nhân, được phát triển bởi tôi - một người có đam mê 
+            AntToeic là nền tảng học tập TOEIC cá nhân, được phát triển bởi tôi - một người có đam mê 
             với giáo dục và công nghệ, mong muốn chia sẻ kiến thức và giúp đỡ các bạn học viên đạt được 
             mục tiêu TOEIC của mình.
           </p>
@@ -78,7 +78,7 @@ const About: React.FC = () => {
             "name": "Lưu Văn Thành",
             "url": "https://thanhtoeic.online",
             "image": "https://thanhtoeic.online/logo.png",
-            "description": "Người phát triển nền tảng học tập TOEIC T-TOEIC",
+            "description": "Người phát triển nền tảng học tập TOEIC AntToeic",
             "address": {
               "@type": "PostalAddress",
               "streetAddress": "P Thủ Đức",

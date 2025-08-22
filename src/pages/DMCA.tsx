@@ -10,27 +10,27 @@ const DMCA: React.FC = () => {
           <div className="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8">
             <h2 className="text-2xl font-semibold text-blue-800 mb-4">📋 Thông Tin DMCA</h2>
             <p className="text-blue-700 text-lg">
-              T-TOEIC tôn trọng quyền sở hữu trí tuệ và cam kết tuân thủ 
+              AntToeic tôn trọng quyền sở hữu trí tuệ và cam kết tuân thủ 
               Đạo luật Bản quyền Kỹ thuật số Thiên niên kỷ (DMCA).
             </p>
           </div>
           
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">1. Giới Thiệu</h2>
           <p className="text-gray-600 mb-6">
-            Chính sách DMCA này giải thích cách T-TOEIC xử lý các khiếu nại về vi phạm bản quyền 
+            Chính sách DMCA này giải thích cách AntToeic xử lý các khiếu nại về vi phạm bản quyền 
             theo Đạo luật Bản quyền Kỹ thuật số Thiên niên kỷ (DMCA) của Hoa Kỳ. 
             Chúng tôi cam kết bảo vệ quyền sở hữu trí tuệ và xử lý nghiêm túc mọi khiếu nại.
           </p>
           
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">2. Thông Báo Vi Phạm Bản Quyền</h2>
           <p className="text-gray-600 mb-6">
-            Nếu bạn tin rằng nội dung trên T-TOEIC vi phạm bản quyền của bạn, 
+            Nếu bạn tin rằng nội dung trên AntToeic vi phạm bản quyền của bạn, 
             vui lòng gửi thông báo vi phạm bản quyền theo DMCA với các thông tin sau:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
             <li><strong>Thông tin người khiếu nại:</strong> Họ tên, địa chỉ, số điện thoại, email</li>
             <li><strong>Mô tả tác phẩm:</strong> Mô tả chi tiết tác phẩm bị vi phạm bản quyền</li>
-            <li><strong>Vị trí vi phạm:</strong> URL cụ thể của nội dung vi phạm trên T-TOEIC</li>
+            <li><strong>Vị trí vi phạm:</strong> URL cụ thể của nội dung vi phạm trên AntToeic</li>
             <li><strong>Tuyên bố:</strong> Tuyên bố rằng bạn tin rằng việc sử dụng không được ủy quyền</li>
             <li><strong>Xác nhận:</strong> Xác nhận thông tin trong thông báo là chính xác</li>
             <li><strong>Chữ ký:</strong> Chữ ký điện tử hoặc vật lý của chủ sở hữu bản quyền</li>
@@ -49,7 +49,7 @@ const DMCA: React.FC = () => {
           
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">4. Quy Trình Xử Lý</h2>
           <p className="text-gray-600 mb-6">
-            Khi nhận được thông báo vi phạm bản quyền hợp lệ, T-TOEIC sẽ:
+            Khi nhận được thông báo vi phạm bản quyền hợp lệ, AntToeic sẽ:
           </p>
           <ol className="list-decimal list-inside text-gray-600 mb-6 space-y-2 ml-4">
             <li><strong>Xem xét thông báo:</strong> Kiểm tra tính hợp lệ của thông báo DMCA</li>
@@ -73,7 +73,7 @@ const DMCA: React.FC = () => {
           
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">6. Lặp Lại Vi Phạm</h2>
           <p className="text-gray-600 mb-6">
-            T-TOEIC có chính sách nghiêm khắc đối với người dùng vi phạm bản quyền lặp lại:
+            AntToeic có chính sách nghiêm khắc đối với người dùng vi phạm bản quyền lặp lại:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
             <li><strong>Lần đầu:</strong> Cảnh báo và gỡ bỏ nội dung vi phạm</li>

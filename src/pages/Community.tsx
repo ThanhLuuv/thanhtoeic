@@ -4,20 +4,20 @@ const Community: React.FC = () => {
   return (
     <main className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Cộng Đồng T-TOEIC</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">Cộng Đồng AntToeic</h1>
         
         <div className="prose prose-lg max-w-none">
           <div className="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8">
             <h2 className="text-2xl font-semibold text-blue-800 mb-4">🌟 Chào Mừng Đến Với Cộng Đồng</h2>
             <p className="text-blue-700 text-lg">
-              T-TOEIC không chỉ là nền tảng học tập, mà còn là nơi kết nối cộng đồng 
+              AntToeic không chỉ là nền tảng học tập, mà còn là nơi kết nối cộng đồng 
               những người yêu thích và đam mê học tập TOEIC.
             </p>
           </div>
           
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">1. Mục Tiêu Cộng Đồng</h2>
           <p className="text-gray-600 mb-6">
-            Cộng đồng T-TOEIC được xây dựng với mục tiêu:
+            Cộng đồng AntToeic được xây dựng với mục tiêu:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
             <li>Chia sẻ kinh nghiệm học tập TOEIC</li>
@@ -56,7 +56,7 @@ const Community: React.FC = () => {
             Để tham gia cộng đồng một cách hiệu quả:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li><strong>Đăng ký tài khoản:</strong> Tạo tài khoản trên nền tảng T-TOEIC</li>
+            <li><strong>Đăng ký tài khoản:</strong> Tạo tài khoản trên nền tảng AntToeic</li>
             <li><strong>Giới thiệu bản thân:</strong> Chia sẻ mục tiêu học tập của bạn</li>
             <li><strong>Tham gia thảo luận:</strong> Đặt câu hỏi và trả lời của người khác</li>
             <li><strong>Chia sẻ kinh nghiệm:</strong> Đóng góp kiến thức của bạn</li>
@@ -87,7 +87,7 @@ const Community: React.FC = () => {
           <div className="bg-green-50 border-l-4 border-green-400 p-6 mt-8">
             <h3 className="text-lg font-semibold text-green-800 mb-2">💡 Lưu Ý</h3>
             <p className="text-green-700">
-              Cộng đồng T-TOEIC hoàn toàn miễn phí và mở rộng cho tất cả mọi người. 
+              Cộng đồng AntToeic hoàn toàn miễn phí và mở rộng cho tất cả mọi người. 
               Hãy cùng nhau xây dựng một môi trường học tập TOEIC tốt nhất!
             </p>
           </div>

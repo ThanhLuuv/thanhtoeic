@@ -185,8 +185,8 @@ const Contact: React.FC = () => {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ContactPage",
-            "name": "Liên Hệ - T-TOEIC",
-            "description": "Trang liên hệ của T-TOEIC - Nền tảng học tập TOEIC cá nhân",
+            "name": "Liên Hệ - AntToeic",
+            "description": "Trang liên hệ của AntToeic - Nền tảng học tập TOEIC cá nhân",
             "url": "https://thanhtoeic.online/contact",
             "mainEntity": {
               "@type": "Person",

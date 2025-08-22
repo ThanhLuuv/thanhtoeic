@@ -15,7 +15,7 @@ const Refund: React.FC = () => {
           <div className="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8">
             <h2 className="text-2xl font-semibold text-blue-800 mb-4">🎯 Dự Án Hoàn Toàn Miễn Phí</h2>
             <p className="text-blue-700 text-lg">
-              T-TOEIC là một dự án giáo dục cá nhân, được phát triển với mục đích chia sẻ kiến thức 
+              AntToeic là một dự án giáo dục cá nhân, được phát triển với mục đích chia sẻ kiến thức 
               và hỗ trợ cộng đồng học tập TOEIC. <strong>Tất cả nội dung và dịch vụ đều hoàn toàn miễn phí.</strong>
             </p>
           </div>

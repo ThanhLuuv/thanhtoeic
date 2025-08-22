@@ -16,7 +16,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             {/* Company Info */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-4">T-TOEIC</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">AntToeic</h3>
               <p className="text-gray-300 text-sm mb-4">
                 Nền tảng học tập TOEIC cá nhân, cung cấp giải pháp học tập miễn phí 
                 và chất lượng cao cho cộng đồng.

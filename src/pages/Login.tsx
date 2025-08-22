@@ -74,7 +74,7 @@ const Login: React.FC = () => {
       <div className={styles.contentWrapper}>
         {/* Header */}
         <div className={styles.header}>
-          <h2 className={styles.headerTitle}>Welcome Back T-Toeic</h2>
+          <h2 className={styles.headerTitle}>Welcome Back AntToeic</h2>
         </div>
 
         {/* Login Form */}

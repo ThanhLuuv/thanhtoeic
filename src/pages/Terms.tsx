@@ -14,14 +14,14 @@ const Terms: React.FC = () => {
           
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">1. Chấp Nhận Điều Khoản</h2>
           <p className="text-gray-600 mb-6">
-            Bằng việc truy cập và sử dụng nền tảng T-TOEIC, bạn đồng ý tuân thủ và bị ràng buộc bởi 
+            Bằng việc truy cập và sử dụng nền tảng AntToeic, bạn đồng ý tuân thủ và bị ràng buộc bởi 
             các điều khoản và điều kiện này. Nếu bạn không đồng ý với bất kỳ phần nào của các điều khoản này, 
             vui lòng không sử dụng dịch vụ của tôi.
           </p>
           
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">2. Mô Tả Dịch Vụ</h2>
           <p className="text-gray-600 mb-6">
-            T-TOEIC cung cấp nền tảng học tập trực tuyến miễn phí bao gồm:
+            AntToeic cung cấp nền tảng học tập trực tuyến miễn phí bao gồm:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
             <li>Bài tập và thực hành TOEIC</li>
@@ -57,7 +57,7 @@ const Terms: React.FC = () => {
           
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">5. Nội Dung và Bản Quyền</h2>
           <p className="text-gray-600 mb-6">
-            Tất cả nội dung trên nền tảng T-TOEIC, bao gồm văn bản, hình ảnh, âm thanh, video, 
+            Tất cả nội dung trên nền tảng AntToeic, bao gồm văn bản, hình ảnh, âm thanh, video, 
             và phần mềm, đều thuộc quyền sở hữu của tôi hoặc được cấp phép sử dụng. 
             Bạn không được sao chép, phân phối, hoặc sử dụng nội dung này mà không có sự cho phép.
           </p>
@@ -78,7 +78,7 @@ const Terms: React.FC = () => {
           
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">8. Giới Hạn Trách Nhiệm</h2>
           <p className="text-gray-600 mb-6">
-            T-TOEIC cung cấp dịch vụ "nguyên trạng" và không đảm bảo rằng dịch vụ sẽ không bị gián đoạn 
+            AntToeic cung cấp dịch vụ "nguyên trạng" và không đảm bảo rằng dịch vụ sẽ không bị gián đoạn 
             hoặc không có lỗi. Tôi không chịu trách nhiệm về bất kỳ thiệt hại nào phát sinh từ việc sử dụng dịch vụ.
           </p>
           

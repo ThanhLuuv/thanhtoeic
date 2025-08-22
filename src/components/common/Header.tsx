@@ -6,7 +6,7 @@ import styles from './Header.module.css';
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
-  const [activeNav, setActiveNav] = useState('Luyện đề');
+  const [activeNav, setActiveNav] = useState('Dictation');
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser, logout } = useAuth();
@@ -79,7 +79,7 @@ const Header: React.FC = () => {
               <div>
                 <span className={styles.brandText}>
                   {
-                   location.pathname === '/' ? 'T-TOEIC' :
+                   location.pathname === '/' ? 'AntToeic' :
                    location.pathname === '/grammar-game' ? 'Grammar' :
                    location.pathname.startsWith('/dictation-practice') ? 'Dictation' :
                    'Antoeic '}

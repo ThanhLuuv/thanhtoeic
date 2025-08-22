@@ -14,7 +14,7 @@ const Privacy: React.FC = () => {
           
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">1. Giới Thiệu</h2>
           <p className="text-gray-600 mb-6">
-            T-TOEIC ("tôi", "của tôi", hoặc "nền tảng") cam kết bảo vệ quyền riêng tư 
+            AntToeic ("tôi", "của tôi", hoặc "nền tảng") cam kết bảo vệ quyền riêng tư 
             và thông tin cá nhân của bạn. Chính sách bảo mật này giải thích cách tôi thu thập, 
             sử dụng, bảo vệ và chia sẻ thông tin của bạn khi bạn sử dụng nền tảng học tập TOEIC của tôi.
           </p>
