@@ -82,7 +82,7 @@ const Header: React.FC = () => {
                    location.pathname === '/' ? 'AntToeic' :
                    location.pathname === '/grammar-game' ? 'Grammar' :
                    location.pathname.startsWith('/dictation-practice') ? 'Dictation' :
-                   'Antoeic '}
+                   'AntToeic '}
                 </span>
               </div>
             </Link>
