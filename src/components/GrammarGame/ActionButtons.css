@@ -3,7 +3,7 @@
   justify-content: center;
   margin-top: 25px;
   padding-top: 20px;
-  border-top: 2px solid #e8f5e8;
+  border-top: 2px solid var(--primary-bg);
 }
 
 .btn {
@@ -24,18 +24,18 @@
 }
 
 .btn-primary {
-  background-color: #4caf50;
+  background-color: var(--primary-color);
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #2e7d32;
+  background-color: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .btn-primary:disabled {
-  background-color: #c8e6c9;
+  background-color: var(--primary-light);
   cursor: not-allowed;
   transform: none;
 }

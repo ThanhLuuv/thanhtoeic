@@ -1,8 +1,8 @@
 .grammar-game-container {
   max-width: 1200px;
   margin: 0 auto;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #2d5016;
+  font-family: 'Inter', sans-serif;
+  color: #111827;
   overflow-x: hidden;
   min-height: 100vh;
   position: relative;

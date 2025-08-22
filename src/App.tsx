@@ -218,8 +218,16 @@ const App: React.FC = () => {
         {/* Admin route - no header/footer */}
         <Route path="/admin" element={<Admin />} />
         
-        {/* Grammar game route - no header/footer */}
-        <Route path="/grammar-game" element={<GrammarGamePage />} />
+        {/* Grammar game route - with header/footer for consistency */}
+        <Route
+          path="/grammar-game"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <GrammarGamePage />
+              <FloatingFeedback />
+            </div>
+          }
+        />
         
         {/* Test route for debugging */}
         <Route path="/test" element={<div>Test Route Working!</div>} />
