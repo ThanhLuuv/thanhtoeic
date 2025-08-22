@@ -282,3 +282,120 @@
 .mobileAuthButton:hover {
   background: var(--primary-bg);
 }
+
+/* More Menu Dropdown Styles */
+.moreMenuContainer {
+  position: relative;
+}
+
+.moreButton {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.moreDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 280px;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
+  padding: 1rem;
+  z-index: 1000;
+  margin-top: 0.5rem;
+}
+
+.dropdownSection {
+  margin-bottom: 1rem;
+}
+
+.dropdownSection:last-child {
+  margin-bottom: 0;
+}
+
+.dropdownTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+.dropdownItem {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  margin-bottom: 0.25rem;
+}
+
+.dropdownItem:hover {
+  background-color: #f3f4f6;
+  color: #1f2937;
+  transform: translateX(2px);
+}
+
+/* Mobile Legal Section Styles */
+.mobileLegalSection {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mobileSectionTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 1rem 0 0.5rem 1rem;
+}
+
+.mobileLegalLink {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: #374151;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.mobileLegalLink:hover {
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .moreDropdown {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+    border: none;
+    margin-top: 0;
+    padding: 0;
+  }
+  
+  .dropdownSection {
+    margin-bottom: 0.5rem;
+  }
+  
+  .dropdownItem {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0;
+    border-radius: 0.375rem;
+  }
+}

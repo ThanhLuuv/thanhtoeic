@@ -16,6 +16,14 @@ import Profile from './pages/Profile';
 import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
 import GrammarGamePage from './pages/GrammarGamePage';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
+import Cookies from './pages/Cookies';
+import Refund from './pages/Refund';
+import Community from './pages/Community';
+import DMCA from './pages/DMCA';
 import { firebaseTestService } from './services/firebaseTestService';
 
 // Extend Window interface for Google Analytics
@@ -87,6 +95,103 @@ const App: React.FC = () => {
             <div className="bg-gray-50 min-h-screen">
               <Header />
               <Profile />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        {/* Policy Pages */}
+        <Route
+          path="/about"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <About />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        <Route
+          path="/contact"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <Contact />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        <Route
+          path="/terms"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <Terms />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        <Route
+          path="/privacy"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <Privacy />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        <Route
+          path="/cookies"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <Cookies />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        <Route
+          path="/refund"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <Refund />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        <Route
+          path="/community"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <Community />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        <Route
+          path="/dmca"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <DMCA />
               <Footer />
               <FloatingFeedback />
             </div>

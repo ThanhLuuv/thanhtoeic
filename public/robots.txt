@@ -1,3 +1,26 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://thanhtoeic.online/sitemap.xml
+
+# Allow indexing for all policy pages
+Allow: /about
+Allow: /contact
+Allow: /terms
+Allow: /privacy
+Allow: /cookies
+Allow: /refund
+Allow: /community
+Allow: /dmca
+Allow: /ads.txt
+
+# Allow main content
+Allow: /grammar-game
+Allow: /login
+Allow: /register
+Allow: /profile
+
+# Crawl delay (optional)
+Crawl-delay: 1
