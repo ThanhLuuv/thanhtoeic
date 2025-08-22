@@ -11,7 +11,7 @@ interface SentenceManagementProps {
 }
 
 const SentenceManagement: React.FC<SentenceManagementProps> = ({ ttsConfig }) => {
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true); // Changed to true to show form by default
   const [editingSentence, setEditingSentence] = useState<Sentence | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [editingSentenceId, setEditingSentenceId] = useState<string | null>(null);
@@ -80,6 +80,17 @@ const SentenceManagement: React.FC<SentenceManagementProps> = ({ ttsConfig }) =>
 
   return (
     <div className={styles.container}>
+      {/* Header with toggle button */}
+      <div className={styles.header}>
+        <h2 className={styles.title}>Sentence Management</h2>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className={styles.toggleButton}
+        >
+          {showForm ? 'Hide Form' : 'Show Form'}
+        </button>
+      </div>
+
       {showForm && (
         <div className={styles.formContainer}>
           <SentenceForm
