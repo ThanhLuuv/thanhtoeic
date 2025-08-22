@@ -10,6 +10,8 @@ export { vocabularyService } from './vocabularyService';
 export { topicService } from './topicService';
 export { exampleGenerationService } from './exampleGenerationService';
 export { exampleService } from './exampleService';
+export { translationService } from './translationService';
+export { sentenceService } from './sentenceService';
 
 // Export types
 export type { 
@@ -26,3 +28,5 @@ export type {
   StoredExampleSentence,
   ExampleSentenceCreateRequest
 } from '../types/example';
+
+export type { Sentence } from './sentenceService';

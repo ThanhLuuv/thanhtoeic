@@ -104,6 +104,75 @@ export class TTSService {
     }
   }
 
+  // New function specifically for generating sentence audio (similar to the provided function)
+  async generateSentenceAudio(text: string, voice: string = 'en-US-Wavenet-F'): Promise<string> {
+    try {
+      console.log('=== Generating Sentence Audio ===');
+      console.log('Text:', text);
+      console.log('Voice:', voice);
+      
+      const ssml = `<speak><voice name='${voice}'>${text}</voice></speak>`;
+      console.log('SSML:', ssml);
+      
+      const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${this.googleTTSKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          input: { ssml },
+          voice: { languageCode: 'en-US', name: voice },
+          audioConfig: { audioEncoding: 'MP3', speakingRate: 0.85 }
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('TTS API Error:', response.status, errorText);
+        throw new Error(`TTS API error: ${response.status} - ${errorText}`);
+      }
+
+      const result = await response.json();
+      console.log('TTS Response:', result);
+      
+      if (result.audioContent) {
+        // Return base64 audio data as data URL
+        const audioData = `data:audio/mp3;base64,${result.audioContent}`;
+        console.log('Audio generated successfully, size:', result.audioContent.length, 'characters');
+        return audioData;
+      } else {
+        console.error('No audio content in response:', result);
+        throw new Error(result.error?.message || 'No audio content received');
+      }
+    } catch (error) {
+      console.error('Error generating sentence audio:', error);
+      throw error;
+    }
+  }
+
+  // Function to generate sentence audio and upload to Cloudinary
+  async generateAndUploadSentenceAudio(text: string, filename: string, voice: string = 'en-US-Wavenet-F'): Promise<string> {
+    try {
+      console.log('=== Generate & Upload Sentence Audio ===');
+      
+      // First generate the audio
+      const audioDataUrl = await this.generateSentenceAudio(text, voice);
+      
+      // Convert data URL to blob for upload
+      const response = await fetch(audioDataUrl);
+      const audioBlob = await response.blob();
+      
+      console.log('Audio blob created, size:', audioBlob.size, 'bytes');
+      
+      // Upload to Cloudinary
+      const audioUrl = await this.uploadToCloudinary(audioBlob, filename);
+      
+      console.log('Audio uploaded successfully:', audioUrl);
+      return audioUrl;
+    } catch (error) {
+      console.error('Error in generateAndUploadSentenceAudio:', error);
+      throw error;
+    }
+  }
+
   async deleteAudioFromCloudinary(audioUrl: string): Promise<void> {
     try {
       // Extract public ID from Cloudinary URL

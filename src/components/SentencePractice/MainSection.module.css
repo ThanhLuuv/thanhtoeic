@@ -1,0 +1,593 @@
+.mainSection {
+  background: white;
+  border-radius: 25px;
+  padding: 1.5rem;
+  width: 50%;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+/* Sound Toggle - Top Right Corner */
+.soundToggleContainer {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+}
+
+.soundToggleButton {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.soundToggleButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.soundToggleButton:active {
+  transform: scale(0.95);
+}
+
+.soundOn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.soundOff {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  color: white;
+}
+
+.soundIconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.soundIcon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+  transition: all 0.3s ease;
+}
+
+.soundIconOn {
+  color: white;
+  transform: scale(1);
+}
+
+.soundIconOff {
+  color: rgba(255, 255, 255, 0.6);
+  transform: scale(0.8);
+}
+
+.soundStrikethrough {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 3px;
+  background: #ef4444;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.wordDisplay {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.wordNumber {
+  font-size: 1.5rem;
+  color: #374151;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+.correctWord {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.wordLabel {
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.wordText {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.audioInputSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.audioSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.audioButton {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.audioButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.audioButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+.soundToggle {
+  background: #f3f4f6;
+  border: 2px solid #d1d5db;
+  padding: 0.75rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.soundToggle:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.inputSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  /* Remove max-width constraint to allow full width usage */
+}
+
+.audioIconButton {
+  position: absolute;
+  left: 8px; /* Move icon closer to input container but not overlapping */
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  cursor: pointer;
+  padding: 6px; /* Reduced from 8px */
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audioIconButton:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.audioIcon {
+  width: 18px; /* Reduced from 20px */
+  height: 18px; /* Reduced from 20px */
+  color: #6b7280;
+}
+
+.audioIconButton:hover .audioIcon {
+  color: #3b82f6;
+}
+
+.lightbulbButton {
+  position: absolute;
+  right: 8px; /* Move icon closer to input container but not overlapping */
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  cursor: pointer;
+  padding: 6px; /* Reduced from 8px */
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbulbButton:hover {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.lightbulbIcon {
+  width: 18px; /* Reduced from 20px */
+  height: 18px; /* Reduced from 20px */
+  color: #f59e0b;
+}
+
+.lightbulbButton:hover .lightbulbIcon {
+  color: #d97706;
+}
+
+.wordInputsContainer {
+  display: flex;
+  gap: 0.3rem; /* Reduced from 0.4rem */
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  margin: 0 3rem; /* Increased to give space for icons */
+  width: 100%;
+}
+
+.wordInput {
+  /* Remove fixed min-width and max-width to allow dynamic styling */
+  padding: 0.35rem 0.25rem; /* Reduced from 0.4rem 0.3rem */
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: #f9fafb;
+  height: 32px; /* Reduced from 34px */
+  box-sizing: border-box;
+  flex: 0 0 auto; /* Changed from flex: 1 to prevent stretching */
+}
+
+.wordInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.wordInput::placeholder {
+  color: #9ca3af;
+}
+
+.inputCorrect {
+  border-color: #10b981;
+  border-width: 3px;
+  background: #f0fdf4;
+  color: #065f46;
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2);
+}
+
+.inputCorrect:focus {
+  outline: none;
+  border-color: #10b981;
+  background: #f0fdf4;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+.inputIncorrect {
+  border-color: #ef4444;
+  border-width: 3px;
+  background: #fef2f2;
+  color: #991b1b;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2);
+}
+
+.inputIncorrect:focus {
+  outline: none;
+  border-color: #ef4444;
+  background: #fef2f2;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+}
+
+.actionButtonsSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.customActionButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.answerDisplay {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 15px;
+  padding: 0.5rem;
+  border: 2px solid #e2e8f0;
+}
+
+.answerCard {
+  text-align: center;
+}
+
+.answerTitle {
+  font-size: 1.3rem;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.answerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.answerEnglish {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.answerVietnamese {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.answerInline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.answerWord {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.answerPhonetic {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Animations */
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mainSection {
+    width: 90%;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .soundToggleContainer {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+
+  .soundToggleButton {
+    width: 40px;
+    height: 40px;
+  }
+
+  .soundIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .soundIconOn {
+    transform: scale(1);
+  }
+
+  .soundIconOff {
+    transform: scale(0.8);
+  }
+
+  .soundStrikethrough {
+    width: 24px;
+    height: 2px;
+  }
+
+  .audioSection {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .audioButton {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .wordInput {
+    /* Remove fixed dimensions to allow dynamic styling */
+    padding: 0.35rem 0.25rem; /* Reduced from 0.4rem 0.3rem */
+    height: 32px; /* Reduced from 34px */
+  }
+  
+  .audioIconButton {
+    left: 6px; /* Adjusted for smaller screens */
+    padding: 5px; /* Reduced from 6px */
+    width: 28px; /* Smaller size for mobile */
+    height: 28px; /* Smaller size for mobile */
+  }
+  
+  .audioIconButton svg {
+    width: 14px; /* Reduced from 16px */
+    height: 14px; /* Reduced from 16px */
+  }
+
+  .lightbulbButton {
+    right: 6px; /* Adjusted for smaller screens */
+    padding: 5px; /* Reduced from 6px */
+    width: 28px; /* Smaller size for mobile */
+    height: 28px; /* Smaller size for mobile */
+  }
+
+  .lightbulbIcon {
+    width: 14px; /* Reduced from 16px */
+    height: 14px; /* Reduced from 16px */
+  }
+
+  .customActionButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .answerInline {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .answerWord {
+    font-size: 1.3rem;
+  }
+
+  .answerPhonetic {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainSection {
+    width: 95%;
+    padding: 1rem;
+  }
+
+  .soundToggleContainer {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .soundToggleButton {
+    width: 35px;
+    height: 35px;
+  }
+
+  .soundIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .soundIconOn {
+    transform: scale(1);
+  }
+
+  .soundIconOff {
+    transform: scale(0.8);
+  }
+
+  .soundStrikethrough {
+    width: 20px;
+    height: 2px;
+  }
+
+  .wordNumber {
+    font-size: 1.3rem;
+  }
+
+  .audioButton {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .wordInput {
+    /* Remove fixed dimensions to allow dynamic styling */
+    padding: 0.25rem 0.2rem; /* Reduced from 0.3rem 0.25rem */
+    height: 30px; /* Reduced from 32px */
+  }
+  
+  .audioIconButton {
+    left: 5px; /* Adjusted for very small screens */
+    padding: 4px; /* Reduced from 5px */
+    width: 24px; /* Even smaller size for very small screens */
+    height: 24px; /* Even smaller size for very small screens */
+  }
+  
+  .audioIconButton svg {
+    width: 12px; /* Reduced from 14px */
+    height: 12px; /* Reduced from 14px */
+  }
+
+  .lightbulbButton {
+    right: 5px; /* Adjusted for very small screens */
+    padding: 4px; /* Reduced from 5px */
+    width: 24px; /* Even smaller size for very small screens */
+    height: 24px; /* Even smaller size for very small screens */
+  }
+
+  .lightbulbIcon {
+    width: 12px; /* Reduced from 14px */
+    height: 12px; /* Reduced from 14px */
+  }
+}

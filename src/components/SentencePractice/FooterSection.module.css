@@ -1,0 +1,273 @@
+.footerSection {
+  background: white;
+  border-radius: 20px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+.shortcutsTitle {
+  font-size: 1.1rem;
+  color: #374151;
+  margin: 0 0 0.8rem 0;
+  font-weight: 700;
+  text-align: center;
+}
+
+.shortcutsRow {
+  display: flex;
+  flex-direction: row;
+  gap: 0.8rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.shortcutItem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.shortcutItem:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.shortcutKey {
+  background: #1e293b;
+  color: white;
+  padding: 0.3rem 0.5rem;
+  border-radius: 5px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 45px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shortcutDescription {
+  color: #475569;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Status Section */
+.statusSection {
+  margin-bottom: 2rem;
+}
+
+.statusGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.statusItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 15px;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.statusItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.statusIcon {
+  font-size: 2rem;
+  min-width: 50px;
+  text-align: center;
+}
+
+.correctStatus {
+  color: #10b981;
+  animation: pulse 2s infinite;
+}
+
+.incorrectStatus {
+  color: #ef4444;
+  animation: shake 0.6s ease;
+}
+
+.pendingStatus {
+  color: #f59e0b;
+  animation: spin 2s linear infinite;
+}
+
+.answerStatus {
+  color: #3b82f6;
+}
+
+.statusInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.statusLabel {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.statusValue {
+  font-size: 1.1rem;
+  color: #374151;
+  font-weight: 700;
+}
+
+/* Tips Section */
+.tipsSection {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 15px;
+  padding: 1.5rem;
+  border: 2px solid #bae6fd;
+}
+
+.tipsTitle {
+  font-size: 1.3rem;
+  color: #0c4a6e;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+  text-align: center;
+}
+
+.tipsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.tipItem {
+  color: #0c4a6e;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.tipItem::before {
+  content: '💡';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-3px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footerSection {
+    padding: 1rem;
+  }
+
+  .shortcutsRow {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .statusGrid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .shortcutItem {
+    padding: 0.5rem;
+  }
+
+  .statusItem {
+    padding: 0.8rem;
+  }
+
+  .tipsSection {
+    padding: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footerSection {
+    padding: 0.8rem;
+  }
+
+  .shortcutsTitle,
+  .tipsTitle {
+    font-size: 1.2rem;
+  }
+
+  .shortcutKey {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.5rem;
+    min-width: 45px;
+  }
+
+  .shortcutDescription {
+    font-size: 0.9rem;
+  }
+
+  .statusIcon {
+    font-size: 1.5rem;
+    min-width: 40px;
+  }
+
+  .statusValue {
+    font-size: 1rem;
+  }
+
+  .tipItem {
+    font-size: 0.9rem;
+    padding-left: 1.2rem;
+  }
+
+  .tipItem::before {
+    font-size: 0.9rem;
+  }
+}

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { adminService, Topic, Vocabulary } from '../services/adminService';
 import { ttsService, TTSConfig, defaultTTSConfig } from '../services/ttsService';
 import TTSSettings from '../components/admin/TTSSettings';
+import { SentenceManagement } from '../components/admin';
 import styles from './Admin.module.css';
 
 
@@ -12,7 +13,7 @@ const Admin: React.FC = () => {
   const { currentUser, logout, loading } = useAuth();
   const navigate = useNavigate();
   
-  const [activeTab, setActiveTab] = useState<'topics' | 'vocabulary'>('topics');
+  const [activeTab, setActiveTab] = useState<'topics' | 'vocabulary' | 'sentences'>('topics');
   const [topics, setTopics] = useState<Topic[]>([]);
   const [vocabularies, setVocabularies] = useState<Vocabulary[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -567,6 +568,17 @@ const Admin: React.FC = () => {
                  <span>Vocabulary</span>
                </div>
              </div>
+             <div
+               onClick={() => setActiveTab('sentences')}
+               className={`${styles.tabButton} ${activeTab === 'sentences' ? styles.active : ''}`}
+             >
+               <div>
+                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                 </svg>
+                 <span>Sentences</span>
+               </div>
+             </div>
            </nav>
           
         </div>
@@ -983,6 +995,13 @@ const Admin: React.FC = () => {
               </div>
             </div>
           </div>
+        )}
+
+                 {/* Sentences Tab */}
+         {activeTab === 'sentences' && (
+           <div className="space-y-4">
+             <SentenceManagement ttsConfig={ttsConfig} />
+           </div>
         )}
 
                  {/* Import Modal */}

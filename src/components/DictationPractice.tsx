@@ -219,7 +219,7 @@ const DictationPractice: React.FC = () => {
         navigate(`/dictation/${setIdx + 1}?topic=${encodedTopic}&setIndex=${nextSetIndex}`);
       } else {
         // If no more sets, go back to list
-        navigate('/dictation-list');
+        navigate('/');
       }
     } else {
       // Move to next word in current set

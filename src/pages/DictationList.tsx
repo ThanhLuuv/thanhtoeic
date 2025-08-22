@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { vocabularyService, ToeicVocabulary, VocabSetByTopic } from '../services';
+import { vocabularyService, sentenceService, ToeicVocabulary, VocabSetByTopic, Sentence } from '../services';
 import styles from './DictationList.module.css';
 
 // Constants
 const WORDS_PER_SET = 20;
+const SENTENCES_PER_SET = 10;
 
 // Types
 interface VocabSet {
@@ -15,9 +16,19 @@ interface VocabSet {
   topicSetIndex?: number; // Add this to track set index within topic
 }
 
+interface SentenceSet {
+  set: Sentence[];
+  idx: number;
+  originalIdx: number;
+  part: 'part1' | 'part2' | 'part3';
+  partSetIndex?: number; // Add this to track set index within part
+}
+
 interface DictationListState {
   vocabSetsByTopic: VocabSetByTopic[];
+  sentenceSetsByPart: SentenceSet[];
   vocabCompletedSets: Set<number>;
+  sentenceCompletedSets: Set<number>;
   isLoading: boolean;
   error: string | null;
   hoverIdx: number | null;
@@ -53,7 +64,9 @@ interface DictationListState {
 const useDictationListState = () => {
   const [state, setState] = useState<DictationListState>({
     vocabSetsByTopic: [],
+    sentenceSetsByPart: [],
     vocabCompletedSets: new Set(),
+    sentenceCompletedSets: new Set(),
     isLoading: true,
     error: null,
     hoverIdx: null,
@@ -71,8 +84,16 @@ const useDictationListState = () => {
     setState(prev => ({ ...prev, vocabSetsByTopic: sets }));
   }, []);
 
+  const setSentenceSetsByPart = useCallback((sets: SentenceSet[]) => {
+    setState(prev => ({ ...prev, sentenceSetsByPart: sets }));
+  }, []);
+
   const setVocabCompletedSets = useCallback((sets: Set<number>) => {
     setState(prev => ({ ...prev, vocabCompletedSets: sets }));
+  }, []);
+
+  const setSentenceCompletedSets = useCallback((sets: Set<number>) => {
+    setState(prev => ({ ...prev, sentenceCompletedSets: sets }));
   }, []);
 
   const setHoverIdx = useCallback((idx: number | null) => {
@@ -84,33 +105,60 @@ const useDictationListState = () => {
     setLoading,
     setError,
     setVocabSetsByTopic,
+    setSentenceSetsByPart,
     setVocabCompletedSets,
+    setSentenceCompletedSets,
     setHoverIdx,
   };
 };
 
 const useVocabularyData = () => {
-  const { state, setLoading, setError, setVocabSetsByTopic } = useDictationListState();
+  const { state, setLoading, setError, setVocabSetsByTopic, setSentenceSetsByPart } = useDictationListState();
 
   const loadVocabularyData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       
+      // Load vocabulary data
       const vocabSetsByTopicData = await vocabularyService.getVocabularySetsByTopic();
       setVocabSetsByTopic(vocabSetsByTopicData);
       
+      // Load sentence data
+      const sentenceSetsByPartData = await sentenceService.getSentenceSetsByPart();
+      
+      // Convert to SentenceSet format
+      const sentenceSets: SentenceSet[] = [];
+      let globalSentenceIndex = 0;
+      
+      sentenceSetsByPartData.forEach((partData) => {
+        partData.sets.forEach((set, setIndex) => {
+          sentenceSets.push({
+            set: set,
+            idx: sentenceSets.length,
+            originalIdx: globalSentenceIndex,
+            part: partData.part,
+            partSetIndex: setIndex
+          });
+          globalSentenceIndex++;
+        });
+      });
+      
+      setSentenceSetsByPart(sentenceSets);
+      
     } catch (error) {
-      console.error('Error loading vocabulary:', error);
-      setError('Failed to load vocabulary data. Please try again.');
+      console.error('Error loading data:', error);
+      setError('Failed to load data. Please try again.');
       setVocabSetsByTopic([]);
+      setSentenceSetsByPart([]);
     } finally {
       setLoading(false);
     }
-  }, [setLoading, setError, setVocabSetsByTopic]);
+  }, [setLoading, setError, setVocabSetsByTopic, setSentenceSetsByPart]);
 
   return {
     vocabSetsByTopic: state.vocabSetsByTopic,
+    sentenceSetsByPart: state.sentenceSetsByPart,
     isLoading: state.isLoading,
     error: state.error,
     loadVocabularyData,
@@ -118,22 +166,35 @@ const useVocabularyData = () => {
 };
 
 const useCompletedSets = () => {
-  const { state, setVocabCompletedSets } = useDictationListState();
+  const { state, setVocabCompletedSets, setSentenceCompletedSets } = useDictationListState();
 
   const loadCompletedSets = useCallback(() => {
+    // Load vocabulary completed sets
     const vocabSavedSets = localStorage.getItem('vocab-completed-sets');
     if (vocabSavedSets) {
       try {
         const parsed = JSON.parse(vocabSavedSets);
         setVocabCompletedSets(new Set(parsed));
       } catch (e) {
-        console.error('Error loading completed sets:', e);
+        console.error('Error loading completed vocab sets:', e);
       }
     }
-  }, [setVocabCompletedSets]);
+
+    // Load sentence completed sets
+    const sentenceSavedSets = localStorage.getItem('sentence-completed-sets');
+    if (sentenceSavedSets) {
+      try {
+        const parsed = JSON.parse(sentenceSavedSets);
+        setSentenceCompletedSets(new Set(parsed));
+      } catch (e) {
+        console.error('Error loading completed sentence sets:', e);
+      }
+    }
+  }, [setVocabCompletedSets, setSentenceCompletedSets]);
 
   return {
     vocabCompletedSets: state.vocabCompletedSets,
+    sentenceCompletedSets: state.sentenceCompletedSets,
     loadCompletedSets,
   };
 };
@@ -225,6 +286,73 @@ const VocabSetCard: React.FC<{
   );
 };
 
+const SentenceSetCard: React.FC<{
+  sentenceSet: SentenceSet;
+  isCompleted: boolean;
+  isHovered: boolean;
+  onHover: (idx: number | null) => void;
+  onClick: (originalIdx: number, part: string, partSetIndex: number) => void;
+}> = ({ sentenceSet, isCompleted, isHovered, onHover, onClick }) => {
+  const { idx, originalIdx, part, partSetIndex } = sentenceSet;
+
+  return (
+    <div
+      className={`${styles.sentenceCard} ${isHovered ? styles.hovered : ''}`}
+      onClick={() => onClick(originalIdx, part, partSetIndex || 0)}
+      onMouseEnter={() => onHover(idx)}
+      onMouseLeave={() => onHover(null)}
+    >
+      <div className={styles.cardContent}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardTitleSection}>
+            <div className={styles.cardIndicator}></div>
+            <h3 className={styles.cardTitle}>
+              Sentence Practice
+            </h3>
+          </div>
+          {isCompleted && (
+            <span className={styles.completedBadge}>
+              ✓
+            </span>
+          )}
+        </div>
+        
+        <div className={styles.cardInfo}>
+          <div className={styles.infoItem}>
+            <svg className={styles.infoIcon} fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+            </svg>
+            <span className={`${styles.infoText} ${styles.primary}`}>{part.toUpperCase()}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <svg className={styles.infoIcon} fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4z" clipRule="evenodd" />
+            </svg>
+            <span className={`${styles.infoText} ${styles.secondary}`}>Set {partSetIndex !== undefined ? partSetIndex + 1 : originalIdx + 1}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <svg className={styles.infoIcon} fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className={`${styles.infoText} ${styles.secondary}`}>Up to {SENTENCES_PER_SET} sentences</span>
+          </div>
+        </div>
+        
+        <div className={styles.progressSection}>
+          <div className={styles.progressBar}>
+            <div 
+              className={`${styles.progressFill} ${isCompleted ? styles.completed : styles.incomplete}`}
+            ></div>
+          </div>
+          <p className={styles.progressText}>
+            {isCompleted ? 'Completed' : 'Start'}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Header: React.FC = () => (
   <div className={styles.header}>
     <p className={styles.headerSubtitle}>Practice dictation with vocabulary</p>
@@ -249,8 +377,8 @@ const Header: React.FC = () => (
 const DictationList: React.FC = () => {
   const navigate = useNavigate();
   const { state, setHoverIdx } = useDictationListState();
-  const { vocabSetsByTopic, isLoading, error, loadVocabularyData } = useVocabularyData();
-  const { vocabCompletedSets, loadCompletedSets } = useCompletedSets();
+  const { vocabSetsByTopic, sentenceSetsByPart, isLoading, error, loadVocabularyData } = useVocabularyData();
+  const { vocabCompletedSets, sentenceCompletedSets, loadCompletedSets } = useCompletedSets();
 
   // Load data on mount
   useEffect(() => {
@@ -258,11 +386,17 @@ const DictationList: React.FC = () => {
     loadCompletedSets();
   }, [loadVocabularyData, loadCompletedSets]);
 
-  // Handle set click
-  const handleSetClick = useCallback((originalIdx: number, topic: string, topicSetIndex: number) => {
+  // Handle vocabulary set click
+  const handleVocabSetClick = useCallback((originalIdx: number, topic: string, topicSetIndex: number) => {
     // Encode topic and set index in URL
     const encodedTopic = encodeURIComponent(topic);
     navigate(`/dictation/${originalIdx}?topic=${encodedTopic}&setIndex=${topicSetIndex}`);
+  }, [navigate]);
+
+  // Handle sentence set click
+  const handleSentenceSetClick = useCallback((originalIdx: number, part: string, partSetIndex: number) => {
+    // Navigate to sentence practice
+    navigate(`/sentence-practice/${originalIdx}?part=${part}&setIndex=${partSetIndex}`);
   }, [navigate]);
 
   // Prepare all sets for rendering
@@ -363,10 +497,33 @@ const DictationList: React.FC = () => {
               isCompleted={vocabCompletedSets.has(vocabSet.originalIdx)}
               isHovered={state.hoverIdx === vocabSet.idx}
               onHover={setHoverIdx}
-              onClick={handleSetClick}
+              onClick={handleVocabSetClick}
             />
           ))}
         </div>
+
+        {/* Sentence Practice Section */}
+        {sentenceSetsByPart.length > 0 && (
+          <>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Sentence Practice</h2>
+              <p className={styles.sectionSubtitle}>Practice listening and dictation with TOEIC sentences</p>
+            </div>
+            
+            <div className={styles.sentenceGrid}>
+              {sentenceSetsByPart.map((sentenceSet) => (
+                <SentenceSetCard
+                  key={`sentence-${sentenceSet.originalIdx}`}
+                  sentenceSet={sentenceSet}
+                  isCompleted={sentenceCompletedSets.has(sentenceSet.originalIdx)}
+                  isHovered={state.hoverIdx === sentenceSet.idx}
+                  onHover={setHoverIdx}
+                  onClick={handleSentenceSetClick}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

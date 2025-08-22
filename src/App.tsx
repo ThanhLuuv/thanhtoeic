@@ -26,6 +26,7 @@ import Refund from './pages/Refund';
 import Community from './pages/Community';
 import DMCA from './pages/DMCA';
 import { firebaseTestService } from './services/firebaseTestService';
+import SentencePractice from './components/SentencePractice';
 
 // Extend Window interface for Google Analytics
 declare global {
@@ -236,6 +237,11 @@ const App: React.FC = () => {
         <Route
           path="/dictation/:setIndex"
           element={<DictationPractice />}
+        />
+
+        <Route
+          path="/sentence-practice/:setIndex"
+          element={<SentencePractice />}
         />
         
         {/* Catch all other routes */}

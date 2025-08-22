@@ -45,7 +45,7 @@ const Header: React.FC = () => {
     
   };
 
-  const isDictationPage = location.pathname.includes('/vocabulary') ||location.pathname === '/grammar-game' || location.pathname.includes('/dictation-list') || location.pathname.includes('/dictation-practice/');
+  const isDictationPage = location.pathname.includes('/vocabulary') ||location.pathname === '/grammar-game' || location.pathname.includes('/') || location.pathname.includes('/dictation-practice/');
 
   // Close more menu when clicking outside
   React.useEffect(() => {

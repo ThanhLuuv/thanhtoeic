@@ -14,7 +14,7 @@ export const useAudioManager = (soundEnabled: boolean) => {
         audioContext.current = new (window.AudioContext || (window as any).webkitAudioContext)();
       }
     } catch (error) {
-      console.log('AudioContext not supported:', error);
+      console.error('AudioContext not supported:', error);
     }
   };
 
@@ -23,7 +23,7 @@ export const useAudioManager = (soundEnabled: boolean) => {
       try {
         await audioContext.current.resume();
       } catch (error) {
-        console.log('Failed to resume audio context:', error);
+        console.error('Failed to resume audio context:', error);
       }
     }
   };
@@ -72,9 +72,8 @@ export const useAudioManager = (soundEnabled: boolean) => {
         successAudioRef.current = successAudio;
         errorAudioRef.current = errorAudio;
         
-        console.log('Audio elements initialized successfully');
       } catch (error) {
-        console.log('Failed to initialize audio elements:', error);
+        console.error('Failed to initialize audio elements:', error);
       }
     };
 
@@ -90,7 +89,7 @@ export const useAudioManager = (soundEnabled: boolean) => {
         currentAudio.current.pause();
         currentAudio.current.currentTime = 0;
       } catch (error) {
-        console.log('Error stopping audio:', error);
+        console.error('Error stopping audio:', error);
       }
       currentAudio.current = null;
     }
@@ -100,7 +99,7 @@ export const useAudioManager = (soundEnabled: boolean) => {
       try {
         window.speechSynthesis.cancel();
       } catch (error) {
-        console.log('Error stopping speech:', error);
+        console.error('Error stopping speech:', error);
       }
       currentSpeech.current = null;
     }
@@ -125,7 +124,6 @@ export const useAudioManager = (soundEnabled: boolean) => {
           });
           
           audio.addEventListener('error', () => {
-            console.log('Success sound failed to play');
             currentAudio.current = null;
             reject(new Error('Success sound failed to play'));
           });
@@ -147,7 +145,6 @@ export const useAudioManager = (soundEnabled: boolean) => {
         });
         
         audio.addEventListener('error', () => {
-          console.log('Success sound failed to play');
           currentAudio.current = null;
           reject(new Error('Success sound failed to play'));
         });
@@ -155,7 +152,6 @@ export const useAudioManager = (soundEnabled: boolean) => {
         audio.play().catch(reject);
       });
     } catch (error) {
-      console.log('Failed to play success sound:', error);
       throw error;
     }
   };
@@ -178,7 +174,6 @@ export const useAudioManager = (soundEnabled: boolean) => {
           });
           
           audio.addEventListener('error', () => {
-            console.log('Error sound failed to play');
             currentAudio.current = null;
             reject(new Error('Error sound failed to play'));
           });
@@ -200,7 +195,6 @@ export const useAudioManager = (soundEnabled: boolean) => {
         });
         
         audio.addEventListener('error', () => {
-          console.log('Error sound failed to play');
           currentAudio.current = null;
           reject(new Error('Error sound failed to play'));
         });
@@ -208,7 +202,6 @@ export const useAudioManager = (soundEnabled: boolean) => {
         audio.play().catch(reject);
       });
     } catch (error) {
-      console.log('Failed to play error sound:', error);
       throw error;
     }
   };
@@ -242,7 +235,6 @@ export const useAudioManager = (soundEnabled: boolean) => {
         });
         
         audio.addEventListener('error', () => {
-          console.log('Audio file failed to load, falling back to text-to-speech');
           currentAudio.current = null;
           isPlayingRef.current = false;
           // Fallback to text-to-speech
@@ -262,9 +254,7 @@ export const useAudioManager = (soundEnabled: boolean) => {
         // Try to play with a shorter timeout and better error handling
         try {
           await audio.play();
-          console.log('Audio playing successfully');
         } catch (playError) {
-          console.log('Audio play failed, trying text-to-speech:', playError);
           currentAudio.current = null;
           isPlayingRef.current = false;
           
@@ -275,7 +265,7 @@ export const useAudioManager = (soundEnabled: boolean) => {
         }
         
       } catch (error) {
-        console.log('Audio failed, using text-to-speech fallback:', error);
+        console.error('Audio failed, using text-to-speech fallback:', error);
         currentAudio.current = null;
         
         // Fallback to text-to-speech
@@ -297,9 +287,7 @@ export const useAudioManager = (soundEnabled: boolean) => {
             });
             
             window.speechSynthesis.speak(utterance);
-            console.log('Text-to-speech fallback activated');
           } catch (ttsError) {
-            console.log('Text-to-speech also failed:', ttsError);
             isPlayingRef.current = false;
           }
         }
@@ -328,9 +316,7 @@ export const useAudioManager = (soundEnabled: boolean) => {
         });
         
         window.speechSynthesis.speak(utterance);
-        console.log('Text-to-speech playing');
       } catch (error) {
-        console.log('Text-to-speech failed:', error);
         currentSpeech.current = null;
         isPlayingRef.current = false;
       }
