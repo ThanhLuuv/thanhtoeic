@@ -9,6 +9,7 @@ import FloatingFeedback from './components/FloatingFeedback';
 import CookieConsent from './components/common/CookieConsent';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
+import DevelopmentNotice from './components/common/DevelopmentNotice';
 import { AuthProvider } from './contexts/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -232,6 +233,7 @@ const App: React.FC = () => {
         {/* Catch all other routes */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <DevelopmentNotice />
       <CookieConsent onAccept={handleCookieAccept} onDecline={handleCookieDecline} />
     </AuthProvider>
   );

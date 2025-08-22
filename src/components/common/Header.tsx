@@ -72,7 +72,7 @@ const Header: React.FC = () => {
                 <span>Back</span>
               </button>
             )}
-            <Link to="/antoree.com" className={styles.logoLink}>
+            <Link to="https://antoree.com" className={styles.logoLink}>
               <div className={styles.logoContainer}>
                 <img src="/logo.png" alt="Antoree TOEIC" className={styles.logo} />
               </div>
