@@ -56,7 +56,9 @@ const MainSection: React.FC<MainSectionProps> = ({
   
   // Initialize refs array when sentence changes
   useEffect(() => {
-    const sentenceWords = item.englishSentence.split(' ');
+    const sentenceWords = item.englishSentence
+      .split(' ')
+      .filter(word => word.trim() !== '');
     inputRefs.current = inputRefs.current.slice(0, sentenceWords.length);
   }, [item.englishSentence]);
 
@@ -133,45 +135,48 @@ const MainSection: React.FC<MainSectionProps> = ({
             
             {/* Multiple input fields for each word */}
             <div className={styles.wordInputsContainer}>
-              {item.englishSentence.split(' ').map((word, wordIndex) => {
-                const currentWordResults = wordResults[currentIndex] || [];
-                const isWordCorrect = currentWordResults[wordIndex];
-                const isWordChecked = isChecked;
-                
-                let inputClassName = styles.wordInput;
-                if (isWordChecked) {
-                  if (isWordCorrect) {
-                    inputClassName += ` ${styles.inputCorrect}`;
-                  } else {
-                    inputClassName += ` ${styles.inputIncorrect}`;
+              {item.englishSentence
+                .split(' ')
+                .filter(word => word.trim() !== '') // Filter out empty strings
+                .map((word, wordIndex) => {
+                  const currentWordResults = wordResults[currentIndex] || [];
+                  const isWordCorrect = currentWordResults[wordIndex];
+                  const isWordChecked = isChecked;
+                  
+                  let inputClassName = styles.wordInput;
+                  if (isWordChecked) {
+                    if (isWordCorrect) {
+                      inputClassName += ` ${styles.inputCorrect}`;
+                    } else {
+                      inputClassName += ` ${styles.inputIncorrect}`;
+                    }
                   }
-                }
-                
-                // Dynamic styling based on word length
-                const dynamicStyles = {
-                  minWidth: getInputWidth(word),
-                  maxWidth: getInputWidth(word),
-                  fontSize: getInputFontSize(word)
-                };
-                
-                return (
-                  <input
-                    key={wordIndex}
-                    ref={(el) => {
-                      inputRefs.current[wordIndex] = el;
-                    }}
-                    type="text"
-                    value={userInputs[currentIndex]?.[wordIndex] || ''}
-                    onChange={(e) => onInputChange(e.target.value, wordIndex)}
-                    onKeyDown={onKeyDown}
-                    placeholder={`Word ${wordIndex + 1}`}
-                    className={inputClassName}
-                    style={dynamicStyles}
-                    disabled={false}
-                    autoFocus={wordIndex === 0}
-                  />
-                );
-              })}
+                  
+                  // Dynamic styling based on word length
+                  const dynamicStyles = {
+                    minWidth: getInputWidth(word),
+                    maxWidth: getInputWidth(word),
+                    fontSize: getInputFontSize(word)
+                  };
+                  
+                  return (
+                    <input
+                      key={wordIndex}
+                      ref={(el) => {
+                        inputRefs.current[wordIndex] = el;
+                      }}
+                      type="text"
+                      value={userInputs[currentIndex]?.[wordIndex] || ''}
+                      onChange={(e) => onInputChange(e.target.value, wordIndex)}
+                      onKeyDown={onKeyDown}
+                      placeholder={`Word ${wordIndex + 1}`}
+                      className={inputClassName}
+                      style={dynamicStyles}
+                      disabled={false}
+                      autoFocus={wordIndex === 0}
+                    />
+                  );
+                })}
             </div>
             
             {!showAnswer && (

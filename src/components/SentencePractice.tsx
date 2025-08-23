@@ -80,7 +80,12 @@ const SentencePractice: React.FC = () => {
         setTotalSets(totalSetsCount);
         
         // Reset user inputs and results for the new set
-        const initialUserInputs = currentSetSentences.map(() => Array(10).fill(''));
+        const initialUserInputs = currentSetSentences.map(sentence => {
+          const wordCount = sentence.englishSentence
+            .split(' ')
+            .filter(word => word.trim() !== '').length;
+          return Array(wordCount).fill('');
+        });
         setUserInputs(initialUserInputs);
         setResult(Array(currentSetSentences.length).fill(null));
         setCurrentIndex(0);
@@ -157,7 +162,9 @@ const SentencePractice: React.FC = () => {
     
     // Get user input words for current sentence
     const userInputWords = userInputs[currentIndex] || [];
-    const sentenceWords = currentItem.englishSentence.split(' ');
+    const sentenceWords = currentItem.englishSentence
+      .split(' ')
+      .filter(word => word.trim() !== '');
     
     // Check each word individually and store results
     const wordResults: boolean[] = [];
@@ -232,7 +239,15 @@ const SentencePractice: React.FC = () => {
       const newResult = [...result];
       const newUserInputs = [...userInputs];
       newResult[safeCurrentIndex + 1] = null;
-      newUserInputs[safeCurrentIndex + 1] = Array(10).fill('');
+      
+      // Initialize correct number of input fields for next sentence
+      const nextSentence = sentenceList[safeCurrentIndex + 1];
+      if (nextSentence) {
+        const wordCount = nextSentence.englishSentence
+          .split(' ')
+          .filter(word => word.trim() !== '').length;
+        newUserInputs[safeCurrentIndex + 1] = Array(wordCount).fill('');
+      }
       
       // Reset word results for the new sentence
       const newWordResults = [...(wordResultsRef.current || [])];
@@ -496,7 +511,7 @@ const SentencePractice: React.FC = () => {
       icon: <CheckCircle />,
       onClick: handleCheck,
       variant: 'success' as const,
-      disabled: !userInputs[currentIndex] || userInputs[currentIndex].some(input => !input.trim()),
+      disabled: false, // Always enable check button
       show: !isChecked
     },
     {
