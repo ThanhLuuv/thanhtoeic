@@ -51,6 +51,11 @@ const Footer = () => {
                     Grammar Game
                   </Link>
                 </li>
+                <li>
+                  <Link to="/toeic-guide" className="text-gray-300 hover:text-white text-sm transition-colors">
+                    TOEIC Guide
+                  </Link>
+                </li>
               </ul>
             </div>
             

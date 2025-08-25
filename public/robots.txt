@@ -18,6 +18,7 @@ Allow: /ads.txt
 
 # Allow main content
 Allow: /grammar-game
+Allow: /toeic-guide
 Allow: /login
 Allow: /register
 Allow: /profile
