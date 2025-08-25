@@ -25,6 +25,7 @@ import Cookies from './pages/Cookies';
 import Refund from './pages/Refund';
 import Community from './pages/Community';
 import DMCA from './pages/DMCA';
+import TOEICGuide from './pages/TOEICGuide';
 import { firebaseTestService } from './services/firebaseTestService';
 import SentencePractice from './components/SentencePractice';
 
@@ -194,6 +195,18 @@ const App: React.FC = () => {
             <div className="bg-gray-50 min-h-screen">
               <Header />
               <DMCA />
+              <Footer />
+              <FloatingFeedback />
+            </div>
+          }
+        />
+        
+        <Route
+          path="/toeic-guide"
+          element={
+            <div className="bg-gray-50 min-h-screen">
+              <Header />
+              <TOEICGuide />
               <Footer />
               <FloatingFeedback />
             </div>
