@@ -11,7 +11,7 @@ const Header: React.FC = () => {
   const location = useLocation();
   const { currentUser, logout } = useAuth();
 
-  const navItems = ['Dictation', 'Grammar'];
+  const navItems = ['Dictation'];
 
   // Xác định menu active dựa trên current location
   React.useEffect(() => {

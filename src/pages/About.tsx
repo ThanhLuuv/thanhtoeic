@@ -3,67 +3,66 @@ import React from 'react';
 const About: React.FC = () => {
   return (
     <main className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Về Tôi</h1>
+      <div className="bg-white p-8">
+        <h1 className="text-3xl font-bold text-black mb-6">About Me</h1>
         
         <div className="prose prose-lg max-w-none">
           <p className="text-gray-600 mb-6">
-            AntToeic là nền tảng học tập TOEIC cá nhân, được phát triển bởi tôi - một người có đam mê 
-            với giáo dục và công nghệ, mong muốn chia sẻ kiến thức và giúp đỡ các bạn học viên đạt được 
-            mục tiêu TOEIC của mình.
+            AntToeic is a personal TOEIC learning platform, developed by me - someone passionate about 
+            education and technology, who wants to share knowledge and help students achieve their TOEIC goals.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Thông Tin Cá Nhân</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">Personal Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div>
-              <h3 className="font-semibold text-gray-700">Họ và Tên:</h3>
-              <p className="text-gray-600">Lưu Văn Thành</p>
+              <h3 className="font-semibold text-black">Full Name:</h3>
+              <p className="text-gray-600">Luu Van Thanh</p>
             </div>
            
             <div>
-              <h3 className="font-semibold text-gray-700">Địa Chỉ:</h3>
-              <p className="text-gray-600">P Thủ Đức, TP HCM</p>
+              <h3 className="font-semibold text-black">Address:</h3>
+              <p className="text-gray-600">Thu Duc District, Ho Chi Minh City</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-700">Email:</h3>
+              <h3 className="font-semibold text-black">Email:</h3>
               <p className="text-gray-600">lvthanh.work@gmail.com</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-700">Điện Thoại:</h3>
+              <h3 className="font-semibold text-black">Phone:</h3>
               <p className="text-gray-600">0876 06 6907</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-700">Website:</h3>
+              <h3 className="font-semibold text-black">Website:</h3>
               <p className="text-gray-600">thanhtoeic.online</p>
             </div>
           </div>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Sứ Mệnh</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">Mission</h2>
           <p className="text-gray-600 mb-6">
-            Tôi cam kết cung cấp giải pháp học tập TOEIC hiệu quả, chất lượng cao với công nghệ tiên tiến, 
-            giúp học viên đạt được mục tiêu điểm số mong muốn một cách nhanh chóng và bền vững.
+            I am committed to providing effective, high-quality TOEIC learning solutions with advanced technology, 
+            helping students achieve their desired scores quickly and sustainably.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Giá Trị Cốt Lõi</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">Core Values</h2>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
-            <li>Chất lượng giáo dục hàng đầu</li>
-            <li>Đổi mới công nghệ liên tục</li>
-            <li>Trải nghiệm người dùng tối ưu</li>
-            <li>Hỗ trợ học viên 24/7</li>
-            <li>Cam kết kết quả học tập</li>
+            <li>Top-quality education</li>
+            <li>Continuous technological innovation</li>
+            <li>Optimal user experience</li>
+            <li>24/7 student support</li>
+            <li>Commitment to learning results</li>
           </ul>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Về Dự Án</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">About the Project</h2>
           <p className="text-gray-600 mb-6">
-            Đây là dự án cá nhân được phát triển với mục đích giáo dục và chia sẻ kiến thức. 
-            Tôi không có mục đích thương mại hay bán khóa học. Tất cả nội dung đều miễn phí 
-            và được tạo ra từ kinh nghiệm và kiến thức cá nhân.
+            This is a personal project developed for educational purposes and knowledge sharing. 
+            I have no commercial purpose or intention to sell courses. All content is free 
+            and created from personal experience and knowledge.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Cam Kết</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">Commitment</h2>
           <p className="text-gray-600 mb-6">
-            Tôi cam kết duy trì chất lượng nội dung, cập nhật thường xuyên và luôn sẵn sàng 
-            hỗ trợ các bạn học viên trong quá trình học tập TOEIC.
+            I am committed to maintaining content quality, regular updates, and always being ready to 
+            support students in their TOEIC learning journey.
           </p>
         </div>
       </div>
@@ -75,15 +74,15 @@ const About: React.FC = () => {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Person",
-            "name": "Lưu Văn Thành",
+            "name": "Luu Van Thanh",
             "url": "https://thanhtoeic.online",
             "image": "https://thanhtoeic.online/logo.png",
-            "description": "Người phát triển nền tảng học tập TOEIC AntToeic",
+            "description": "Developer of the AntToeic TOEIC learning platform",
             "address": {
               "@type": "PostalAddress",
-              "streetAddress": "P Thủ Đức",
-              "addressLocality": "TP HCM",
-              "addressRegion": "TP HCM",
+              "streetAddress": "Thu Duc District",
+              "addressLocality": "Ho Chi Minh City",
+              "addressRegion": "Ho Chi Minh City",
               "addressCountry": "VN"
             },
             "contactPoint": {

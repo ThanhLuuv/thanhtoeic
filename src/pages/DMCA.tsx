@@ -3,100 +3,100 @@ import React from 'react';
 const DMCA: React.FC = () => {
   return (
     <main className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Chính Sách DMCA</h1>
+      <div className="bg-white p-8">
+        <h1 className="text-3xl font-bold text-black mb-6">DMCA Policy</h1>
         
         <div className="prose prose-lg max-w-none">
-          <div className="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8">
-            <h2 className="text-2xl font-semibold text-blue-800 mb-4">📋 Thông Tin DMCA</h2>
-            <p className="text-blue-700 text-lg">
-              AntToeic tôn trọng quyền sở hữu trí tuệ và cam kết tuân thủ 
-              Đạo luật Bản quyền Kỹ thuật số Thiên niên kỷ (DMCA).
+          <div className="bg-gray-100 p-6 mb-8">
+            <h2 className="text-2xl font-semibold text-black mb-4">DMCA Information</h2>
+            <p className="text-black text-lg">
+              AntToeic respects intellectual property rights and is committed to complying with 
+              the Digital Millennium Copyright Act (DMCA).
             </p>
           </div>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">1. Giới Thiệu</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">1. Introduction</h2>
           <p className="text-gray-600 mb-6">
-            Chính sách DMCA này giải thích cách AntToeic xử lý các khiếu nại về vi phạm bản quyền 
-            theo Đạo luật Bản quyền Kỹ thuật số Thiên niên kỷ (DMCA) của Hoa Kỳ. 
-            Chúng tôi cam kết bảo vệ quyền sở hữu trí tuệ và xử lý nghiêm túc mọi khiếu nại.
+            This DMCA policy explains how AntToeic handles copyright infringement complaints 
+            under the Digital Millennium Copyright Act (DMCA) of the United States. 
+            We are committed to protecting intellectual property rights and take all complaints seriously.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">2. Thông Báo Vi Phạm Bản Quyền</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">2. Copyright Infringement Notice</h2>
           <p className="text-gray-600 mb-6">
-            Nếu bạn tin rằng nội dung trên AntToeic vi phạm bản quyền của bạn, 
-            vui lòng gửi thông báo vi phạm bản quyền theo DMCA với các thông tin sau:
+            If you believe that content on AntToeic infringes your copyright, 
+            please send a copyright infringement notice under DMCA with the following information:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li><strong>Thông tin người khiếu nại:</strong> Họ tên, địa chỉ, số điện thoại, email</li>
-            <li><strong>Mô tả tác phẩm:</strong> Mô tả chi tiết tác phẩm bị vi phạm bản quyền</li>
-            <li><strong>Vị trí vi phạm:</strong> URL cụ thể của nội dung vi phạm trên AntToeic</li>
-            <li><strong>Tuyên bố:</strong> Tuyên bố rằng bạn tin rằng việc sử dụng không được ủy quyền</li>
-            <li><strong>Xác nhận:</strong> Xác nhận thông tin trong thông báo là chính xác</li>
-            <li><strong>Chữ ký:</strong> Chữ ký điện tử hoặc vật lý của chủ sở hữu bản quyền</li>
+            <li><strong>Complainant information:</strong> Full name, address, phone number, email</li>
+            <li><strong>Work description:</strong> Detailed description of the copyrighted work being infringed</li>
+            <li><strong>Infringement location:</strong> Specific URL of infringing content on AntToeic</li>
+            <li><strong>Statement:</strong> Statement that you believe the use is not authorized</li>
+            <li><strong>Confirmation:</strong> Confirmation that information in the notice is accurate</li>
+            <li><strong>Signature:</strong> Electronic or physical signature of the copyright owner</li>
           </ul>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">3. Gửi Thông Báo DMCA</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">3. Sending DMCA Notice</h2>
           <p className="text-gray-600 mb-6">
-            Thông báo vi phạm bản quyền có thể được gửi qua:
+            Copyright infringement notices can be sent via:
           </p>
-          <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <p className="text-gray-700 font-semibold">Email:</p>
+          <div className="bg-gray-100 p-4 mb-6">
+            <p className="text-black font-semibold">Email:</p>
             <p className="text-gray-600">lvthanh.work@gmail.com</p>
-            <p className="text-gray-700 font-semibold mt-2">Tiêu đề email:</p>
-            <p className="text-gray-600">"DMCA Takedown Request - [Tên tác phẩm]"</p>
+            <p className="text-black font-semibold mt-2">Email subject:</p>
+            <p className="text-gray-600">"DMCA Takedown Request - [Work Title]"</p>
           </div>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">4. Quy Trình Xử Lý</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">4. Processing Procedure</h2>
           <p className="text-gray-600 mb-6">
-            Khi nhận được thông báo vi phạm bản quyền hợp lệ, AntToeic sẽ:
+            When a valid copyright infringement notice is received, AntToeic will:
           </p>
           <ol className="list-decimal list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li><strong>Xem xét thông báo:</strong> Kiểm tra tính hợp lệ của thông báo DMCA</li>
-            <li><strong>Xác minh quyền sở hữu:</strong> Xác minh quyền sở hữu bản quyền</li>
-            <li><strong>Gỡ bỏ nội dung:</strong> Gỡ bỏ hoặc vô hiệu hóa nội dung vi phạm</li>
-            <li><strong>Thông báo cho người dùng:</strong> Thông báo cho người dùng đã đăng nội dung</li>
-            <li><strong>Ghi nhận:</strong> Ghi nhận việc xử lý trong hệ thống</li>
+            <li><strong>Review notice:</strong> Check the validity of the DMCA notice</li>
+            <li><strong>Verify ownership:</strong> Verify copyright ownership</li>
+            <li><strong>Remove content:</strong> Remove or disable infringing content</li>
+            <li><strong>Notify user:</strong> Notify the user who posted the content</li>
+            <li><strong>Record:</strong> Record the processing in the system</li>
           </ol>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">5. Phản Đối (Counter-Notice)</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">5. Counter-Notice</h2>
           <p className="text-gray-600 mb-6">
-            Nếu bạn tin rằng nội dung của bạn bị gỡ bỏ nhầm, bạn có thể gửi phản đối với:
+            If you believe your content was removed by mistake, you can send a counter-notice with:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li><strong>Thông tin cá nhân:</strong> Họ tên, địa chỉ, số điện thoại, email</li>
-            <li><strong>Xác định nội dung:</strong> Xác định nội dung đã bị gỡ bỏ</li>
-            <li><strong>Tuyên bố:</strong> Tuyên bố rằng bạn tin rằng nội dung bị gỡ bỏ nhầm</li>
-            <li><strong>Đồng ý:</strong> Đồng ý với thẩm quyền của tòa án địa phương</li>
-            <li><strong>Chữ ký:</strong> Chữ ký điện tử hoặc vật lý</li>
+            <li><strong>Personal information:</strong> Full name, address, phone number, email</li>
+            <li><strong>Content identification:</strong> Identify the removed content</li>
+            <li><strong>Statement:</strong> Statement that you believe the content was removed by mistake</li>
+            <li><strong>Consent:</strong> Consent to local court jurisdiction</li>
+            <li><strong>Signature:</strong> Electronic or physical signature</li>
           </ul>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">6. Lặp Lại Vi Phạm</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">6. Repeat Infringement</h2>
           <p className="text-gray-600 mb-6">
-            AntToeic có chính sách nghiêm khắc đối với người dùng vi phạm bản quyền lặp lại:
+            AntToeic has a strict policy for users who repeatedly violate copyright:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li><strong>Lần đầu:</strong> Cảnh báo và gỡ bỏ nội dung vi phạm</li>
-            <li><strong>Lần thứ hai:</strong> Tạm thời đình chỉ tài khoản</li>
-            <li><strong>Lần thứ ba:</strong> Đình chỉ vĩnh viễn tài khoản</li>
-            <li><strong>Báo cáo:</strong> Báo cáo cho cơ quan có thẩm quyền nếu cần thiết</li>
+            <li><strong>First time:</strong> Warning and removal of infringing content</li>
+            <li><strong>Second time:</strong> Temporary account suspension</li>
+            <li><strong>Third time:</strong> Permanent account suspension</li>
+            <li><strong>Reporting:</strong> Report to authorities if necessary</li>
           </ul>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">7. Liên Hệ</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">7. Contact</h2>
           <p className="text-gray-600 mb-6">
-            Nếu bạn có câu hỏi về chính sách DMCA hoặc cần hỗ trợ, 
-            vui lòng liên hệ với tôi:<br /><br />
+            If you have questions about the DMCA policy or need support, 
+            please contact me:<br /><br />
             <strong>Email:</strong> lvthanh.work@gmail.com<br />
-            <strong>Điện thoại:</strong> 0876 06 6907<br />
-            <strong>Địa chỉ:</strong> P Thủ Đức, TP HCM<br />
-            <strong>Trang web:</strong> <a href="/contact" className="text-blue-600 hover:underline">Liên hệ</a>
+            <strong>Phone:</strong> 0876 06 6907<br />
+            <strong>Address:</strong> Thu Duc District, Ho Chi Minh City<br />
+            <strong>Website:</strong> <a href="/contact" className="text-black underline">Contact</a>
           </p>
           
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mt-8">
-            <h3 className="text-lg font-semibold text-yellow-800 mb-2">⚠️ Lưu Ý Quan Trọng</h3>
-            <p className="text-yellow-700">
-              Chỉ gửi thông báo DMCA nếu bạn thực sự sở hữu bản quyền của nội dung bị vi phạm. 
-              Gửi thông báo sai có thể dẫn đến hậu quả pháp lý nghiêm trọng.
+          <div className="bg-gray-100 p-6 mt-8">
+            <h3 className="text-lg font-semibold text-black mb-2">Important Note</h3>
+            <p className="text-black">
+              Only send DMCA notices if you actually own the copyright to the infringed content. 
+              Sending false notices can lead to serious legal consequences.
             </p>
           </div>
         </div>

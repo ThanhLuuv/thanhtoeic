@@ -3,117 +3,117 @@ import React from 'react';
 const Cookies: React.FC = () => {
   return (
     <main className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Chính Sách Cookie</h1>
+      <div className="bg-white p-8">
+        <h1 className="text-3xl font-bold text-black mb-6">Cookie Policy</h1>
         
         <div className="prose prose-lg max-w-none">
           <p className="text-gray-600 mb-6">
-            <strong>Ngày cập nhật:</strong> 15/01/2025<br />
-            <strong>Phiên bản:</strong> 1.0
+            <strong>Last updated:</strong> January 15, 2025<br />
+            <strong>Version:</strong> 1.0
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">1. Cookie Là Gì?</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">1. What Are Cookies?</h2>
           <p className="text-gray-600 mb-6">
-            Cookie là những file văn bản nhỏ được lưu trữ trên thiết bị của bạn khi bạn truy cập website. 
-            Chúng giúp website ghi nhớ thông tin về chuyến thăm của bạn, giúp cải thiện trải nghiệm người dùng 
-            và cung cấp thông tin hữu ích cho chủ sở hữu website.
+            Cookies are small text files stored on your device when you visit a website. 
+            They help websites remember information about your visit, improve user experience, 
+            and provide useful information to website owners.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">2. Cookie Tôi Sử Dụng</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">2. Cookies I Use</h2>
           
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">2.1 Cookie Cần Thiết</h3>
+          <h3 className="text-xl font-semibold text-black mb-3">2.1 Essential Cookies</h3>
           <p className="text-gray-600 mb-4">
-            Những cookie này cần thiết để website hoạt động bình thường:
+            These cookies are necessary for the website to function normally:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li>Cookie phiên đăng nhập</li>
-            <li>Cookie bảo mật</li>
-            <li>Cookie cài đặt ngôn ngữ</li>
-            <li>Cookie ghi nhớ tùy chọn</li>
+            <li>Login session cookies</li>
+            <li>Security cookies</li>
+            <li>Language setting cookies</li>
+            <li>Preference memory cookies</li>
           </ul>
           
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">2.2 Cookie Phân Tích</h3>
+          <h3 className="text-xl font-semibold text-black mb-3">2.2 Analytics Cookies</h3>
           <p className="text-gray-600 mb-4">
-            Tôi sử dụng cookie phân tích để hiểu cách người dùng tương tác với website:
+            I use analytics cookies to understand how users interact with the website:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
             <li>Google Analytics</li>
-            <li>Thống kê truy cập</li>
-            <li>Phân tích hành vi người dùng</li>
-            <li>Cải thiện hiệu suất website</li>
+            <li>Traffic statistics</li>
+            <li>User behavior analysis</li>
+            <li>Website performance improvement</li>
           </ul>
           
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">2.3 Cookie Quảng Cáo</h3>
+          <h3 className="text-xl font-semibold text-black mb-3">2.3 Advertising Cookies</h3>
           <p className="text-gray-600 mb-6">
-            Nếu bạn chấp nhận, tôi có thể sử dụng cookie quảng cáo để hiển thị quảng cáo phù hợp 
-            với sở thích của bạn. Các cookie này có thể được đặt bởi các đối tác quảng cáo của tôi.
+            If you accept, I may use advertising cookies to display ads relevant to your interests. 
+            These cookies may be set by my advertising partners.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">3. Cookie Của Bên Thứ Ba</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">3. Third-Party Cookies</h2>
           <p className="text-gray-600 mb-6">
-            Tôi có thể sử dụng các dịch vụ của bên thứ ba như Google Analytics, Facebook Pixel, 
-            hoặc các nền tảng quảng cáo khác. Những dịch vụ này có thể đặt cookie riêng của họ trên thiết bị của bạn.
+            I may use third-party services such as Google Analytics, Facebook Pixel, 
+            or other advertising platforms. These services may set their own cookies on your device.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">4. Quản Lý Cookie</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">4. Managing Cookies</h2>
           <p className="text-gray-600 mb-4">
-            Bạn có thể kiểm soát và quản lý cookie thông qua:
+            You can control and manage cookies through:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li><strong>Cài đặt trình duyệt:</strong> Hầu hết trình duyệt cho phép bạn chặn hoặc xóa cookie</li>
-            <li><strong>Bảng điều khiển cookie:</strong> Sử dụng bảng điều khiển trên website của tôi</li>
-            <li><strong>Thiết lập quảng cáo:</strong> Tùy chỉnh cài đặt quảng cáo của Google</li>
-            <li><strong>Opt-out tools:</strong> Sử dụng các công cụ từ chối quảng cáo</li>
+            <li><strong>Browser settings:</strong> Most browsers allow you to block or delete cookies</li>
+            <li><strong>Cookie control panel:</strong> Use the control panel on my website</li>
+            <li><strong>Ad settings:</strong> Customize Google advertising settings</li>
+            <li><strong>Opt-out tools:</strong> Use advertising opt-out tools</li>
           </ul>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">5. Hướng Dẫn Theo Trình Duyệt</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">5. Browser-Specific Instructions</h2>
           
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">5.1 Google Chrome</h3>
+          <h3 className="text-xl font-semibold text-black mb-3">5.1 Google Chrome</h3>
           <p className="text-gray-600 mb-4">
-            Vào Cài đặt → Bảo mật và quyền riêng tư → Cookie và dữ liệu trang web
+            Go to Settings → Privacy and security → Cookies and other site data
           </p>
           
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">5.2 Mozilla Firefox</h3>
+          <h3 className="text-xl font-semibold text-black mb-3">5.2 Mozilla Firefox</h3>
           <p className="text-gray-600 mb-4">
-            Vào Cài đặt → Quyền riêng tư & Bảo mật → Cookie và dữ liệu trang web
+            Go to Settings → Privacy & Security → Cookies and Site Data
           </p>
           
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">5.3 Safari</h3>
+          <h3 className="text-xl font-semibold text-black mb-3">5.3 Safari</h3>
           <p className="text-gray-600 mb-4">
-            Vào Tùy chọn → Quyền riêng tư → Cookie và dữ liệu trang web
+            Go to Preferences → Privacy → Cookies and website data
           </p>
           
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">5.4 Microsoft Edge</h3>
+          <h3 className="text-xl font-semibold text-black mb-3">5.4 Microsoft Edge</h3>
           <p className="text-gray-600 mb-6">
-            Vào Cài đặt → Cookie và quyền trang web
+            Go to Settings → Cookies and site permissions
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">6. Tác Động Của Việc Vô Hiệu Hóa Cookie</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">6. Impact of Disabling Cookies</h2>
           <p className="text-gray-600 mb-6">
-            Nếu bạn vô hiệu hóa cookie, một số tính năng của website có thể không hoạt động bình thường:
+            If you disable cookies, some website features may not work normally:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li>Không thể đăng nhập hoặc ghi nhớ tài khoản</li>
-            <li>Không thể lưu cài đặt và tùy chọn</li>
-            <li>Một số tính năng tương tác có thể bị gián đoạn</li>
-            <li>Trải nghiệm người dùng có thể bị ảnh hưởng</li>
+            <li>Unable to login or remember accounts</li>
+            <li>Unable to save settings and preferences</li>
+            <li>Some interactive features may be disrupted</li>
+            <li>User experience may be affected</li>
           </ul>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">7. Cập Nhật Chính Sách Cookie</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">7. Cookie Policy Updates</h2>
           <p className="text-gray-600 mb-6">
-            Tôi có thể cập nhật chính sách cookie này theo thời gian để phản ánh những thay đổi 
-            trong cách tôi sử dụng cookie hoặc vì lý do pháp lý. Những thay đổi quan trọng sẽ được 
-            thông báo qua email hoặc thông báo trên website.
+            I may update this cookie policy from time to time to reflect changes 
+            in how I use cookies or for legal reasons. Important changes will be 
+            notified via email or notice on the website.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">8. Liên Hệ</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">8. Contact</h2>
           <p className="text-gray-600 mb-6">
-            Nếu bạn có câu hỏi về chính sách cookie này hoặc cách tôi sử dụng cookie, 
-            vui lòng liên hệ với tôi:<br /><br />
+            If you have questions about this cookie policy or how I use cookies, 
+            please contact me:<br /><br />
             <strong>Email:</strong> lvthanh.work@gmail.com<br />
-            <strong>Địa chỉ:</strong> P Thủ Đức, TP HCM<br />
-            <strong>Điện thoại:</strong> 0876 06 6907<br />
-            <strong>Trang web:</strong> <a href="/contact" className="text-blue-600 hover:underline">Liên hệ</a>
+            <strong>Address:</strong> Thu Duc District, Ho Chi Minh City<br />
+            <strong>Phone:</strong> 0876 06 6907<br />
+            <strong>Website:</strong> <a href="/contact" className="text-black underline">Contact</a>
           </p>
         </div>
       </div>

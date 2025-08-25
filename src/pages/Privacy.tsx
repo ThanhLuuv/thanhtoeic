@@ -3,131 +3,131 @@ import React from 'react';
 const Privacy: React.FC = () => {
   return (
     <main className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Chính Sách Bảo Mật</h1>
+      <div className="bg-white p-8">
+        <h1 className="text-3xl font-bold text-black mb-6">Privacy Policy</h1>
         
         <div className="prose prose-lg max-w-none">
           <p className="text-gray-600 mb-6">
-            <strong>Ngày cập nhật:</strong> 15/01/2025<br />
-            <strong>Phiên bản:</strong> 1.0
+            <strong>Last updated:</strong> January 15, 2025<br />
+            <strong>Version:</strong> 1.0
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">1. Giới Thiệu</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">1. Introduction</h2>
           <p className="text-gray-600 mb-6">
-            AntToeic ("tôi", "của tôi", hoặc "nền tảng") cam kết bảo vệ quyền riêng tư 
-            và thông tin cá nhân của bạn. Chính sách bảo mật này giải thích cách tôi thu thập, 
-            sử dụng, bảo vệ và chia sẻ thông tin của bạn khi bạn sử dụng nền tảng học tập TOEIC của tôi.
+            AntToeic ("I", "my", or "platform") is committed to protecting your privacy 
+            and personal information. This privacy policy explains how I collect, 
+            use, protect, and share your information when you use my TOEIC learning platform.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">2. Thông Tin Tôi Thu Thập</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">2. Information I Collect</h2>
           
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">2.1 Thông Tin Cá Nhân</h3>
+          <h3 className="text-xl font-semibold text-black mb-3">2.1 Personal Information</h3>
           <p className="text-gray-600 mb-4">
-            Khi bạn đăng ký tài khoản hoặc sử dụng dịch vụ, tôi có thể thu thập:
+            When you register an account or use services, I may collect:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li>Họ và tên</li>
-            <li>Địa chỉ email</li>
-            <li>Số điện thoại (nếu cung cấp)</li>
-            <li>Thông tin tài khoản học tập</li>
+            <li>Full name</li>
+            <li>Email address</li>
+            <li>Phone number (if provided)</li>
+            <li>Learning account information</li>
           </ul>
           
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">2.2 Thông Tin Sử Dụng</h3>
+          <h3 className="text-xl font-semibold text-black mb-3">2.2 Usage Information</h3>
           <p className="text-gray-600 mb-4">
-            Tôi tự động thu thập thông tin về cách bạn sử dụng nền tảng:
+            I automatically collect information about how you use the platform:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li>Thời gian truy cập và sử dụng</li>
-            <li>Trang web bạn truy cập</li>
-            <li>Thiết bị và trình duyệt bạn sử dụng</li>
-            <li>Địa chỉ IP</li>
-            <li>Tiến độ học tập và kết quả</li>
+            <li>Access and usage time</li>
+            <li>Websites you visit</li>
+            <li>Device and browser you use</li>
+            <li>IP address</li>
+            <li>Learning progress and results</li>
           </ul>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">3. Cách Tôi Sử Dụng Thông Tin</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">3. How I Use Information</h2>
           <p className="text-gray-600 mb-4">
-            Tôi sử dụng thông tin thu thập được để:
+            I use the collected information to:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li>Cung cấp và cải thiện dịch vụ học tập</li>
-            <li>Gửi thông báo và cập nhật về dịch vụ</li>
-            <li>Hỗ trợ học viên và giải quyết vấn đề</li>
-            <li>Phân tích và tối ưu hóa trải nghiệm người dùng</li>
-            <li>Tuân thủ các nghĩa vụ pháp lý</li>
+            <li>Provide and improve learning services</li>
+            <li>Send notifications and service updates</li>
+            <li>Support students and resolve issues</li>
+            <li>Analyze and optimize user experience</li>
+            <li>Comply with legal obligations</li>
           </ul>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">4. Chia Sẻ Thông Tin</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">4. Sharing Information</h2>
           <p className="text-gray-600 mb-6">
-            Tôi không bán, trao đổi hoặc chuyển giao thông tin cá nhân của bạn cho bên thứ ba 
-            mà không có sự đồng ý của bạn, ngoại trừ các trường hợp sau:
+            I do not sell, exchange, or transfer your personal information to third parties 
+            without your consent, except in the following cases:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li>Khi được yêu cầu bởi luật pháp hoặc cơ quan chính phủ</li>
-            <li>Để bảo vệ quyền và tài sản của tôi</li>
-            <li>Trong trường hợp khẩn cấp để bảo vệ sự an toàn của người dùng</li>
-            <li>Với các nhà cung cấp dịch vụ cần thiết để vận hành nền tảng</li>
+            <li>When required by law or government agencies</li>
+            <li>To protect my rights and property</li>
+            <li>In emergency cases to protect user safety</li>
+            <li>With service providers necessary to operate the platform</li>
           </ul>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">5. Bảo Mật Thông Tin</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">5. Information Security</h2>
           <p className="text-gray-600 mb-6">
-            Tôi thực hiện các biện pháp bảo mật phù hợp để bảo vệ thông tin cá nhân của bạn:
+            I implement appropriate security measures to protect your personal information:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li>Mã hóa dữ liệu trong quá trình truyền tải</li>
-            <li>Bảo mật cơ sở dữ liệu với tường lửa</li>
-            <li>Kiểm soát truy cập nghiêm ngặt</li>
-            <li>Giám sát bảo mật liên tục</li>
-            <li>Tuân thủ các tiêu chuẩn bảo mật thông tin</li>
+            <li>Data encryption during transmission</li>
+            <li>Database security with firewalls</li>
+            <li>Strict access control</li>
+            <li>Continuous security monitoring</li>
+            <li>Compliance with information security standards</li>
           </ul>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">6. Cookie và Công Nghệ Theo Dõi</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">6. Cookies and Tracking Technologies</h2>
           <p className="text-gray-600 mb-6">
-            Tôi sử dụng cookie và các công nghệ tương tự để:
+            I use cookies and similar technologies to:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li>Ghi nhớ tùy chọn và cài đặt của bạn</li>
-            <li>Phân tích lưu lượng truy cập và sử dụng</li>
-            <li>Cải thiện hiệu suất và trải nghiệm người dùng</li>
-            <li>Cung cấp nội dung được cá nhân hóa</li>
+            <li>Remember your preferences and settings</li>
+            <li>Analyze traffic and usage</li>
+            <li>Improve performance and user experience</li>
+            <li>Provide personalized content</li>
           </ul>
           <p className="text-gray-600 mb-6">
-            Bạn có thể kiểm soát cookie thông qua cài đặt trình duyệt. 
-            Xem chi tiết tại trang <a href="/cookies" className="text-blue-600 hover:underline">Chính sách Cookie</a>.
+            You can control cookies through browser settings. 
+            See details at the <a href="/cookies" className="text-black underline">Cookie Policy</a> page.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">7. Quyền Của Bạn</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">7. Your Rights</h2>
           <p className="text-gray-600 mb-4">
-            Bạn có các quyền sau đối với thông tin cá nhân của mình:
+            You have the following rights regarding your personal information:
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2 ml-4">
-            <li>Quyền truy cập và xem thông tin</li>
-            <li>Quyền chỉnh sửa và cập nhật thông tin</li>
-            <li>Quyền xóa tài khoản và dữ liệu</li>
-            <li>Quyền rút lại sự đồng ý</li>
-            <li>Quyền khiếu nại với cơ quan bảo vệ dữ liệu</li>
+            <li>Right to access and view information</li>
+            <li>Right to edit and update information</li>
+            <li>Right to delete account and data</li>
+            <li>Right to withdraw consent</li>
+            <li>Right to complain to data protection authorities</li>
           </ul>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">8. Bảo Lưu Dữ Liệu</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">8. Data Retention</h2>
           <p className="text-gray-600 mb-6">
-            Tôi lưu trữ thông tin cá nhân của bạn trong thời gian cần thiết để cung cấp dịch vụ 
-            hoặc tuân thủ các nghĩa vụ pháp lý. Khi không còn cần thiết, tôi sẽ xóa hoặc ẩn danh hóa dữ liệu.
+            I retain your personal information for as long as necessary to provide services 
+            or comply with legal obligations. When no longer needed, I will delete or anonymize the data.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">9. Thay Đổi Chính Sách</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">9. Policy Changes</h2>
           <p className="text-gray-600 mb-6">
-            Tôi có thể cập nhật chính sách bảo mật này theo thời gian. 
-            Những thay đổi quan trọng sẽ được thông báo qua email hoặc thông báo trên nền tảng. 
-            Việc tiếp tục sử dụng dịch vụ sau khi thay đổi được coi là chấp nhận chính sách mới.
+            I may update this privacy policy from time to time. 
+            Important changes will be notified via email or notice on the platform. 
+            Continued use of services after changes is considered acceptance of the new policy.
           </p>
           
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">10. Liên Hệ</h2>
+          <h2 className="text-2xl font-semibold text-black mb-4">10. Contact</h2>
           <p className="text-gray-600 mb-6">
-            Nếu bạn có câu hỏi về chính sách bảo mật này hoặc cách tôi xử lý thông tin cá nhân, 
-            vui lòng liên hệ với tôi:<br /><br />
+            If you have questions about this privacy policy or how I handle personal information, 
+            please contact me:<br /><br />
             <strong>Email:</strong> lvthanh.work@gmail.com<br />
-            <strong>Địa chỉ:</strong> P Thủ Đức, TP HCM<br />
-            <strong>Điện thoại:</strong> 0876 06 6907<br />
-            <strong>Trang web:</strong> <a href="/contact" className="text-blue-600 hover:underline">Liên hệ</a>
+            <strong>Address:</strong> Thu Duc District, Ho Chi Minh City<br />
+            <strong>Phone:</strong> 0876 06 6907<br />
+            <strong>Website:</strong> <a href="/contact" className="text-black underline">Contact</a>
           </p>
         </div>
       </div>
